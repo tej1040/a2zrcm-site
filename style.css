@@ -363,7 +363,14 @@ li::marker {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
-
+/* ===== RCM Cycle Image Wrap ===== */
+.cycle-image {
+  width: 360px;
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  shape-outside: circle();
+  shape-margin: 10px;
+}
 /* ========= Responsive ========= */
 @media (max-width: 900px) {
   .cards-grid {
@@ -410,3 +417,4 @@ li::marker {
     max-width: 180px;
   }
 }
+
