@@ -294,6 +294,17 @@ li::marker {
   box-shadow: var(--shadow-soft);
   padding: 1.35rem 1.4rem 1.25rem;
 }
+/* Force card layout to keep button aligned at bottom */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card .btn,
+.card .btn-outline,
+.card .btn-primary {
+  margin-top: auto; /* pushes button to bottom */
+}
 
 .card h3 {
   margin-top: 0;
@@ -417,4 +428,5 @@ li::marker {
     max-width: 180px;
   }
 }
+
 
