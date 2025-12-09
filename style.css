@@ -73,6 +73,119 @@ body {
     max-width: 320px;
   }
 }
+/* ---------- RCM Bubble Layout ---------- */
+
+.rcm-wrapper {
+  position: relative;
+  margin-top: 1.2rem;
+}
+
+/* RCM LIST ITEMS */
+.rcm-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.rcm-list li {
+  padding: 8px 10px;
+  margin: 6px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+}
+
+.rcm-list li:hover {
+  color: var(--accent-navy);
+}
+
+/* Arrow icon */
+.arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+  font-size: 0.8rem;
+}
+
+.arrow.rotate {
+  transform: rotate(90deg);
+}
+
+/* GLASSY BUBBLE BOX */
+.rcm-bubble {
+  position: absolute;
+  top: 50%;
+  left: 50%;             /* will be shifted by side classes */
+  transform: translate(-50%, -50%);
+  width: 340px;
+  min-height: 150px;
+  padding: 16px 16px 18px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.85); /* light transparency */
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+
+  display: none;  /* hidden by default */
+  z-index: 10;
+}
+
+/* Align bubble to right of Basics (overlapping Advanced) */
+.rcm-bubble.right-side {
+  left: 68%;
+}
+
+/* Align bubble to left of Advanced (overlapping Basics) */
+.rcm-bubble.left-side {
+  left: 32%;
+}
+
+/* Tail / Cone pointing to list */
+.rcm-bubble::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-style: solid;
+}
+
+/* Tail for bubble on the right of Basics (points left) */
+.rcm-bubble.right-side::before {
+  left: -12px;
+  border-width: 8px 12px 8px 0;
+  border-color: transparent rgba(255, 255, 255, 0.85) transparent transparent;
+}
+
+/* Tail for bubble on the left of Advanced (points right) */
+.rcm-bubble.left-side::before {
+  right: -12px;
+  border-width: 8px 0 8px 12px;
+  border-color: transparent transparent transparent rgba(255, 255, 255, 0.85);
+}
+
+/* Close button */
+.bubble-close {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  float: right;
+  padding: 0;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.bubble-close:hover {
+  color: var(--accent-navy);
+}
+
+/* Button inside bubble – reusing your button style */
+.rcm-bubble .btn {
+  margin-top: 10px;
+}
+
 
 /* ========= Layout Helpers ========= */
 .container {
@@ -504,6 +617,7 @@ li::marker {
   text-decoration: none;
   font-weight: bold;
 }
+
 
 
 
