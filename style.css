@@ -11,7 +11,7 @@
   --accent-soft: #e0f2fe;
   --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius-lg: 0.9rem;
-  --font	-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 *,
@@ -31,8 +31,8 @@ body {
   color: var(--text-main);
   line-height: 1.6;
 }
-/* ===== Medical Billing & RCM Two-Column Layout ===== */
 
+/* ===== Medical Billing & RCM Two-Column Layout (if you use later) ===== */
 .billing-flex {
   display: flex;
   align-items: flex-start;
@@ -58,136 +58,21 @@ body {
   object-fit: contain;
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive for billing flex */
 @media (max-width: 900px) {
   .billing-flex {
     flex-direction: column;
     text-align: left;
   }
-  
+
   .billing-image {
     justify-content: flex-start;
   }
-  
+
   .billing-image img {
     max-width: 320px;
   }
 }
-/* ---------- RCM Bubble Layout ---------- */
-
-.rcm-wrapper {
-  position: relative;
-  margin-top: 1.2rem;
-}
-
-/* RCM LIST ITEMS */
-.rcm-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.rcm-list li {
-  padding: 12px 14px;
-  margin: 8px 0;
-  background: #eef3ff;
-  border-left: 5px solid #4a68ff;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.25s;
-  display: flex;
-  align-items: center;   /* 🔥 arrow + text inline */
-  gap: 10px;             /* spacing between arrow & text */
-}
-
-.arrow {
-  font-size: 1rem;
-  transition: transform 0.25s ease;
-  margin-right: 6px;
-}
-
-.arrow.rotate {
-  transform: rotate(90deg);  /* ▶ becomes ▼ */
-}
-
-
-/* GLASSY BUBBLE BOX */
-.rcm-bubble {
-  position: absolute;
-  top: 50%;
-  left: 50%;             /* will be shifted by side classes */
-  transform: translate(-50%, -50%);
-  width: 340px;
-  min-height: 150px;
-  padding: 16px 16px 18px;
-  border-radius: 16px;
-
-  background: rgba(255, 255, 255, 0.85); /* light transparency */
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-
-  display: none;  /* hidden by default */
-  z-index: 10;
-}
-
-/* Align bubble to right of Basics (overlapping Advanced) */
-.rcm-bubble.right-side {
-  left: 68%;
-}
-
-/* Align bubble to left of Advanced (overlapping Basics) */
-.rcm-bubble.left-side {
-  left: 32%;
-}
-
-/* Tail / Cone pointing to list */
-.rcm-bubble::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  border-style: solid;
-}
-
-/* Tail for bubble on the right of Basics (points left) */
-.rcm-bubble.right-side::before {
-  left: -12px;
-  border-width: 8px 12px 8px 0;
-  border-color: transparent rgba(255, 255, 255, 0.85) transparent transparent;
-}
-
-/* Tail for bubble on the left of Advanced (points right) */
-.rcm-bubble.left-side::before {
-  right: -12px;
-  border-width: 8px 0 8px 12px;
-  border-color: transparent transparent transparent rgba(255, 255, 255, 0.85);
-}
-
-/* Close button (X) – Red version */
-.bubble-close {
-  border: none;
-  background: transparent;
-  font-size: 1.4rem;
-  cursor: pointer;
-  float: right;
-  padding: 0;
-  margin: -4px -4px 0 0;
-  color: #e11d48; /* RED */
-  font-weight: 700;
-  transition: color 0.2s ease;
-}
-
-.bubble-close:hover {
-  color: #be123c; /* DARKER RED */
-}
-
-
-/* Button inside bubble – reusing your button style */
-.rcm-bubble .btn {
-  margin-top: 10px;
-}
-
 
 /* ========= Layout Helpers ========= */
 .container {
@@ -400,8 +285,6 @@ li::marker {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.4rem;
   margin-top: 1.2rem;
-
-  /* Make all grid items equal height */
   align-items: stretch;
 }
 
@@ -411,8 +294,6 @@ li::marker {
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-soft);
   padding: 1.35rem 1.4rem 1.25rem;
-
-  /* Make card stretch + allow button to stick at bottom */
   display: flex;
   flex-direction: column;
 }
@@ -423,14 +304,12 @@ li::marker {
   font-size: 1.05rem;
 }
 
-/* Button always stays at bottom */
 .card .btn,
 .card .btn-outline,
 .card .btn-primary {
   margin-top: auto;
 }
 
-/* Remove empty <p> spacing if needed */
 .card p:empty {
   display: none;
 }
@@ -497,6 +376,7 @@ li::marker {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+
 /* ===== RCM Cycle Image Wrap ===== */
 .cycle-image {
   width: 360px;
@@ -505,6 +385,7 @@ li::marker {
   shape-outside: circle();
   shape-margin: 10px;
 }
+
 /* ========= Responsive ========= */
 @media (max-width: 900px) {
   .cards-grid {
@@ -552,150 +433,89 @@ li::marker {
   }
 }
 
-/* -------- RCM LIST – Option A (Minimal + Underline for clickable look) -------- */
+/* =========================================================
+   RCM INTERACTIVE (LIST + DESKTOP BUBBLE + MOBILE DROPDOWN)
+   ========================================================= */
 
-.rcm-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.rcm-list li {
-  padding: 12px 14px;
-  margin: 8px 0;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-
-  transition: 0.25s;
-  text-decoration: underline;   /* 🔥 Makes it look clickable */
-  text-underline-offset: 3px;
-  font-weight: 500;
-}
-
-.rcm-list li:hover {
-  background: #f3f4f6;
-  border-color: #cbd5e1;
-}
-
-/* Arrow beside text */
-.arrow {
-  font-size: 0.85rem;
-  transition: transform 0.25s ease;
-}
-
-.arrow.rotate {
-  transform: rotate(90deg);
-}
-
-
-/* EXPANDABLE PANEL */
-.rcm-panel {
-  margin-top: 30px;
-  padding: 25px;
-  background: #f5f5f7;  
-  border-radius: 14px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  overflow: hidden;
-
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.45s ease, opacity 0.4s ease;
-}
-
-/* When expanded */
-.rcm-panel.active {
-  max-height: 500px;
-  opacity: 1;
-}
-
-/* Button inside expanded section */
-.rcm-btn {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background: #4a68ff;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-/* ===== RCM INTERACTIVE (DESKTOP BUBBLE + MOBILE CARD) ===== */
-
-/* Wrapper so bubble positions relative to the two cards */
+/* Wrapper for the two cards + bubble */
 .rcm-wrapper {
   position: relative;
   margin-top: 1.2rem;
 }
 
-/* Make sure li tiles still look like before (you already had styles).
-   We only tweak small things here. */
+/* RCM list tiles */
 .rcm-list {
   list-style: none;
   padding-left: 0;
+  margin: 0;
 }
 
 .rcm-list li {
+  padding: 12px 14px;
+  margin: 8px 0;
+  background: #eef3ff;
+  border-left: 5px solid #4a68ff;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;      /* label + mobile card stacked */
-  gap: 4px;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s;
+}
+
+.rcm-list li:hover {
+  background: #dbe5ff;
 }
 
 .rcm-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  color: var(--text-main);
 }
 
-/* arrow animation */
+/* Arrow icon beside text */
 .arrow {
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   transition: transform 0.25s ease;
 }
 
 .arrow.rotate {
-  transform: rotate(90deg);
+  transform: rotate(90deg); /* ▶ becomes ▼ */
 }
 
-/* ---------- DESKTOP BUBBLE ---------- */
+/* ---------- Desktop Floating Bubble (Single Global) ---------- */
 
-.rcm-bubble {
+#rcm-bubble {
   position: absolute;
-  top: 62%;
-  left: 50%;
+  top: 60%;
+  left: 68%; /* default, overridden by left/right-side */
   transform: translate(-50%, -50%);
-  width: 500px;                 /* medium width */
-  min-height: 200px;
-  padding: 22px 26px 26px;
-  border-radius: 14px;
-
+  width: 480px;
+  max-width: 95vw;
+  min-height: 160px;
+  padding: 22px 24px 24px;
   background: #ffffff;
+  border-radius: 16px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
   display: none;
-  z-index: 20;
+  z-index: 50;
 }
 
-/* Bubble aligned to the RIGHT of Basics (over Advanced) */
-.rcm-bubble.right-side {
-  left: 68%;
+/* Right of Basics */
+#rcm-bubble.right-side {
+  left: 70%;
 }
 
-/* Bubble aligned to the LEFT of Advanced (over Basics) */
-.rcm-bubble.left-side {
-  left: 32%;
+/* Left of Advanced */
+#rcm-bubble.left-side {
+  left: 30%;
 }
 
-/* Tail / cone */
-.rcm-bubble::before {
+/* Tail / pointer */
+#rcm-bubble::before {
   content: "";
   position: absolute;
   top: 40%;
@@ -703,32 +523,32 @@ li::marker {
   border-style: solid;
 }
 
-/* Tail for right-side bubble (points to left) */
-.rcm-bubble.right-side::before {
+/* Tail when on right (pointing left) */
+#rcm-bubble.right-side::before {
   left: -15px;
   border-width: 10px 15px 10px 0;
   border-color: transparent #ffffff transparent transparent;
 }
 
-/* Tail for left-side bubble (points to right) */
-.rcm-bubble.left-side::before {
+/* Tail when on left (pointing right) */
+#rcm-bubble.left-side::before {
   right: -15px;
   border-width: 10px 0 10px 15px;
   border-color: transparent transparent transparent #ffffff;
 }
 
-/* Floating red close button (Option D) */
+/* Red floating close button */
 .bubble-close {
   position: absolute;
   top: -14px;
   right: -14px;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
   border: none;
   background: #dc2626;
   color: #ffffff;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
   display: flex;
@@ -740,41 +560,39 @@ li::marker {
   background: #b91c1c;
 }
 
-/* Button inside bubble uses your existing .btn styles */
-.rcm-bubble .btn {
-  margin-top: 16px;
+/* Button inside bubble */
+#rcm-bubble .btn {
+  margin-top: 14px;
 }
 
-/* ---------- MOBILE CARD VERSION ---------- */
+/* ---------- Mobile Dropdown Version ---------- */
 
 .rcm-mobile-card {
-  display: none;              /* not shown on desktop */
+  display: none; /* hidden on desktop */
 }
 
-/* Mobile-specific behavior */
 @media (max-width: 768px) {
 
-  /* stack the two main cards vertically */
-  #rcm-section .cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* hide desktop bubble completely on mobile */
-  .rcm-bubble {
+  /* No bubble on mobile */
+  #rcm-bubble {
     display: none !important;
   }
 
-  /* enable expandable card under each item */
+  /* RCM cards stacked */
+  #rcm-section .cards-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .rcm-mobile-card {
     display: block;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
     opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
   }
 
   .rcm-mobile-card.open {
-    max-height: 400px; /* enough for text + button */
+    max-height: 500px;
     opacity: 1;
   }
 
