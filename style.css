@@ -433,190 +433,93 @@ li::marker {
   }
 }
 
-/* =========================================================
-   RCM INTERACTIVE (LIST + DESKTOP BUBBLE + MOBILE DROPDOWN)
-   ========================================================= */
+/* ============================
+   RCM EXPAND LIST STYLING
+   ============================ */
 
-/* Wrapper for the two cards + bubble */
-.rcm-wrapper {
-  position: relative;
-  margin-top: 1.2rem;
-}
-
-/* RCM list tiles */
+/* Remove default list styles */
 .rcm-list {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
   margin: 0;
 }
 
-.rcm-list li {
-  padding: 12px 14px;
-  margin: 8px 0;
-  background: #eef3ff;
-  border-left: 5px solid #4a68ff;
-  border-radius: 8px;
+.rcm-item {
+  border-radius: 12px;
+  margin-bottom: 16px;
   cursor: pointer;
+  transition: background 0.2s ease;
+  overflow: hidden; /* important for clipping animation */
+}
+
+/* Header row (clickable area) */
+.rcm-item-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: 0.25s;
+  padding: 14px 18px;
+  font-weight: 600;
+  user-select: none;
 }
 
-.rcm-list li:hover {
-  background: #dbe5ff;
-}
-
-.rcm-label {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 500;
-  color: var(--text-main);
-}
-
-/* Arrow icon beside text */
-.arrow {
-  display: inline-block;
-  font-size: 0.9rem;
+/* Arrow styling */
+.rcm-item .arrow {
   transition: transform 0.25s ease;
+  display: inline-block;
 }
 
-.arrow.rotate {
-  transform: rotate(90deg); /* ▶ becomes ▼ */
+/* Rotate arrow when open */
+.rcm-item.open .arrow {
+  transform: rotate(90deg);
 }
 
-/* ---------- Desktop Floating Bubble (Single Global) ---------- */
+/* Option 2 – Grey background expand box */
+.rcm-expand {
+  background: #e8f0ff; /* soft grey-blue box */
+  border-left: 6px solid #2563eb; /* blue bar on left */
+  padding: 18px 20px;
+  margin-top: 6px;
 
-#rcm-bubble {
-  position: absolute;
-  top: 60%;
-  left: 68%; /* default, overridden by left/right-side */
-  transform: translate(-50%, -50%);
-  width: 480px;
-  max-width: 95vw;
-  min-height: 160px;
-  padding: 22px 24px 24px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
   display: none;
-  z-index: 50;
+  animation: fadeSlide 0.25s ease;
+  border-radius: 10px;
 }
 
-/* Right of Basics */
-#rcm-bubble.right-side {
-  left: 70%;
+/* Show expand when parent has .open */
+.rcm-item.open .rcm-expand {
+  display: block;
 }
 
-/* Left of Advanced */
-#rcm-bubble.left-side {
-  left: 30%;
-}
-
-/* Tail / pointer */
-#rcm-bubble::before {
-  content: "";
-  position: absolute;
-  top: 40%;
-  transform: translateY(-50%);
-  border-style: solid;
-}
-
-/* Tail when on right (pointing left) */
-#rcm-bubble.right-side::before {
-  left: -15px;
-  border-width: 10px 15px 10px 0;
-  border-color: transparent #ffffff transparent transparent;
-}
-
-/* Tail when on left (pointing right) */
-#rcm-bubble.left-side::before {
-  right: -15px;
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent #ffffff;
-}
-
-/* Red floating close button */
-.bubble-close {
-  position: absolute;
-  top: -14px;
-  right: -14px;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  border: none;
-  background: #dc2626;
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bubble-close:hover {
-  background: #b91c1c;
-}
-
-/* Button inside bubble */
-#rcm-bubble .btn {
-  margin-top: 14px;
-}
-
-/* ---------- Mobile Dropdown Version ---------- */
-
-.rcm-mobile-card {
-  display: none; /* hidden on desktop */
-}
-
-@media (max-width: 768px) {
-
-  /* No bubble on mobile */
-  #rcm-bubble {
-    display: none !important;
-  }
-
-  /* RCM cards stacked */
-  #rcm-section .cards-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .rcm-mobile-card {
-    display: block;
-    max-height: 0;
-    overflow: hidden;
+/* Animation */
+@keyframes fadeSlide {
+  from {
     opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
+    transform: translateY(-6px);
   }
-
-  .rcm-mobile-card.open {
-    max-height: 500px;
+  to {
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Label text */
+.rcm-label {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* Better spacing for buttons inside expand */
+.rcm-expand .btn {
+  margin-top: 12px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .rcm-expand {
+    padding: 16px;
   }
 
-  .rcm-mobile-card-inner {
-    margin-top: 6px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid var(--border-subtle);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-    padding: 12px 14px 16px;
-  }
-
-  .rcm-mobile-card-inner h4 {
-    margin: 0 0 6px;
-    font-size: 0.95rem;
-  }
-
-  .rcm-mobile-card-inner p {
-    margin: 0 0 10px;
-    font-size: 0.9rem;
-  }
-
-  .rcm-mobile-card-inner .btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.85rem;
+  .rcm-item-header {
+    padding: 12px 16px;
   }
 }
