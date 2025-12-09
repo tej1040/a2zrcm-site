@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Place of Service (POS) Codes</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #dce6f7, #f1f5ff);
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    #searchInput {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .pos-item {
+        background: #f8f9ff;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border-left: 4px solid #4a68ff;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .pos-item strong {
+        width: 50px;
+        display: inline-block;
+    }
+
+    /* Modal */
+    #detailModal {
+        display:none;
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:rgba(0,0,0,0.6);
+        justify-content:center;
+        align-items:center;
+    }
+    #detailBox {
+        background:#fff;
+        padding:20px;
+        border-radius:12px;
+        max-width:600px;
+        width:90%;
+        max-height:80%;
+        overflow:auto;
+        text-align:left;
+    }
+    #detailTitle {
+        font-size:20px;
+        color:#1a3db1;
+        margin-bottom:10px;
+    }
+    #detailDesc {
+        white-space: pre-line;
+        line-height: 1.5;
+    }
+    #closeBtn {
+        margin-top:10px;
+        cursor:pointer;
+        color:#fff;
+        background:#ff4d4d;
+        padding:8px 12px;
+        border-radius:6px;
+        text-align:center;
+        display:inline-block
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Place of Service (POS) Codes</h1>
+
+    <input type="text" id="searchInput" placeholder="Search POS or description..." onkeyup="searchPOS()" />
+
+    <div id="posList">
+
+        <!-- POS LIST START -->
+        <div class="pos-item" data-pos="01"><strong>01</strong> – Pharmacy</div>
+        <div class="pos-item" data-pos="02"><strong>02</strong> – Telehealth Provided Other than in Patient’s Home</div>
+        <div class="pos-item" data-pos="03"><strong>03</strong> – School</div>
+        <div class="pos-item" data-pos="04"><strong>04</strong> – Homeless Shelter</div>
+        <div class="pos-item" data-pos="05"><strong>05</strong> – Indian Health Service Free-Standing Facility</div>
+        <div class="pos-item" data-pos="06"><strong>06</strong> – Indian Health Service Provider-Based Facility</div>
+        <div class="pos-item" data-pos="07"><strong>07</strong> – Tribal 638 Free-Standing Facility</div>
+        <div class="pos-item" data-pos="08"><strong>08</strong> – Tribal 638 Provider-Based Facility</div>
+        <div class="pos-item" data-pos="09"><strong>09</strong> – Prison / Correctional Facility</div>
+        <div class="pos-item" data-pos="10"><strong>10</strong> – Telehealth Provided in Patient’s Home</div>
+        <div class="pos-item" data-pos="11"><strong>11</strong> – Office</div>
+        <div class="pos-item" data-pos="12"><strong>12</strong> – Home</div>
+        <div class="pos-item" data-pos="13"><strong>13</strong> – Assisted Living Facility</div>
+        <div class="pos-item" data-pos="14"><strong>14</strong> – Group Home</div>
+        <div class="pos-item" data-pos="15"><strong>15</strong> – Mobile Unit</div>
+        <div class="pos-item" data-pos="16"><strong>16</strong> – Temporary Lodging</div>
+        <div class="pos-item" data-pos="17"><strong>17</strong> – Walk-in Retail Health Clinic</div>
+        <div class="pos-item" data-pos="18"><strong>18</strong> – Place of Employment / Worksite</div>
+        <div class="pos-item" data-pos="19"><strong>19</strong> – Off Campus-Outpatient Hospital</div>
+        <div class="pos-item" data-pos="20"><strong>20</strong> – Urgent Care Facility</div>
+        <div class="pos-item" data-pos="21"><strong>21</strong> – Inpatient Hospital</div>
+        <div class="pos-item" data-pos="22"><strong>22</strong> – On Campus-Outpatient Hospital</div>
+        <div class="pos-item" data-pos="23"><strong>23</strong> – Emergency Room – Hospital</div>
+        <div class="pos-item" data-pos="24"><strong>24</strong> – Ambulatory Surgical Center</div>
+        <div class="pos-item" data-pos="25"><strong>25</strong> – Birthing Center</div>
+        <div class="pos-item" data-pos="26"><strong>26</strong> – Military Treatment Facility</div>
+        <div class="pos-item" data-pos="27"><strong>27</strong> – Skilled Nursing Facility</div>
+        <div class="pos-item" data-pos="28"><strong>28</strong> – Skilled Nursing Facility (Non-Certified)</div>
+        <div class="pos-item" data-pos="29"><strong>29</strong> – Unassigned</div>
+        <div class="pos-item" data-pos="30"><strong>30</strong> – Unassigned</div>
+        <div class="pos-item" data-pos="31"><strong>31</strong> – Skilled Nursing Facility</div>
+        <div class="pos-item" data-pos="32"><strong>32</strong> – Nursing Facility</div>
+        <div class="pos-item" data-pos="33"><strong>33</strong> – Custodial Care Facility</div>
+        <div class="pos-item" data-pos="34"><strong>34</strong> – Hospice Facility</div>
+        <div class="pos-item" data-pos="35"><strong>35</strong> – Residential Substance Abuse Treatment Facility</div>
+        <div class="pos-item" data-pos="36"><strong>36</strong> – Rehabilitation Facility</div>
+        <div class="pos-item" data-pos="37"><strong>37</strong> – Residential Mental Health Facility</div>
+        <div class="pos-item" data-pos="38"><strong>38</strong> – Unassigned</div>
+        <div class="pos-item" data-pos="39"><strong>39</strong> – Independent Clinic</div>
+        <div class="pos-item" data-pos="40"><strong>40</strong> – Federally Qualified Health Center</div>
+        <div class="pos-item" data-pos="41"><strong>41</strong> – Ambulance – Land</div>
+        <div class="pos-item" data-pos="42"><strong>42</strong> – Ambulance – Air or Water</div>
+        <div class="pos-item" data-pos="49"><strong>49</strong> – Independent Clinic (Legacy)</div>
+        <div class="pos-item" data-pos="50"><strong>50</strong> – Federally Qualified Health Center (FQHC)</div>
+        <div class="pos-item" data-pos="51"><strong>51</strong> – Inpatient Psychiatric Facility</div>
+        <div class="pos-item" data-pos="52"><strong>52</strong> – Psychiatric Facility – Partial Hospitalization</div>
+        <div class="pos-item" data-pos="53"><strong>53</strong> – Community Mental Health Center</div>
+        <div class="pos-item" data-pos="54"><strong>54</strong> – Intermediate Care Facility / Intellectual Disabilities</div>
+        <div class="pos-item" data-pos="55"><strong>55</strong> – Residential Substance Abuse Treatment Facility</div>
+        <div class="pos-item" data-pos="56"><strong>56</strong> – Psychiatric Residential Treatment Center</div>
+        <div class="pos-item" data-pos="57"><strong>57</strong> – Non-Residential Opioid Treatment Facility</div>
+        <div class="pos-item" data-pos="60"><strong>60</strong> – Mass Immunization Center</div>
+        <div class="pos-item" data-pos="61"><strong>61</strong> – Comprehensive Inpatient Rehabilitation Facility</div>
+        <div class="pos-item" data-pos="62"><strong>62</strong> – Comprehensive Outpatient Rehabilitation Facility</div>
+        <div class="pos-item" data-pos="65"><strong>65</strong> – ESRD Treatment Facility</div>
+        <div class="pos-item" data-pos="71"><strong>71</strong> – Public Health Clinic</div>
+        <div class="pos-item" data-pos="72"><strong>72</strong> – Rural Health Clinic</div>
+        <div class="pos-item" data-pos="81"><strong>81</strong> – Independent Laboratory</div>
+        <div class="pos-item" data-pos="99"><strong>99</strong> – Other Place of Service</div>
+
+    </div> <!-- end posList -->
+</div> <!-- end container -->
+
+<!-- Modal -->
+<div id="detailModal">
+  <div id="detailBox">
+    <h3 id="detailTitle"></h3>
+    <p id="detailDesc"></p>
+    <div id="closeBtn">Close</div>
+  </div>
+</div>
+
+<script>
+const posDetails = {
+  "01": {
+    title: "POS 01 – Pharmacy",
+    desc: "Used when prescription medications are dispensed by a pharmacy. Includes retail, specialty, and mail-order drugs. Billing applies to pharmacy/dispensing claims; some medications require prior authorization."
+  },
+  "02": {
+    title: "POS 02 – Telehealth (Not in Patient’s Home)",
+    desc: "Used for telehealth services delivered when the patient is located in a facility or other setting outside the home. Includes video consultations, behavioral health visits, and follow-ups under payer-specific telehealth rules."
+  },
+  "03": {
+    title: "POS 03 – School",
+    desc: "Used when services such as therapy, nursing, or counseling are provided within a school setting. Often linked to special education or school-based health programs; coverage rules vary by state and payer."
+  },
+  "04": {
+    title: "POS 04 – Homeless Shelter",
+    desc: "Used for medical or behavioral services provided in a homeless shelter. Includes basic primary care, mental health support, and outreach. Billing depends heavily on Medicaid and local program policies."
+  },
+  "05": {
+    title: "POS 05 – IHS Free-Standing Facility",
+    desc: "Used for services delivered in a free-standing Indian Health Service facility. Includes outpatient medical care, preventive services, and chronic care management for eligible American Indian and Alaska Native patients."
+  },
+  "06": {
+    title: "POS 06 – IHS Provider-Based Facility",
+    desc: "Used when services occur in a provider-based Indian Health Service facility linked to a hospital or clinic. Follows IHS regulations and special reimbursement methods."
+  },
+  "07": {
+    title: "POS 07 – Tribal 638 Free-Standing Facility",
+    desc: "Used for healthcare services in tribally operated free-standing facilities authorized under Public Law 93-638. Includes primary care, preventive services, and chronic disease management for tribal members."
+  },
+  "08": {
+    title: "POS 08 – Tribal 638 Provider-Based Facility",
+    desc: "Used when services are delivered in a Tribal 638 provider-based facility connected to a hospital or health system. Reimbursement is based on tribal and federal guidelines."
+  },
+  "09": {
+    title: "POS 09 – Prison / Correctional Facility",
+    desc: "Used for healthcare services provided to incarcerated individuals within correctional institutions. Some services may not qualify for Medicaid or Medicare reimbursement except under specific circumstances."
+  },
+  "10": {
+    title: "POS 10 – Telehealth in Patient’s Home",
+    desc: "Used when the patient receives telehealth services while physically located at home. Includes virtual visits, behavioral health sessions, and chronic care follow-ups. Many payers use POS 10 for non-facility telehealth payment."
+  },
+  "11": {
+    title: "POS 11 – Office",
+    desc: "Used for services provided in a physician or qualified health professional’s office. Includes evaluation and management (E/M) visits, minor procedures, injections, diagnostics, and routine follow-up care."
+  },
+  "12": {
+    title: "POS 12 – Home",
+    desc: "Used when the provider delivers care in the patient’s residence. Common for home visits, chronic condition management, home therapy, and palliative care. Medical necessity must usually justify a home setting."
+  },
+  "13": {
+    title: "POS 13 – Assisted Living Facility",
+    desc: "Used for services delivered in assisted living communities where residents need help with daily activities but not full nursing facility care. Includes routine medical follow-ups and chronic disease management."
+  },
+  "14": {
+    title: "POS 14 – Group Home",
+    desc: "Used when services are provided in group homes that support residents with long-term needs, such as developmental or behavioral conditions. Includes periodic medical visits and therapy services."
+  },
+  "15": {
+    title: "POS 15 – Mobile Unit",
+    desc: "Used when services are rendered via mobile medical units like mobile clinics, dental vans, or screening vehicles. Common for outreach, immunization campaigns, and health screenings."
+  },
+  "16": {
+    title: "POS 16 – Temporary Lodging",
+    desc: "Used when patients receive care while staying in temporary lodging such as a hotel or emergency shelter due to travel or displacement. Often used when patients travel for specialty care."
+  },
+  "17": {
+    title: "POS 17 – Walk-in Retail Health Clinic",
+    desc: "Used for minor acute care delivered in retail clinics inside pharmacies, supermarkets, or big-box stores. Includes treatment of simple infections, minor injuries, and vaccinations—usually without a referral."
+  },
+  "18": {
+    title: "POS 18 – Place of Employment / Worksite",
+    desc: "Used when healthcare or occupational health services are provided at the patient’s job location. Includes wellness screenings, job-related exams, and minor treatments."
+  },
+  "19": {
+    title: "POS 19 – Off Campus-Outpatient Hospital",
+    desc: "Used for outpatient hospital services performed in an off-campus department. Includes imaging, lab work, therapy, and specialty visits. Facility reimbursement rules apply according to hospital outpatient standards."
+  },
+  "20": {
+    title: "POS 20 – Urgent Care Facility",
+    desc: "Used for unscheduled urgent visits treating non-life-threatening conditions such as minor injuries, infections, or exacerbations of chronic illnesses. Typically faster and less costly than emergency room visits."
+  },
+  "21": {
+    title: "POS 21 – Inpatient Hospital",
+    desc: "Used when a patient is formally admitted for inpatient hospital care. Includes surgeries, complex medical management, monitoring, and multi-day stays. Prior authorization is usually required for non-emergent admissions."
+  },
+  "22": {
+    title: "POS 22 – On Campus-Outpatient Hospital",
+    desc: "Used for outpatient services provided on the hospital’s main campus. Examples include same-day surgeries, infusion centers, diagnostic imaging, and outpatient clinics under hospital outpatient billing."
+  },
+  "23": {
+    title: "POS 23 – Emergency Room – Hospital",
+    desc: "Used for emergency services delivered in a hospital ER. Includes evaluation and treatment of acute or life-threatening symptoms, trauma, chest pain, stroke, and urgent conditions. Emergency services generally do not require prior authorization or referral."
+  },
+  "24": {
+    title: "POS 24 – Ambulatory Surgical Center (ASC)",
+    desc: "Used for same-day surgical procedures performed in free-standing or hospital-owned surgical centers. Patients are admitted, treated, and discharged on the same day. Many procedures require pre-authorization."
+  },
+  "25": {
+    title: "POS 25 – Birthing Center",
+    desc: "Used for maternity care and delivery services in certified birthing centers. Includes labor, delivery, and immediate postpartum care in a non-hospital setting. Coverage varies widely by payer and plan."
+  },
+  "26": {
+    title: "POS 26 – Military Treatment Facility",
+    desc: "Used when services are rendered within a military healthcare facility. Serves active duty members, retirees, and dependents under TRICARE and related programs. Can include primary care, specialty care, and emergency services."
+  },
+  "27": {
+    title: "POS 27 – Skilled Nursing Facility",
+    desc: "Used for skilled services such as IV therapy, wound care, and rehabilitation delivered in a SNF. Often follows an acute hospital stay. Payers, including Medicare, generally require pre-authorization and strict medical necessity."
+  },
+  "28": {
+    title: "POS 28 – Skilled Nursing Facility (Non-Certified)",
+    desc: "Used when a facility functions like a SNF but does not meet Medicare certification status. Coverage depends heavily on payer policy and may be limited."
+  },
+  "29": {
+    title: "POS 29 – Unassigned",
+    desc: "POS 29 is currently unassigned by CMS and should not be used for normal billing. If used, detailed documentation and payer-specific instructions are required."
+  },
+  "30": {
+    title: "POS 30 – Unassigned",
+    desc: "POS 30 is unassigned and not commonly accepted for billing. Avoid usage unless explicitly allowed by a payer’s instructions."
+  },
+  "31": {
+    title: "POS 31 – Skilled Nursing Facility",
+    desc: "Used for inpatient stays where patients receive 24-hour skilled nursing and rehabilitation. Services include therapy, medication management, and complex nursing care following hospitalization."
+  },
+  "32": {
+    title: "POS 32 – Nursing Facility",
+    desc: "Used for long-term custodial care in a nursing home. Focus is assistance with daily activities and ongoing supervision rather than intensive rehab. Many commercial payers limit coverage for custodial care."
+  },
+  "33": {
+    title: "POS 33 – Custodial Care Facility",
+    desc: "Used when patients receive primarily non-medical help with daily living activities. Medical services are limited, and many insurance plans do not cover pure custodial care."
+  },
+  "34": {
+    title: "POS 34 – Hospice Facility",
+    desc: "Used for hospice services delivered in a dedicated hospice center. Emphasizes comfort care, pain control, and emotional support for terminally ill patients and their families."
+  },
+  "35": {
+    title: "POS 35 – Residential Substance Abuse Treatment Facility",
+    desc: "Used for live-in treatment programs for substance use disorders. Includes detox support, individual and group therapy, and rehabilitation. Coverage and length-of-stay rules vary significantly between payers."
+  },
+  "36": {
+    title: "POS 36 – Rehabilitation Facility",
+    desc: "Used for inpatient rehab centers focused on intensive therapy after significant injury, surgery, or illness. Therapy may include physical, occupational, and speech services under physician supervision."
+  },
+  "37": {
+    title: "POS 37 – Residential Mental Health Facility",
+    desc: "Used for long-term residential care for mental health conditions where patients require structured support and therapy. Includes psychiatric oversight, group therapy, and behavior programs."
+  },
+  "38": {
+    title: "POS 38 – Unassigned",
+    desc: "POS 38 is not currently assigned for standard billing. Use only if a payer provides specific guidance and ensure clear documentation of the care setting."
+  },
+  "39": {
+    title: "POS 39 – Independent Clinic",
+    desc: "Used for services in clinics that are not part of a hospital system. Includes outpatient visits, chronic care management, and preventive services in an independent setting."
+  },
+  "40": {
+    title: "POS 40 – Federally Qualified Health Center",
+    desc: "Used for FQHC facilities providing primary and preventive care in underserved areas. Encounter-based reimbursement often applies instead of per-service payment."
+  },
+  "41": {
+    title: "POS 41 – Ambulance – Land",
+    desc: "Used for medically necessary ground ambulance transport. Requires documentation of why other means of transport were unsafe and must include origin and destination."
+  },
+  "42": {
+    title: "POS 42 – Ambulance – Air or Water",
+    desc: "Used for critical transport by air or water when rapid evacuation or specialized transport is needed. Strong documentation of urgency and necessity is required."
+  },
+  "49": {
+    title: "POS 49 – Independent Clinic (Legacy)",
+    desc: "Used similarly to POS 39 for clinic services in non-hospital affiliated settings. Maintained as a legacy POS; some payers may still recognize it, but POS 39 is more common."
+  },
+  "50": {
+    title: "POS 50 – Federally Qualified Health Center (FQHC)",
+    desc: "Used for billing services under FQHC reimbursement structures. Provides comprehensive primary care, preventive services, and behavioral health for underserved communities."
+  },
+  "51": {
+    title: "POS 51 – Inpatient Psychiatric Facility",
+    desc: "Used when a patient is admitted to a psychiatric hospital or unit for intensive mental health treatment. Includes crisis stabilization, medication management, and structured therapies."
+  },
+  "52": {
+    title: "POS 52 – Psychiatric Facility – Partial Hospitalization",
+    desc: "Used for day programs where patients receive several hours of psychiatric treatment but return home each day. Often used as an alternative to full inpatient admission."
+  },
+  "53": {
+    title: "POS 53 – Community Mental Health Center",
+    desc: "Used for services in community-based mental health agencies. Provides counseling, psychiatric care, crisis support, and case management, especially for Medicaid populations."
+  },
+  "54": {
+    title: "POS 54 – Intermediate Care Facility / Intellectual Disabilities",
+    desc: "Used when individuals with intellectual or developmental disabilities receive long-term residential care, including medical oversight, skills training, and daily living support."
+  },
+  "55": {
+    title: "POS 55 – Residential Substance Abuse Treatment Facility",
+    desc: "Used for residential addiction treatment programs where patients live on-site and participate in structured rehabilitation and counseling services."
+  },
+  "56": {
+    title: "POS 56 – Psychiatric Residential Treatment Center",
+    desc: "Used mainly for children or adolescents requiring residential psychiatric care. Combines therapy, schooling, and structured living in a 24-hour setting."
+  },
+  "57": {
+    title: "POS 57 – Non-Residential Opioid Treatment Facility",
+    desc: "Used for outpatient opioid treatment programs providing medication-assisted treatment (e.g., methadone, buprenorphine), counseling, and monitoring."
+  },
+  "60": {
+    title: "POS 60 – Mass Immunization Center",
+    desc: "Used for large-scale vaccination sites such as community clinics and temporary immunization drives. Focus is high-volume vaccine administration with streamlined documentation."
+  },
+  "61": {
+    title: "POS 61 – Comprehensive Inpatient Rehabilitation Facility",
+    desc: "Used for facilities providing intensive, multidisciplinary inpatient rehabilitation services. Often follows severe injury, stroke, or major surgery; authorization is commonly required."
+  },
+  "62": {
+    title: "POS 62 – Comprehensive Outpatient Rehabilitation Facility",
+    desc: "Used for outpatient rehab facilities offering coordinated therapy programs for complex rehabilitation needs under physician direction."
+  },
+  "65": {
+    title: "POS 65 – ESRD Treatment Facility",
+    desc: "Used for dialysis centers treating patients with End-Stage Renal Disease. Includes in-center hemodialysis and training for home dialysis. Follows strict CMS ESRD payment rules."
+  },
+  "71": {
+    title: "POS 71 – Public Health Clinic",
+    desc: "Used for clinics operated by public health departments. Services may include immunizations, TB treatment, STD care, screenings, maternal-child health, and other community health programs."
+  },
+  "72": {
+    title: "POS 72 – Rural Health Clinic",
+    desc: "Used for certified Rural Health Clinics delivering primary and preventive care in underserved rural areas. Uses special RHC encounter-based billing structures."
+  },
+  "81": {
+    title: "POS 81 – Independent Laboratory",
+    desc: "Used when laboratory tests are performed by independent labs not owned by a physician or hospital. Examples include clinical chemistry, microbiology, and pathology testing."
+  },
+  "99": {
+    title: "POS 99 – Other Place of Service",
+    desc: "Used only when no other POS code accurately describes the service location. Should be used rarely and with detailed documentation; payers may request clarification."
+  }
+};
+
+// Search functionality
+function searchPOS() {
+  let input = document.getElementById('searchInput').value.toLowerCase();
+  let items = document.getElementsByClassName('pos-item');
+  for (let i = 0; i < items.length; i++) {
+    let text = (items[i].innerText || '').toLowerCase();
+    items[i].style.display = text.includes(input) ? '' : 'none';
+  }
+}
+
+// Open modal
+document.querySelectorAll('.pos-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const code = item.getAttribute('data-pos');
+    const info = posDetails[code] || {
+      title: `POS ${code}`,
+      desc: "Standard billing POS code. Detailed explanation not added yet."
+    };
+    document.getElementById('detailTitle').innerText = info.title;
+    document.getElementById('detailDesc').innerText = info.desc;
+    document.getElementById('detailModal').style.display = 'flex';
+  });
+});
+
+// Close modal
+document.getElementById('closeBtn').addEventListener('click', () => {
+  document.getElementById('detailModal').style.display = 'none';
+});
+</script>
+
+</body>
+</html>

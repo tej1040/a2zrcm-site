@@ -1,0 +1,94 @@
+<section id="useful-links" style="margin-top: 30px;">
+
+    <h2 style="color:#2b6cb0; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">
+        Useful Links
+    </h2>
+
+    <!-- Search Bar -->
+    <input 
+        type="text" 
+        id="linkSearch" 
+        placeholder="Search links..." 
+        onkeyup="filterLinks()" 
+        style="
+            padding: 10px; 
+            width: 100%; 
+            max-width: 420px; 
+            margin: 15px 0; 
+            border: 2px solid #cbd5e0; 
+            border-radius: 6px;
+            font-size: 14px;
+        "
+    />
+
+    <!-- Links Container Box -->
+    <div style="
+        background: #f7fafc; 
+        padding: 15px 20px; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    ">
+        <ul id="linksList" style="list-style-type: none; padding-left: 0; line-height: 2;">
+
+            <li>
+                <strong style="color:#2b6cb0;">MUE Lookup:</strong> 
+                <a href="https://www.cgsmedicare.com/medicare_dynamic/j15/mue/mue_tool.aspx" 
+                   target="_blank" 
+                   style="color:#1a73e8;">
+                    Source - CGS Lookup Tool
+                </a>
+            </li>
+
+            <li>
+                <strong style="color:#2b6cb0;">NCCI PTP Edits:</strong> 
+                <a href="https://www.cgsmedicare.com/medicare_dynamic/j15/ptpb/ptp/ptp.aspx" 
+                   target="_blank"
+                   style="color:#1a73e8;">
+                    Source - CGS Lookup Tool
+                </a>
+            </li>
+
+            <li>
+                <strong style="color:#2b6cb0;">LCD/NCD Lookup:</strong> 
+                <a href="https://www.cms.gov/medicare-coverage-database" 
+                   target="_blank"
+                   style="color:#1a73e8;">
+                    Source - CMS Database
+                </a>
+            </li>
+
+            <li>
+                <strong style="color:#2b6cb0;">Authorization Lookup:</strong> 
+                <a href="https://www.wellcare.com/en/authorization-lookup" 
+                   target="_blank"
+                   style="color:#1a73e8;">
+                    Source - WellCare 
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- Disclaimer -->
+    <p style="font-size: 14px; color: gray; margin-top: 10px;">
+        <em>Disclaimer: These links are added based on my choice and experience. Please verify information from official sources.</em>
+    </p>
+
+</section>
+
+<!-- Filter Script -->
+<script>
+function filterLinks() {
+    let input = document.getElementById("linkSearch");
+    let filter = input.value.toLowerCase();
+    let list = document.getElementById("linksList");
+    let items = list.getElementsByTagName("li");
+
+    for (let i = 0; i < items.length; i++) {
+        let text = items[i].innerText.toLowerCase();
+        items[i].style.display = text.includes(filter) ? "" : "none";
+    }
+}
+</script>
+

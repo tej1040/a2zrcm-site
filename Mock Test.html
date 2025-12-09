@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RCM Mock Test – Professional & Hospital Billing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f5fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 20px 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .mode-select {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary {
+      background: #4c6fff;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #e3e7ff;
+      color: #1b2a4e;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .info-bar {
+      text-align: center;
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    #quiz-area {
+      margin-top: 15px;
+    }
+
+    .question-block {
+      background: #f8f9ff;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #dde1ff;
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .options input[type="radio"] {
+      margin-right: 6px;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+
+    #result.success {
+      background: #e7f8ee;
+      color: #176a3b;
+      border: 1px solid #95d7ac;
+    }
+
+    #result.danger {
+      background: #ffecec;
+      color: #b30021;
+      border: 1px solid #ff9aa6;
+    }
+
+    #summary-list {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .summary-item {
+      margin-bottom: 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin-right: 4px;
+      background: #eef1ff;
+      color: #2e3a8c;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>RCM Mock Test</h1>
+    <h3>Professional Billing (CMS-1500) &amp; Hospital Billing (UB-04)</h3>
+
+    <div class="mode-select">
+      <button id="btn-professional" class="btn btn-primary">
+        Professional Billing Test
+      </button>
+      <button id="btn-hospital" class="btn btn-secondary">
+        Hospital Billing Test
+      </button>
+      <button id="btn-reset" class="btn btn-secondary" style="display:none;">
+        New Test / Change Mode
+      </button>
+    </div>
+
+    <div id="test-info" class="info-bar">
+      Select a test type to start a 15-question mock test. Questions are randomly shuffled from a large pool each time.
+    </div>
+
+    <div id="quiz-area"></div>
+
+    <div style="text-align:center; margin-top: 15px;">
+      <button id="btn-submit" class="btn btn-primary" style="display:none;">
+        Submit Answers
+      </button>
+    </div>
+
+    <div id="result"></div>
+    <div id="summary-list"></div>
+
+    <div class="footer-note">
+      Tip: Use this as a practice tool before live RCM assessments. Refresh the page or click "New Test" for fresh questions.
+    </div>
+  </div>
+
+  <script>
+    // ========= QUESTION POOLS =========
+    // 50+ PROFESSIONAL BILLING QUESTIONS (CMS-1500, POS, eligibility, abbreviations, etc.)
+    const professionalQuestions = [
+      {
+        question: "In professional billing, which form is primarily used to submit outpatient physician claims?",
+        options: ["UB-04", "CMS-1500", "ADA Dental Form", "837 I"],
+        answer: 1,
+        tags: ["Form", "Basics"]
+      },
+      {
+        question: "What does 'POS' stand for in medical billing?",
+        options: ["Point of Service", "Place of Service", "Proof of Service", "Plan of Service"],
+        answer: 1,
+        tags: ["POS", "Abbreviation"]
+      },
+      {
+        question: "Which POS code represents 'Office' for professional services?",
+        options: ["11", "21", "22", "23"],
+        answer: 0,
+        tags: ["POS"]
+      },
+      {
+        question: "Which POS code is used for 'Inpatient Hospital'?",
+        options: ["11", "12", "21", "24"],
+        answer: 2,
+        tags: ["POS"]
+      },
+      {
+        question: "Which POS code is commonly used for 'Emergency Room – Hospital'?",
+        options: ["21", "22", "23", "32"],
+        answer: 2,
+        tags: ["POS"]
+      },
+      {
+        question: "On the CMS-1500 form, Box 1 indicates:",
+        options: ["Insured's ID Number", "Type of Insurance / Program", "Patient's Address", "Referring Physician NPI"],
+        answer: 1,
+        tags: ["CMS-1500", "Boxes"]
+      },
+      {
+        question: "On the CMS-1500, Box 1a is used for:",
+        options: ["Insured's ID Number", "Patient’s Date of Birth", "Diagnosis Codes", "Rendering Provider NPI"],
+        answer: 0,
+        tags: ["CMS-1500", "Boxes"]
+      },
+      {
+        question: "Which box on the CMS-1500 is used for the patient's name?",
+        options: ["Box 2", "Box 1", "Box 5", "Box 9"],
+        answer: 0,
+        tags: ["CMS-1500", "Boxes"]
+      },
+      {
+        question: "Diagnosis codes are entered in which box on the CMS-1500?",
+        options: ["Box 17", "Box 21", "Box 24D", "Box 33"],
+        answer: 1,
+        tags: ["CMS-1500", "Diagnosis"]
+      },
+      {
+        question: "CPT/HCPCS procedure codes along with modifiers are reported in which CMS-1500 box?",
+        options: ["Box 21", "Box 24D", "Box 25", "Box 31"],
+        answer: 1,
+        tags: ["CMS-1500", "Procedure"]
+      },
+      {
+        question: "On CMS-1500, Box 25 usually contains:",
+        options: ["Patient's Account Number", "Federal Tax ID Number", "Total Charge", "Referring Provider Info"],
+        answer: 1,
+        tags: ["CMS-1500", "Boxes"]
+      },
+      {
+        question: "The rendering provider's NPI is reported in which field on CMS-1500?",
+        options: ["Box 24J", "Box 21", "Box 17a", "Box 33a"],
+        answer: 0,
+        tags: ["CMS-1500", "NPI"]
+      },
+      {
+        question: "Which box on CMS-1500 is used for the provider's signature?",
+        options: ["Box 12", "Box 13", "Box 31", "Box 33"],
+        answer: 2,
+        tags: ["CMS-1500", "Boxes"]
+      },
+      {
+        question: "NPI stands for:",
+        options: ["National Provider Identifier", "National Patient Indicator", "Network Provider Index", "New Provider ID"],
+        answer: 0,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "What does 'EOB' stand for in medical billing?",
+        options: ["Episode of Benefit", "Explanation of Benefits", "Evidence of Billing", "End of Billing"],
+        answer: 1,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "Which of the following best describes 'deductible'?",
+        options: [
+          "Fixed amount patient pays at each visit",
+          "Percentage patient pays after insurance share",
+          "Amount patient must pay before plan starts paying",
+          "Amount provider writes off"
+        ],
+        answer: 2,
+        tags: ["Eligibility", "Patient Responsibility"]
+      },
+      {
+        question: "Coinsurance refers to:",
+        options: [
+          "Fixed fee at time of service",
+          "Shared percentage of allowed amount between patient and plan",
+          "Amount not covered at all",
+          "Secondary insurance only"
+        ],
+        answer: 1,
+        tags: ["Eligibility"]
+      },
+      {
+        question: "A 'copay' is typically:",
+        options: [
+          "Percentage of allowed charges",
+          "Fixed amount due at each visit",
+          "Annual limit on patient spending",
+          "Insurer’s payment to provider"
+        ],
+        answer: 1,
+        tags: ["Eligibility"]
+      },
+      {
+        question: "What does 'COB' stand for in billing context?",
+        options: ["Coordination of Benefits", "Cost of Billing", "Claim on Balance", "Coordination of Billing"],
+        answer: 0,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "Which code set is used to report diagnoses on professional claims?",
+        options: ["ICD-10-CM", "CPT", "HCPCS Level II", "DRG"],
+        answer: 0,
+        tags: ["Coding", "Diagnosis"]
+      },
+      {
+        question: "Which code set is used to report procedures on professional physician claims?",
+        options: ["ICD-10-PCS", "CPT", "DRG", "Revenue Codes"],
+        answer: 1,
+        tags: ["Coding", "Procedure"]
+      },
+      {
+        question: "HCPCS Level II codes are primarily used for:",
+        options: [
+          "Inpatient surgeries",
+          "Durable medical equipment, supplies, and some drugs",
+          "Diagnosis reporting",
+          "Hospital room charges"
+        ],
+        answer: 1,
+        tags: ["Coding"]
+      },
+      {
+        question: "When verifying eligibility, which of the following is MOST important?",
+        options: [
+          "Patient phone number",
+          "Plan effective dates and coverage details",
+          "Pharmacy preference",
+          "Employer HR details"
+        ],
+        answer: 1,
+        tags: ["Eligibility"]
+      },
+      {
+        question: "A claim denied as 'CO-11: Diagnosis inconsistent with procedure' means:",
+        options: [
+          "Patient not eligible",
+          "Provider not contracted",
+          "Diagnosis code doesn’t support billed procedure",
+          "Duplicate claim"
+        ],
+        answer: 2,
+        tags: ["Denial"]
+      },
+      {
+        question: "Which modifier generally indicates 'bilateral procedure'?",
+        options: ["-25", "-50", "-59", "-26"],
+        answer: 1,
+        tags: ["Modifiers"]
+      },
+      {
+        question: "Modifier -25 is used to indicate:",
+        options: [
+          "Separate procedure same day",
+          "Significant, separately identifiable E/M service by same physician on same day",
+          "Bilateral procedure",
+          "Professional component only"
+        ],
+        answer: 1,
+        tags: ["Modifiers"]
+      },
+      {
+        question: "Modifier -59 often indicates:",
+        options: [
+          "Distinct procedural service",
+          "Reduced services",
+          "Multiple procedures",
+          "Unplanned return to OR"
+        ],
+        answer: 0,
+        tags: ["Modifiers"]
+      },
+      {
+        question: "What does 'DOS' stand for on a claim?",
+        options: ["Diagnosis of Service", "Date of Service", "Document of Service", "Denial of Service"],
+        answer: 1,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "The term 'allowed amount' refers to:",
+        options: [
+          "Total billed charges",
+          "Maximum amount the plan will consider for payment",
+          "Patient’s total responsibility",
+          "Provider write-off only"
+        ],
+        answer: 1,
+        tags: ["Payment"]
+      },
+      {
+        question: "If a patient has both Medicare and a secondary plan, Medicare is typically:",
+        options: ["Always secondary", "Primary payer", "Only for inpatient", "Only for dental"],
+        answer: 1,
+        tags: ["COB"]
+      },
+      {
+        question: "Box 24B on CMS-1500 is used for:",
+        options: ["POS", "Diagnosis Pointer", "Charges", "Modifiers"],
+        answer: 0,
+        tags: ["CMS-1500", "POS"]
+      },
+      {
+        question: "Box 24F on CMS-1500 contains:",
+        options: ["Total charge for the line", "Units", "NPI", "Diagnosis code"],
+        answer: 0,
+        tags: ["CMS-1500"]
+      },
+      {
+        question: "Box 24G on CMS-1500 represents:",
+        options: ["Place of Service", "Days or Units", "Rendering Provider", "Patient Status"],
+        answer: 1,
+        tags: ["CMS-1500"]
+      },
+      {
+        question: "The 'referring provider' details are typically entered in which CMS-1500 box?",
+        options: ["Box 17", "Box 19", "Box 21", "Box 33"],
+        answer: 0,
+        tags: ["CMS-1500"]
+      },
+      {
+        question: "Which of the following is an example of eligibility verification?",
+        options: [
+          "Posting an EOB",
+          "Calling payer portal to confirm active coverage",
+          "Coding the claim",
+          "Submitting secondary claim"
+        ],
+        answer: 1,
+        tags: ["Eligibility"]
+      },
+      {
+        question: "What does 'TOS' usually stand for on claims?",
+        options: ["Time of Service", "Type of Service", "Total of Services", "Terms of Service"],
+        answer: 1,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "Which of the following is NOT typically verified during eligibility check?",
+        options: [
+          "Copay and coinsurance",
+          "Deductible status",
+          "Provider contracting status",
+          "Provider’s salary amount"
+        ],
+        answer: 3,
+        tags: ["Eligibility"]
+      },
+      {
+        question: "What does 'PPO' stand for?",
+        options: [
+          "Preferred Provider Organization",
+          "Prepaid Provider Option",
+          "Primary Physician Office",
+          "Personal Provider Organization"
+        ],
+        answer: 0,
+        tags: ["Abbreviation", "Plan Type"]
+      },
+      {
+        question: "In professional billing, 'global period' generally refers to:",
+        options: [
+          "Entire length of patient’s policy",
+          "Time around a surgical procedure including related services",
+          "Total claim processing time",
+          "Time before eligibility confirmation"
+        ],
+        answer: 1,
+        tags: ["Surgery", "Concept"]
+      },
+      {
+        question: "Which of these might cause a 'timely filing' denial?",
+        options: [
+          "Wrong diagnosis code",
+          "Claim submitted after payer’s time limit",
+          "Missing patient signature",
+          "Incorrect NPI"
+        ],
+        answer: 1,
+        tags: ["Denial"]
+      },
+      {
+        question: "The abbreviation 'HMO' stands for:",
+        options: [
+          "Health Maintenance Organization",
+          "Health Management Office",
+          "Hospital Management Organization",
+          "Health Member Option"
+        ],
+        answer: 0,
+        tags: ["Abbreviation", "Plan Type"]
+      },
+      {
+        question: "Which code set is mainly used for outpatient diagnoses in professional claims?",
+        options: ["ICD-10-PCS", "ICD-10-CM", "CPT", "DRG"],
+        answer: 1,
+        tags: ["Diagnosis"]
+      },
+      {
+        question: "Which claim format is the electronic version of CMS-1500?",
+        options: ["837 I", "837 D", "837 P", "835"],
+        answer: 2,
+        tags: ["Electronic Claims"]
+      },
+      {
+        question: "What does the abbreviation 'DOS from–to' refer to?",
+        options: [
+          "Date of Submission",
+          "Date of Service range",
+          "Denial of Service",
+          "Diagnosis or Service"
+        ],
+        answer: 1,
+        tags: ["Abbreviation"]
+      },
+      {
+        question: "Which is generally TRUE about 'participating providers'?",
+        options: [
+          "They never accept insurance",
+          "They have a contract and accept allowed amount",
+          "They decide allowed amount themselves",
+          "They only see cash patients"
+        ],
+        answer: 1,
+        tags: ["Contracting"]
+      },
+      {
+        question: "What does 'NCC' stand for in context of coding? (often used as 'NCCI edits')",
+        options: [
+          "National Correct Coding Initiative",
+          "Non Covered Claim Initiative",
+          "Network Claim Check Indicator",
+          "National Coverage Clause Index"
+        ],
+        answer: 0,
+        tags: ["Coding", "Edits"]
+      },
+      {
+        question: "Which statement is TRUE regarding primary vs secondary insurance?",
+        options: [
+          "Secondary always pays first",
+          "Primary pays according to its benefits, then secondary may cover remaining eligible amounts",
+          "Both pay 50% each automatically",
+          "Only secondary covers copay"
+        ],
+        answer: 1,
+        tags: ["COB"]
+      },
+      {
+        question: "What is the purpose of a 'claim scrubber' in billing?",
+        options: [
+          "To destroy denied claims",
+          "To check claims for errors before submission",
+          "To print CMS-1500 forms",
+          "To store EOBs physically"
+        ],
+        answer: 1,
+        tags: ["Process", "Edits"]
+      },
+      {
+        question: "Which of the following BEST describes 'patient responsibility'?",
+        options: [
+          "Amount plan pays",
+          "Difference between billed and allowed amount",
+          "Copay, coinsurance, and deductible owed by patient",
+          "Adjustment by provider"
+        ],
+        answer: 2,
+        tags: ["Eligibility", "Payment"]
+      }
+    ];
+
+    // 50+ HOSPITAL BILLING QUESTIONS (UB-04, rev codes, type of bill, etc.)
+    const hospitalQuestions = [
+      {
+        question: "In hospital billing, which form is primarily used for facility claims?",
+        options: ["CMS-1500", "UB-04 (CMS-1450)", "ADA Dental Form", "837 P"],
+        answer: 1,
+        tags: ["Form", "Basics"]
+      },
+      {
+        question: "Which electronic format is the counterpart of UB-04 for institutional claims?",
+        options: ["837 P", "837 I", "837 D", "835"],
+        answer: 1,
+        tags: ["Electronic Claims"]
+      },
+      {
+        question: "On the UB-04, 'Type of Bill' is reported in which field locator (FL)?",
+        options: ["FL 1", "FL 4", "FL 12", "FL 46"],
+        answer: 1,
+        tags: ["UB-04"]
+      },
+      {
+        question: "On UB-04, the 'Statement Covers Period: From/Through' dates appear in:",
+        options: ["FL 6", "FL 12–15", "FL 39–41", "FL 46"],
+        answer: 0,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Revenue codes are generally reported in which area of the UB-04?",
+        options: ["FL 42", "FL 60", "FL 4", "FL 1"],
+        answer: 0,
+        tags: ["Revenue Code"]
+      },
+      {
+        question: "On UB-04, 'Patient Discharge Status' is reported in:",
+        options: ["FL 17", "FL 22", "FL 48", "FL 39"],
+        answer: 0,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Which of the following is an example of a revenue code?",
+        options: ["99213", "0360", "Q2010", "R68.89"],
+        answer: 1,
+        tags: ["Revenue Code"]
+      },
+      {
+        question: "What does DRG stand for in hospital billing?",
+        options: [
+          "Diagnosis Related Group",
+          "Diagnostic Revenue Group",
+          "Department Revenue Group",
+          "Direct Reimbursement Group"
+        ],
+        answer: 0,
+        tags: ["Abbreviation", "DRG"]
+      },
+      {
+        question: "DRGs are MOST commonly associated with which setting?",
+        options: ["Outpatient clinic", "Inpatient acute hospital", "Skilled nursing only", "Dental office"],
+        answer: 1,
+        tags: ["DRG", "Inpatient"]
+      },
+      {
+        question: "On UB-04, condition codes are typically entered in:",
+        options: ["FL 18–28", "FL 31–34", "FL 39–41", "FL 67–75"],
+        answer: 0,
+        tags: ["UB-04", "Condition Codes"]
+      },
+      {
+        question: "Occurrence codes with dates are reported in which UB-04 fields?",
+        options: ["FL 39–41", "FL 31–34", "FL 42–49", "FL 1–3"],
+        answer: 1,
+        tags: ["UB-04", "Occurrence Codes"]
+      },
+      {
+        question: "Value codes and amounts are reported in which UB-04 locators?",
+        options: ["FL 39–41", "FL 42–49", "FL 50–65", "FL 67–75"],
+        answer: 0,
+        tags: ["UB-04", "Value Codes"]
+      },
+      {
+        question: "Which field on UB-04 typically contains the principal diagnosis code?",
+        options: ["FL 67", "FL 72", "FL 4", "FL 39"],
+        answer: 0,
+        tags: ["UB-04", "Diagnosis"]
+      },
+      {
+        question: "On UB-04, 'Patient Name' and demographic info appear in:",
+        options: ["FL 1–8", "FL 39–41", "FL 67–75", "FL 50–65"],
+        answer: 0,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Type of Bill '111' generally indicates:",
+        options: [
+          "Inpatient Part B only",
+          "Outpatient hospital claim",
+          "Inpatient hospital claim - admit through discharge",
+          "Skilled nursing facility"
+        ],
+        answer: 2,
+        tags: ["Type of Bill"]
+      },
+      {
+        question: "Type of Bill '131' most often represents:",
+        options: [
+          "Hospital outpatient claim",
+          "Hospital inpatient interim bill",
+          "Hospital inpatient admission",
+          "Hospital swing-bed"
+        ],
+        answer: 0,
+        tags: ["Type of Bill"]
+      },
+      {
+        question: "Revenue code 0450 generally represents:",
+        options: ["Operating room", "Emergency room", "Radiology", "Pharmacy"],
+        answer: 1,
+        tags: ["Revenue Code", "ER"]
+      },
+      {
+        question: "Revenue code 0300 is associated with:",
+        options: ["Laboratory", "Radiology", "Operating room", "Pharmacy"],
+        answer: 0,
+        tags: ["Revenue Code", "Lab"]
+      },
+      {
+        question: "In hospital billing, ICD-10-PCS codes are used primarily for:",
+        options: ["Inpatient procedures", "Outpatient office visits", "Dental procedures", "Anesthesia only"],
+        answer: 0,
+        tags: ["Coding", "ICD-10-PCS"]
+      },
+      {
+        question: "For outpatient hospital services, procedures are typically reported using:",
+        options: ["ICD-10-PCS", "CPT/HCPCS", "DRG", "Revenue codes only"],
+        answer: 1,
+        tags: ["Coding", "Outpatient"]
+      },
+      {
+        question: "APC in outpatient hospital billing stands for:",
+        options: [
+          "Ambulatory Payment Classification",
+          "Associated Patient Category",
+          "Applicable Payment Category",
+          "Ambulance Payment Code"
+        ],
+        answer: 0,
+        tags: ["Abbreviation", "APC"]
+      },
+      {
+        question: "Which of the following is MOST important when assigning the principal diagnosis on UB-04?",
+        options: [
+          "Diagnosis with highest reimbursement",
+          "Condition after study chiefly responsible for occasioning the admission",
+          "All comorbidities present",
+          "Any chronic condition"
+        ],
+        answer: 1,
+        tags: ["Diagnosis", "Inpatient"]
+      },
+      {
+        question: "UB-04 FL 8b is used for:",
+        options: ["Patient identification", "Patient gender", "Patient address", "Patient race"],
+        answer: 1,
+        tags: ["UB-04"]
+      },
+      {
+        question: "What does 'CC/MCC' refer to in DRG-based reimbursement?",
+        options: [
+          "Cost control / Max claim cost",
+          "Complication or Comorbidity / Major Complication or Comorbidity",
+          "Care coordination / Managed care coordination",
+          "Certified coder / Medical claims coder"
+        ],
+        answer: 1,
+        tags: ["DRG"]
+      },
+      {
+        question: "On UB-04, payer name and ID are typically listed in:",
+        options: ["FL 1–3", "FL 50–65", "FL 67–75", "FL 39–41"],
+        answer: 1,
+        tags: ["UB-04"]
+      },
+      {
+        question: "In a hospital claim, which code set is used to report diagnoses?",
+        options: ["ICD-10-CM", "CPT", "HCPCS Level II", "RCM"],
+        answer: 0,
+        tags: ["Diagnosis"]
+      },
+      {
+        question: "Hospital claims for room and board commonly use which revenue code range?",
+        options: ["010X", "036X", "045X", "025X"],
+        answer: 0,
+        tags: ["Revenue Code", "Room and Board"]
+      },
+      {
+        question: "Revenue code 0360 generally represents:",
+        options: ["Operating Room", "Laboratory", "Radiology", "Observation Room"],
+        answer: 0,
+        tags: ["Revenue Code", "OR"]
+      },
+      {
+        question: "On the UB-04, FL 5 'Fed. Tax No.' refers to:",
+        options: [
+          "Patient’s tax ID",
+          "Hospital’s tax identification number",
+          "Payer’s tax ID",
+          "Physician’s tax ID"
+        ],
+        answer: 1,
+        tags: ["UB-04"]
+      },
+      {
+        question: "FL 12 on UB-04 is typically used for which date?",
+        options: ["Admission date", "Statement covers period", "Discharge date", "Occurrence date"],
+        answer: 0,
+        tags: ["UB-04"]
+      },
+      {
+        question: "FL 13 on UB-04 refers to:",
+        options: ["Admission hour", "Discharge hour", "Patient status", "Claim frequency"],
+        answer: 0,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Patient Discharge Status '01' generally means:",
+        options: [
+          "Discharged to home or self-care",
+          "Discharged to another acute care facility",
+          "Expired",
+          "Discharged to skilled nursing facility"
+        ],
+        answer: 0,
+        tags: ["Patient Status"]
+      },
+      {
+        question: "Which of the following is TRUE about 'Occurrence Codes'?",
+        options: [
+          "Describe special conditions/events related to the claim with associated dates",
+          "Represent line-item charges",
+          "Represent payer types",
+          "Represent prescribing physician only"
+        ],
+        answer: 0,
+        tags: ["Occurrence Codes"]
+      },
+      {
+        question: "Value Code 80–81 often relates to:",
+        options: [
+          "Patient’s address",
+          "Covered days and coinsurance days under Medicare",
+          "Provider Tax ID",
+          "Revenue Code description"
+        ],
+        answer: 1,
+        tags: ["Value Codes"]
+      },
+      {
+        question: "In hospital billing, 'late charges' typically refer to:",
+        options: [
+          "Charges added long after discharge due to late documentation",
+          "Charges not covered by insurance",
+          "Charges for night admissions only",
+          "Charges posted after payment"
+        ],
+        answer: 0,
+        tags: ["Charges"]
+      },
+      {
+        question: "Which of the following could cause a 'medical necessity' denial in hospital claims?",
+        options: [
+          "Missing Tax ID",
+          "Invalid NPI",
+          "Diagnosis does not support inpatient level of care",
+          "Incorrect revenue code"
+        ],
+        answer: 2,
+        tags: ["Denial", "Medical Necessity"]
+      },
+      {
+        question: "Observation services in hospital outpatient are often associated with which revenue code?",
+        options: ["0762", "0360", "0450", "0300"],
+        answer: 0,
+        tags: ["Revenue Code", "Observation"]
+      },
+      {
+        question: "Which statement is TRUE regarding UB-04 and professional services?",
+        options: [
+          "UB-04 is always used for physician office claims",
+          "UB-04 is used mainly for facility/hospital billing",
+          "UB-04 replaces CMS-1500 in all settings",
+          "UB-04 is used only for dental claims"
+        ],
+        answer: 1,
+        tags: ["Basics"]
+      },
+      {
+        question: "FL 38 'Responsible Party Name and Address' on UB-04 is used for:",
+        options: [
+          "Hospital CEO",
+          "Guarantor or responsible party for payment",
+          "Payer representative",
+          "Ordering physician"
+        ],
+        answer: 1,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Which of the following best describes 'charge master' in hospital billing?",
+        options: [
+          "List of all patients",
+          "Hospital’s comprehensive list of billable services and items with charges",
+          "List of all payers",
+          "List of only denied claims"
+        ],
+        answer: 1,
+        tags: ["Charge Master"]
+      },
+      {
+        question: "Inpatient-only procedures are typically reimbursed under:",
+        options: ["APC", "DRG", "RBRVS", "POS"],
+        answer: 1,
+        tags: ["Inpatient", "DRG"]
+      },
+      {
+        question: "Under OPPS, outpatient hospital procedures are grouped into:",
+        options: ["DRGs", "APCs", "MS-DRGs", "RUGs"],
+        answer: 1,
+        tags: ["APC", "Outpatient"]
+      },
+      {
+        question: "On UB-04, FL 67A–Q are used for:",
+        options: ["Condition Codes", "Additional diagnoses", "Service dates", "Revenue codes"],
+        answer: 1,
+        tags: ["UB-04", "Diagnosis"]
+      },
+      {
+        question: "What does 'MS-DRG' stand for?",
+        options: [
+          "Medicare Severity Diagnosis Related Group",
+          "Medical Service Diagnosis Related Group",
+          "Managed Service Diagnostic Resource Group",
+          "Medical Severity Division Group"
+        ],
+        answer: 0,
+        tags: ["DRG"]
+      },
+      {
+        question: "Which one is TRUE about 'Interim' bills in hospital settings?",
+        options: [
+          "Filed when patient has not yet been discharged and billing is split by time/charges",
+          "Filed only for outpatient visits",
+          "Filed only for denied claims",
+          "Filed after final payment is received"
+        ],
+        answer: 0,
+        tags: ["Type of Bill", "Inpatient"]
+      },
+      {
+        question: "On UB-04, FL 47 is generally used for:",
+        options: ["Total charges", "Line item total charges", "Quantity of services (units)", "Payer name"],
+        answer: 2,
+        tags: ["UB-04"]
+      },
+      {
+        question: "Hospital 'room and board' for ICU typically uses which revenue code range?",
+        options: ["010X", "020X", "036X", "045X"],
+        answer: 1,
+        tags: ["Revenue Code", "ICU"]
+      },
+      {
+        question: "Which of the following is commonly needed for correct DRG assignment?",
+        options: [
+          "Principal diagnosis and principal procedure (if applicable)",
+          "Only patient’s age",
+          "Only length of stay",
+          "Only attending physician name"
+        ],
+        answer: 0,
+        tags: ["DRG"]
+      },
+      {
+        question: "Which code set is used to capture inpatient facility procedures for DRG grouping?",
+        options: ["CPT", "HCPCS Level II", "ICD-10-PCS", "ICD-10-CM"],
+        answer: 2,
+        tags: ["ICD-10-PCS"]
+      },
+      {
+        question: "In hospital billing, 'Occurrence Span Codes' are used to:",
+        options: [
+          "Indicate a span of time with specific meaning (e.g., SNF stay, qualifying stay)",
+          "Replace all occurrence and value codes",
+          "Assign DRGs",
+          "Link to CPT codes"
+        ],
+        answer: 0,
+        tags: ["Occurrence Span Codes"]
+      }
+    ];
+
+    // ========= QUIZ LOGIC =========
+
+    const NUM_QUESTIONS_PER_TEST = 15;
+
+    const btnProfessional = document.getElementById("btn-professional");
+    const btnHospital = document.getElementById("btn-hospital");
+    const btnReset = document.getElementById("btn-reset");
+    const btnSubmit = document.getElementById("btn-submit");
+    const quizArea = document.getElementById("quiz-area");
+    const resultDiv = document.getElementById("result");
+    const summaryList = document.getElementById("summary-list");
+    const testInfo = document.getElementById("test-info");
+
+    let currentQuestions = [];
+    let currentMode = null; // "professional" or "hospital"
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function getRandomQuestions(source, count) {
+      const shuffled = shuffleArray(source);
+      return shuffled.slice(0, count);
+    }
+
+    function startTest(mode) {
+      currentMode = mode;
+      resultDiv.style.display = "none";
+      resultDiv.className = "";
+      summaryList.innerHTML = "";
+      quizArea.innerHTML = "";
+      btnSubmit.style.display = "inline-block";
+      btnReset.style.display = "inline-block";
+
+      if (mode === "professional") {
+        currentQuestions = getRandomQuestions(professionalQuestions, NUM_QUESTIONS_PER_TEST);
+        testInfo.textContent = "Professional Billing (CMS-1500) Mock Test – 15 random questions from a large pool.";
+      } else {
+        currentQuestions = getRandomQuestions(hospitalQuestions, NUM_QUESTIONS_PER_TEST);
+        testInfo.textContent = "Hospital Billing (UB-04) Mock Test – 15 random questions from a large pool.";
+      }
+
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      quizArea.innerHTML = "";
+      currentQuestions.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+
+        const qText = document.createElement("div");
+        qText.className = "question-text";
+        qText.textContent = (index + 1) + ". " + q.question;
+
+        const tagWrap = document.createElement("div");
+        if (q.tags && q.tags.length) {
+          q.tags.forEach(t => {
+            const span = document.createElement("span");
+            span.className = "tag";
+            span.textContent = t;
+            tagWrap.appendChild(span);
+          });
+        }
+
+        const optionsDiv = document.createElement("div");
+        optionsDiv.className = "options";
+
+        q.options.forEach((opt, i) => {
+          const id = `q${index}_opt${i}`;
+          const label = document.createElement("label");
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `q${index}`;
+          radio.value = i;
+          radio.id = id;
+
+          label.htmlFor = id;
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(opt));
+          optionsDiv.appendChild(label);
+        });
+
+        block.appendChild(qText);
+        if (q.tags && q.tags.length) {
+          block.appendChild(tagWrap);
+        }
+        block.appendChild(optionsDiv);
+        quizArea.appendChild(block);
+      });
+    }
+
+    function gradeTest() {
+      let score = 0;
+      let total = currentQuestions.length;
+      let summaryHtml = "";
+
+      currentQuestions.forEach((q, index) => {
+        const radios = document.getElementsByName(`q${index}`);
+        let selectedIndex = null;
+        radios.forEach(r => {
+          if (r.checked) selectedIndex = parseInt(r.value, 10);
+        });
+
+        const isCorrect = selectedIndex === q.answer;
+        if (isCorrect) score++;
+
+        summaryHtml += `<div class="summary-item">
+          Q${index + 1}: ${isCorrect ? "✔ Correct" : "✘ Incorrect"} 
+          ${selectedIndex === null ? "(No answer)" : ""}
+        </div>`;
+      });
+
+      const percentage = Math.round((score / total) * 100);
+      resultDiv.style.display = "block";
+      resultDiv.textContent = `You scored ${score} out of ${total} (${percentage}%).`;
+
+      if (percentage >= 70) {
+        resultDiv.className = "success";
+      } else {
+        resultDiv.className = "danger";
+      }
+
+      summaryList.innerHTML = summaryHtml;
+    }
+
+    // ========= EVENT LISTENERS =========
+    btnProfessional.addEventListener("click", () => startTest("professional"));
+    btnHospital.addEventListener("click", () => startTest("hospital"));
+    btnSubmit.addEventListener("click", gradeTest);
+    btnReset.addEventListener("click", () => {
+      quizArea.innerHTML = "";
+      resultDiv.style.display = "none";
+      summaryList.innerHTML = "";
+      btnSubmit.style.display = "none";
+      btnReset.style.display = "none";
+      currentQuestions = [];
+      currentMode = null;
+      testInfo.textContent = "Select a test type to start a 15-question mock test. Questions are randomly shuffled from a large pool each time.";
+    });
+  </script>
+</body>
+</html>

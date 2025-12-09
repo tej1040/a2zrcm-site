@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RCM Abbreviations</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #dce6f7, #f1f5ff);
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    #searchInput {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #aaa;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+    .abbr-item {
+        background: #f8f9ff;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border-left: 4px solid #4a68ff;
+        cursor: pointer;
+    }
+    .abbr-item strong {
+        font-size: 16px;
+        display: inline-block;
+        width: 130px;
+    }
+    /* Modal */
+    #detailModal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+    }
+    #detailBox {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+    }
+    #closeBtn {
+        background: red;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        margin-top: 10px;
+        cursor: pointer;
+        display: inline-block;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>RCM Abbreviations</h1>
+
+    <input type="text" id="searchInput" placeholder="Search Abbreviation..." onkeyup="searchAbbr()">
+
+    <div id="abbrList">
+
+        <!-- LIST IN SAME ORDER AS YOU PROVIDED -->
+        <div class="abbr-item" data-abbr="HIPAA"><strong>HIPAA</strong> - Health Insurance Portability and Accountability Act</div>
+        <div class="abbr-item" data-abbr="RCM"><strong>RCM</strong> - Revenue Cycle Management</div>
+        <div class="abbr-item" data-abbr="CMS"><strong>CMS</strong> - Centers for Medicare & Medicaid Services</div>
+        <div class="abbr-item" data-abbr="AMA"><strong>AMA</strong> - American Medical Association</div>
+        <div class="abbr-item" data-abbr="EDI"><strong>EDI</strong> - Electronic Data Interchange</div>
+        <div class="abbr-item" data-abbr="PHI"><strong>PHI</strong> - Protected Health Information</div>
+        <div class="abbr-item" data-abbr="POS"><strong>POS</strong> - Place of Service</div>
+        <div class="abbr-item" data-abbr="HCPCS"><strong>HCPCS</strong> - Healthcare Common Procedure Coding System</div>
+        <div class="abbr-item" data-abbr="CPT"><strong>CPT</strong> - Current Procedural Terminology</div>
+        <div class="abbr-item" data-abbr="ICD10CMS"><strong>ICD10CMS</strong> - International Classification of Diseases, Tenth Revision, Clinical Modification</div>
+        <div class="abbr-item" data-abbr="MCO"><strong>MCO</strong> - Managed Care Organization</div>
+        <div class="abbr-item" data-abbr="HMO"><strong>HMO</strong> - Health Maintenance Organization</div>
+        <div class="abbr-item" data-abbr="PPO"><strong>PPO</strong> - Preferred Provider Organization</div>
+        <div class="abbr-item" data-abbr="POSP"><strong>POS PLAN</strong> - Point of Service Plan</div>
+        <div class="abbr-item" data-abbr="EPO"><strong>EPO</strong> - Exclusive Provider Organization</div>
+        <div class="abbr-item" data-abbr="DEERS"><strong>DEERS</strong> - Defense Enrollment Eligibility Reporting System</div>
+        <div class="abbr-item" data-abbr="NPI"><strong>NPI</strong> - National Provider Identifier</div>
+        <div class="abbr-item" data-abbr="TIN"><strong>TIN</strong> - Tax Identification Number</div>
+        <div class="abbr-item" data-abbr="PTAN"><strong>PTAN</strong> - Provider Transaction Access Number</div>
+        <div class="abbr-item" data-abbr="NPPES"><strong>NPPES</strong> - National Plan and Provider Enumeration System </div>
+        <div class="abbr-item" data-abbr="PECOS"><strong>PECOS</strong> - Provider Enrollment, Chain & Ownership System</div>
+        <div class="abbr-item" data-abbr="COBRA"><strong>COBRA</strong> - Consolidated Omnibus Budget Reconciliation Act</div>
+        <div class="abbr-item" data-abbr="ABN"><strong>ABN</strong> - Advance Beneficiary Notice</div>
+        <div class="abbr-item" data-abbr="WL"><strong>WL</strong> - Waiver of Liability</div>
+        <div class="abbr-item" data-abbr="AOB"><strong>AOB</strong> - Assignment of Benefits</div>
+        <div class="abbr-item" data-abbr="ROI"><strong>ROI</strong> - Release of Information</div>
+        <div class="abbr-item" data-abbr="EOB"><strong>EOB</strong> - Explanation of Benefits</div>
+        <div class="abbr-item" data-abbr="ERA"><strong>ERA</strong> - Electronic Remittance Advice</div>
+        <div class="abbr-item" data-abbr="TFL"><strong>TFL</strong> - Timely Filing Limit</div>
+        <div class="abbr-item" data-abbr="TAT"><strong>TAT</strong> - Turnaround Time</div>
+        <div class="abbr-item" data-abbr="MCR"><strong>MCR</strong> - Medicare</div>
+        <div class="abbr-item" data-abbr="MCD"><strong>MCD</strong> - Medicaid</div>
+        <div class="abbr-item" data-abbr="QMB"><strong>QMB</strong> - Qualified Medicare Beneficiary</div>
+        <div class="abbr-item" data-abbr="MBI"><strong>MBI</strong> - Medicare Beneficiary Identifier</div>
+<div class="abbr-item" data-abbr="ESRD"><strong>ESRD</strong> - End-Stage Renal Disease</div>
+<div class="abbr-item" data-abbr="MSP"><strong>MSP</strong> - Medicare Secondary Payer</div>
+<div class="abbr-item" data-abbr="SSDI"><strong>SSDI</strong> - Social Security Disability Insurance</div>
+<div class="abbr-item" data-abbr="ALS"><strong>ALS</strong> - Amyotrophic Lateral Sclerosis</div>
+<div class="abbr-item" data-abbr="ACA"><strong>ACA</strong> - Affordable Care Act</div>
+<div class="abbr-item" data-abbr="HCBS"><strong>HCBS</strong> - Home and Community-Based Services</div>
+<div class="abbr-item" data-abbr="CHIP"><strong>CHIP</strong> - Children's Health Insurance Program</div>
+
+
+        <div class="abbr-item" data-abbr="HICN"><strong>HICN</strong> - Health Insurance Claim Number</div>
+        <div class="abbr-item" data-abbr="CARC"><strong>CARC</strong> - Claim Adjustment Reason Code</div>
+        <div class="abbr-item" data-abbr="RARC"><strong>RARC</strong> - Remark Code</div>
+        <div class="abbr-item" data-abbr="RVU"><strong>RVU</strong> - Relative Value Unit</div>
+        <div class="abbr-item" data-abbr="GPCI"><strong>GPCI</strong> - Geographic Practice Cost Index</div>
+        <div class="abbr-item" data-abbr="CF"><strong>CF</strong> - Conversion Factor</div>
+        <div class="abbr-item" data-abbr="NDC"><strong>NDC</strong> - National Drug Code</div>
+        <div class="abbr-item" data-abbr="CLIA"><strong>CLIA</strong> - Clinical Laboratory Improvement Amendments</div>
+        <div class="abbr-item" data-abbr="OOP"><strong>OOP</strong> - Out of Pocket</div>
+        <div class="abbr-item" data-abbr="LCD"><strong>LCD</strong> - Local Coverage Determination</div>
+        <div class="abbr-item" data-abbr="NCD"><strong>NCD</strong> - National Coverage Determination</div>
+        <div class="abbr-item" data-abbr="MAC"><strong>MAC</strong> - Medicare Administrative Contractor</div>
+        <div class="abbr-item" data-abbr="MUE"><strong>MUE</strong> - Medically Unlikely Edit</div>
+        <div class="abbr-item" data-abbr="NCCI"><strong>NCCI</strong> - National Correct Coding Initiative</div>
+        <div class="abbr-item" data-abbr="WC"><strong>WC</strong> - Workers Compensation</div>
+        <div class="abbr-item" data-abbr="PIP"><strong>PIP</strong> - Personal Injury Protection</div>
+        <div class="abbr-item" data-abbr="EIN"><strong>EIN</strong> - Employer Identification Number</div>
+        
+        <div class="abbr-item" data-abbr="FAULT"><strong>FAULT</strong> - At Fault</div>
+        <div class="abbr-item" data-abbr="NOFAULT"><strong>NO FAULT</strong> - Not At Fault</div>
+        <div class="abbr-item" data-abbr="MVA"><strong>MVA</strong> - Motor Vehicle Accident</div>
+
+        <div class="abbr-item" data-abbr="PCP"><strong>PCP</strong> - Primary Care Physician</div>
+        <div class="abbr-item" data-abbr="EVBV"><strong>EVBV</strong> - Eligibility & Benefits Verification</div>
+        <div class="abbr-item" data-abbr="DOS"><strong>DOS</strong> - Date of Service</div>
+        <div class="abbr-item" data-abbr="DOB"><strong>DOB</strong> - Date of Birth</div>
+        <div class="abbr-item" data-abbr="DOI"><strong>DOI</strong> - Date of Injury</div>
+  	
+
+    </div>
+</div>
+
+<!-- DETAILS MODAL -->
+<div id="detailModal">
+    <div id="detailBox">
+        <h3 id="detailTitle"></h3>
+        <p id="detailDesc"></p>
+        <div id="closeBtn">Close</div>
+    </div>
+</div>
+
+<script>
+const details = {
+
+    "HIPAA":"Federal law protecting patient health information, signed into effect on August 21, 1996.",
+    "RCM":"Complete financial cycle from registration to payment collection.",
+    "CMS":"Government agency managing Medicare & Medicaid.",
+    "AMA":"American Medical Association that maintains CPT codes.",
+    "EDI":"Electronic exchange format for claim files.",
+    "PHI":"Any identifiable patient health information.",
+    "POS":"Place of Service – where service was rendered.",
+    "HCPCS":"Code set for supplies, DME and drugs.",
+    "CPT":"Procedure code used for billing services.",
+    "ICD10CMS":"Diagnosis coding system used for claims.",
+    "MCO":"Managed Care Organization regulating care & cost.",
+    "HMO":"Insurance model requiring referrals & in-network care.",
+    "PPO":"Flexible insurance plan with larger network not requiring referrals & in and out network care.",
+    "POSP":"Point of Service plan (hybrid of HMO/PPO).",
+    "EPO":"Exclusive Provider Organization – no out-of-network care.",
+    "DEERS":"Eligibility system for military insurance (TRICARE).",
+    "NPI":"10-digit provider identification number.",
+    "TIN":"Provider or organization tax identification 9-digit.",
+    "PTAN":"Medicare-issued provider number.",
+    "NPPES":"System used to assign and manage NPI.",
+    "PECOS":"Provider enrollment system for Medicare.",
+    "COBRA":"The act that allows continued coverage after employment ends.",
+    "ABN":"Notice given when Medicare may not cover service.",
+    "WL":"Waiver of Liability – patient takes responsibility.",
+    "AOB":"Patient authorizes provider to bill insurance directly.",
+    "ROI":"Release of Information form for medical records.",
+    "EOB":"Payer statement explaining claim processing. Sent to both Patient and Provider",
+    "ERA":"Electronic version of remittance advice. Sent to only Provider",
+    "TFL":"Last date to submit a claim to payers.",
+    "TAT":"Time taken for a claim or task to complete.",
+    "MCR":"Medicare insurance program.",
+    "MCD":"Medicaid program for low-income patients.",
+    "QMB":"Medicare program helping with premiums & deductibles.",
+    "MBI":"Unique Medicare beneficiary ID.",
+"ESRD": `
+End-Stage Renal Disease (ESRD) is permanent kidney failure requiring dialysis or a kidney transplant. 
+ESRD patients automatically qualify for Medicare regardless of age. Eligibility is based on confirmed renal failure and ongoing dialysis treatment. Special billing rules apply under Medicare ESRD programs.
+`,
+"MSP": `
+Medicare Secondary Payer (MSP) refers to situations where Medicare is not the primary insurance. 
+Another insurance such as employer group health plans, auto liability, workers’ compensation, or no-fault insurance must be billed first. 
+MSP rules ensure correct payer order to prevent improper Medicare billing.
+`,
+"SSDI": `
+Social Security Disability Insurance (SSDI) provides monthly income to individuals unable to work due to a long-term disability. 
+After receiving SSDI benefits for 24 months, the individual becomes eligible for Medicare coverage regardless of age. 
+SSDI is determined by the Social Security Administration based on disability criteria and work history.
+`,
+"ALS": `
+Amyotrophic Lateral Sclerosis (ALS), also known as Lou Gehrig’s disease, is a progressive neurological condition that affects nerve cells controlling voluntary muscle movement. 
+Individuals diagnosed with ALS qualify for Medicare immediately without the standard 24-month SSDI waiting period. 
+Coverage starts the same month disability benefits begin.
+`,
+"ACA": `
+The Affordable Care Act (ACA) is a federal healthcare reform law designed to expand insurance access, protect consumers, and reduce healthcare costs. 
+Key features include marketplace insurance plans, coverage for pre-existing conditions, essential health benefits, Medicaid expansion, and financial subsidies for low-income families. 
+ACA plans often require eligibility verification and may include referral or authorization requirements.
+`,
+"HCBS": `
+Home and Community-Based Services (HCBS) are Medicaid-funded programs that allow eligible individuals to receive long-term care services in their home or community instead of a nursing facility. 
+Examples include personal care assistance, home health aide services, respite care, adult day programs, and homemaker services. 
+HCBS programs operate under Medicaid waivers and typically require prior authorization, with rules varying by state.
+`,
+"CHIP": `The Children's Health Insurance Program provides low-cost or no-cost health coverage to children in families who earn too much to qualify for Medicaid but cannot afford private insurance. CHIP covers essential health benefits such as doctor visits, immunizations, prescriptions, dental and vision care. Eligibility and coverage rules vary by state, and some states administer CHIP through Medicaid expansion programs.`,
+    "HICN":"Old Medicare number (retired).",
+    "CARC":"Code explaining payer adjustment reason.",
+    "RARC":"Additional explanation code on remittances.",
+    "RVU":"Value assigned to each CPT code for payment.",
+    "GPCI":"Geographical factor affecting payment rates.",
+    "CF":"Conversion factor used in fee schedule payment.",
+    "NDC":"Code for identifying drugs.",
+    "CLIA":"Certification for labs performing tests.",
+    "OOP":"Patient’s out-of-pocket expense.",
+    "LCD":"Local Medicare coverage rule.",
+    "NCD":"National Medicare coverage rule.",
+    "MAC":"Medicare Administrative Contractor.",
+    "MUE":"Limit on number of units billable.",
+    "NCCI":"Edits preventing incorrect CPT combinations.",
+    "WC":"Insurance for work-related injuries.",
+    "PIP":"Auto insurance covering medical expenses.",
+    "EIN":"Employer Identification Number.",
+    
+    "FAULT":"At Fault – patient responsible for accident; determines which insurance pays first in MVA.",
+    "NOFAULT":"Not At Fault – insurance pays initial costs regardless of responsibility.",
+    "MVA":"Motor Vehicle Accident insurance category.",
+    
+    "PCP":"Primary Care Physician.",
+    "EVBV":"Eligibility & Benefits Verification.",
+    "DOS":"Date of Service.",
+    "DOB":"Date of Birth.",
+    "DOI":"Date of Injury.",
+    "DOA":"Date of Accident.",
+    "HRA":"Employer-funded medical reimbursement plan.",
+    "HSA":"Tax-advantaged savings for medical expenses."
+
+};
+
+// search
+function searchAbbr() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll(".abbr-item").forEach(item => {
+        item.style.display = item.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+// close modal
+document.getElementById('closeBtn').onclick = () => {
+    document.getElementById('detailModal').style.display = 'none';
+};
+
+// AUTO-SEARCH FROM URL PARAMETER
+window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const term = params.get("search");
+
+    if (term) {
+        const searchBox = document.getElementById("searchInput");
+        searchBox.value = term;
+        searchAbbr(); // run your existing search function
+    }
+};
+</script>
+
+</body>
+</html>

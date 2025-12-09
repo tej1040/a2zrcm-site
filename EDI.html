@@ -1,0 +1,221 @@
+<!-- Light Blue Background Wrapper -->
+<div style="
+    background: linear-gradient(135deg, #dce6f7, #f1f5ff);
+    padding: 30px 15px;
+">
+
+    <div class="container" style="
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 25px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    ">
+
+        <h1 style="text-align:center; margin-bottom:20px;">
+            EDI – Electronic Data Interchange (Complete Guide)
+        </h1>
+
+        <!-- BOX 1 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>What Is EDI in Healthcare?</h3>
+            <p>
+                EDI (Electronic Data Interchange) is the standardized digital communication system 
+                used in healthcare for exchanging claims, eligibility checks, remittance information, 
+                claim status updates, and enrollment data between providers, payers, and clearing 
+                houses.
+            </p>
+            <p>
+                EDI eliminates manual paperwork, reduces errors, speeds up processing, and ensures 
+                HIPAA-compliant communication across the healthcare revenue cycle.
+            </p>
+        </div>
+
+        <!-- BOX 2 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>📌 Why Do We Use EDI?</h3>
+            <p>
+                • Reduces manual data entry and paperwork<br>
+                • Sends claims instantly in HIPAA formats<br>
+                • Decreases denials caused by formatting errors<br>
+                • Speeds up the entire billing process<br>
+                • Automates claim tracking and payment posting<br>
+                • Ensures secure encrypted communication<br>
+            </p>
+        </div>
+
+        <!-- BOX 3 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>⚙️ How EDI Works (Simple Explanation)</h3>
+            <p>
+                1. Provider system creates an EDI file (e.g., 837 claim)<br>
+                2. File is sent to a clearing house<br>
+                3. Clearing house scrubs and formats the data<br>
+                4. Valid claims are forwarded to the payer<br>
+                5. Payer adjudicates the claim and returns EDI responses<br>
+                6. Providers receive payment info and update AR<br>
+            </p>
+        </div>
+
+        <!-- BOX 4 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>📄 Major EDI Transaction Types</h3>
+
+            <p><strong>📨 Claim Transactions</strong><br>
+            • 837P – Professional Claims<br>
+            • 837I – Institutional Claims<br>
+            • 837D – Dental Claims</p>
+
+            <p><strong>💵 Remittance Advice</strong><br>
+            • 835 – ERA (Explanation of Payment)</p>
+
+            <p><strong>🔍 Eligibility Check</strong><br>
+            • 270 – Eligibility Request<br>
+            • 271 – Eligibility Response</p>
+
+            <p><strong>📡 Claim Status</strong><br>
+            • 276 – Claim Status Inquiry<br>
+            • 277 – Claim Status Response</p>
+
+            <p><strong>👥 Enrollment / ERA Setup</strong><br>
+            • 834 – Enrollment<br>
+            • 820 / 828 – Premium Payments</p>
+        </div>
+
+        <!-- BOX 5 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>🧠 What Does an EDI File Contain?</h3>
+            <p>
+                • Patient details (name, DOB, member ID)<br>
+                • Provider details (NPI, taxonomy, TIN)<br>
+                • Service lines (CPT, ICD-10, modifiers)<br>
+                • Date of service & place of service<br>
+                • Claim charges & units<br>
+                • Payer and plan details<br>
+            </p>
+        </div>
+
+        <!-- BOX 6 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>🔄 EDI Processing Workflow</h3>
+            <p>
+                1. EDI file generated from PMS/EHR<br>
+                2. Sent to clearing house for scrubbing<br>
+                3. Converted into ANSI X12 HIPAA format<br>
+                4. Sent to payer → verified → adjudicated<br>
+                5. Payer returns EDI responses (999, 277CA, 835)<br>
+                6. Provider posts payments and works denials<br>
+            </p>
+        </div>
+
+        <!-- BOX 7 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>🌟 Benefits of EDI</h3>
+            <p>
+                • Faster claim submission & payment cycles<br>
+                • Automated eligibility verification<br>
+                • Lower denial rates & fewer human errors<br>
+                • Standardized communication across RCM<br>
+                • Reduced workload & operational cost<br>
+                • Huge improvement in AR performance<br>
+            </p>
+        </div>
+
+        <!-- BOX 8 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>📘 EDI File Structure (ANSI X12 Format)</h3>
+            <p>
+                • ISA – Interchange Control Header<br>
+                • GS – Functional Group Header<br>
+                • ST – Transaction Set Header<br>
+                • NM1, REF, N3, DTP – Patient & Provider Info<br>
+                • CLM – Claim Information<br>
+                • SV1/SV2 – Service Line Info<br>
+                • SE / GE / IEA – File Footers<br>
+            </p>
+        </div>
+
+        <!-- BOX 9 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:12px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>⚠️ Common EDI Errors</h3>
+            <p>
+                • Missing or invalid NPI / taxonomy<br>
+                • Incorrect ICD-10 or CPT combinations<br>
+                • Subscriber not found / inactive plan<br>
+                • Missing patient demographics<br>
+                • Invalid payer ID or routing<br>
+                • Incorrect claim formatting<br>
+            </p>
+        </div>
+
+        <!-- BOX 10 -->
+        <div style="
+            background:#f8f9ff;
+            padding:15px;
+            border-radius:10px;
+            border-left:4px solid #4a68ff;
+        ">
+            <h3>📊 EDI vs Manual Billing</h3>
+            <p>
+                <strong>EDI:</strong> Fast, automated, accurate, secure, standardized.<br>
+                <strong>Manual Billing:</strong> Slow, paper-based, high error chance, inefficient.<br>
+            </p>
+        </div>
+
+    </div>
+</div>
