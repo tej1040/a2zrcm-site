@@ -192,7 +192,7 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
     </div>
   </div>
 </section>
-<!-- ============= RCM BASICS + ADVANCED RCM (NEW SECTION) ============= -->
+<!-- ============= RCM BASICS + ADVANCED RCM (BUBBLE VERSION) ============= -->
 <section id="rcm-section" class="section section-alt">
   <div class="container section-inner">
 
@@ -200,48 +200,50 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
       <h2>RCM Learning Categories</h2>
     </div>
 
-    <div class="cards-grid">
+    <div class="rcm-wrapper">
+      <div class="cards-grid">
 
-      <!-- ⭐ RCM Basics -->
-      <article class="card">
-        <h3>⭐ RCM Basics</h3>
+        <!-- ⭐ RCM Basics -->
+        <article class="card">
+          <h3>⭐ RCM Basics</h3>
 
-        <ul class="rcm-list">
-          <li onclick="toggleContent('pos', this)">
-            <span class="arrow">▶</span> POS – Place of Service
-          </li>
+          <ul class="rcm-list">
+            <li onclick="toggleBubble('pos', this, 'right')">
+              <span class="arrow">▶</span> POS – Place of Service
+            </li>
+            <li onclick="toggleBubble('clearing', this, 'right')">
+              <span class="arrow">▶</span> Clearing House
+            </li>
+          </ul>
+        </article>
 
-          <li onclick="toggleContent('clearing', this)">
-            <span class="arrow">▶</span> Clearing House
-          </li>
-        </ul>
-      </article>
+        <!-- ⭐ Advanced RCM -->
+        <article class="card">
+          <h3>⭐ Advanced RCM</h3>
 
-      <!-- ⭐ Advanced RCM -->
-      <article class="card">
-        <h3>⭐ Advanced RCM</h3>
+          <ul class="rcm-list">
+            <li onclick="toggleBubble('edi', this, 'left')">
+              <span class="arrow">▶</span> EDI – Electronic Data Interchange
+            </li>
+            <li onclick="toggleBubble('pfs', this, 'left')">
+              <span class="arrow">▶</span> PFS – Provider Fee Schedule
+            </li>
+          </ul>
+        </article>
 
-        <ul class="rcm-list">
-          <li onclick="toggleContent('edi', this)">
-            <span class="arrow">▶</span> EDI – Electronic Data Interchange
-          </li>
+      </div>
 
-          <li onclick="toggleContent('pfs', this)">
-            <span class="arrow">▶</span> PFS – Provider Fee Schedule
-          </li>
-        </ul>
-      </article>
-
-    </div>
-
-    <!-- EXPANDABLE FULL-WIDTH PANEL -->
-    <div id="rcm-content-panel" class="rcm-panel">
-      <div id="rcm-content"></div>
+      <!-- GLASSY BUBBLE BOX -->
+      <div id="rcm-bubble" class="rcm-bubble">
+        <button class="bubble-close" onclick="closeBubble(event)">✕</button>
+        <h3 id="rcm-bubble-title"></h3>
+        <p id="rcm-bubble-body"></p>
+        <a id="rcm-bubble-btn" class="btn btn-outline" target="_blank">Open</a>
+      </div>
     </div>
 
   </div>
 </section>
-    
     <!-- ============= POS SECTION ============= -->
     <section id="pos" class="section section-alt">
       <div class="container section-inner">
@@ -439,4 +441,5 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
 
 </body>
 </html>
+
 
