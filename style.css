@@ -165,21 +165,24 @@ body {
   border-color: transparent transparent transparent rgba(255, 255, 255, 0.85);
 }
 
-/* Close button */
+/* Close button (X) – Red version */
 .bubble-close {
   border: none;
   background: transparent;
-  font-size: 1rem;
+  font-size: 1.4rem;
   cursor: pointer;
   float: right;
   padding: 0;
-  margin: 0;
-  color: var(--text-muted);
+  margin: -4px -4px 0 0;
+  color: #e11d48; /* RED */
+  font-weight: 700;
+  transition: color 0.2s ease;
 }
 
 .bubble-close:hover {
-  color: var(--accent-navy);
+  color: #be123c; /* DARKER RED */
 }
+
 
 /* Button inside bubble – reusing your button style */
 .rcm-bubble .btn {
@@ -794,6 +797,7 @@ li::marker {
     font-size: 0.85rem;
   }
 }
+
 
 
 
