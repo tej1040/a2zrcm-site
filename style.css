@@ -506,6 +506,8 @@ li::marker {
 .rcm-label {
   font-size: 15px;
   line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Better spacing for buttons inside expand */
@@ -523,3 +525,4 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
