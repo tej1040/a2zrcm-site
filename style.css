@@ -617,6 +617,184 @@ li::marker {
   text-decoration: none;
   font-weight: bold;
 }
+/* ===== RCM INTERACTIVE (DESKTOP BUBBLE + MOBILE CARD) ===== */
+
+/* Wrapper so bubble positions relative to the two cards */
+.rcm-wrapper {
+  position: relative;
+  margin-top: 1.2rem;
+}
+
+/* Make sure li tiles still look like before (you already had styles).
+   We only tweak small things here. */
+.rcm-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.rcm-list li {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;      /* label + mobile card stacked */
+  gap: 4px;
+}
+
+.rcm-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* arrow animation */
+.arrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  transition: transform 0.25s ease;
+}
+
+.arrow.rotate {
+  transform: rotate(90deg);
+}
+
+/* ---------- DESKTOP BUBBLE ---------- */
+
+.rcm-bubble {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;                 /* medium width */
+  min-height: 200px;
+  padding: 22px 26px 26px;
+  border-radius: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+
+  display: none;
+  z-index: 20;
+}
+
+/* Bubble aligned to the RIGHT of Basics (over Advanced) */
+.rcm-bubble.right-side {
+  left: 68%;
+}
+
+/* Bubble aligned to the LEFT of Advanced (over Basics) */
+.rcm-bubble.left-side {
+  left: 32%;
+}
+
+/* Tail / cone */
+.rcm-bubble::before {
+  content: "";
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  border-style: solid;
+}
+
+/* Tail for right-side bubble (points to left) */
+.rcm-bubble.right-side::before {
+  left: -15px;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+/* Tail for left-side bubble (points to right) */
+.rcm-bubble.left-side::before {
+  right: -15px;
+  border-width: 10px 0 10px 15px;
+  border-color: transparent transparent transparent #ffffff;
+}
+
+/* Floating red close button (Option D) */
+.bubble-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bubble-close:hover {
+  background: #b91c1c;
+}
+
+/* Button inside bubble uses your existing .btn styles */
+.rcm-bubble .btn {
+  margin-top: 16px;
+}
+
+/* ---------- MOBILE CARD VERSION ---------- */
+
+.rcm-mobile-card {
+  display: none;              /* not shown on desktop */
+}
+
+/* Mobile-specific behavior */
+@media (max-width: 768px) {
+
+  /* stack the two main cards vertically */
+  #rcm-section .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* hide desktop bubble completely on mobile */
+  .rcm-bubble {
+    display: none !important;
+  }
+
+  /* enable expandable card under each item */
+  .rcm-mobile-card {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .rcm-mobile-card.open {
+    max-height: 400px; /* enough for text + button */
+    opacity: 1;
+  }
+
+  .rcm-mobile-card-inner {
+    margin-top: 6px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    padding: 12px 14px 16px;
+  }
+
+  .rcm-mobile-card-inner h4 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+  }
+
+  .rcm-mobile-card-inner p {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+  }
+
+  .rcm-mobile-card-inner .btn {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
 
 
 
