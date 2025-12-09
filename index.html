@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>A2Z RCM – Your Partner in AR Knowledge</title>
 
-  <!-- Google Font (optional but looks professional) -->
+  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,19 +14,16 @@
 </head>
 <body>
 
-
   <!--404 script-->
   <script>
-      (function() {
-          var redirect = sessionStorage.getItem('redirect');
-          if (redirect) {
-              sessionStorage.removeItem('redirect');
-              window.location.replace(redirect);
-          }
-      })();
+    (function() {
+      var redirect = sessionStorage.getItem('redirect');
+      if (redirect) {
+        sessionStorage.removeItem('redirect');
+        window.location.replace(redirect);
+      }
+    })();
   </script>
-</body>
-</html>
 
   <!-- ============= HEADER ============= -->
   <header class="site-header">
@@ -57,211 +54,211 @@
           <p className="eyebrow">RCM Learning Hub</p>
           <h1>Your Partner in AR Knowledge</h1>
           <p class="hero-lead">
-            Here, you’ll find everything you need to build strong AR and RCM skills, from industry abbreviations and payer eligibility rules to real AR scenarios and interactive mock tests. Whether you're just starting your journey or leveling up for a team lead/QA role, this platform will guide you step-by-step with clarity and confidence.We are continuously adding more features, including payer guidelines, denial management, appeal strategies, and interview prep content, so keep checking back!
-If you have suggestions, corrections, or ideas you'd like to see on the site, feel free to reach out.
-Your feedback helps us improve and grow this knowledge hub for everyone.
+            Here, you’ll find everything you need to build strong AR and RCM skills, from industry abbreviations and payer eligibility rules to real AR scenarios and interactive mock tests. Whether you're just starting your journey or leveling up for a team lead/QA role, this platform will guide you step-by-step with clarity and confidence. We are continuously adding more features, including payer guidelines, denial management, appeal strategies, and interview prep content, so keep checking back!
+            If you have suggestions, corrections, or ideas you'd like to see on the site, feel free to reach out.
+            Your feedback helps us improve and grow this knowledge hub for everyone.
           </p>
         </div>
       </div>
     </section>
 
     <!-- ============= WHAT IS MEDICAL BILLING ============= -->
-<section id="medical-billing" class="section">
-  <div class="container section-inner">
+    <section id="medical-billing" class="section">
+      <div class="container section-inner">
 
-    <h2>What is Medical Billing &amp; RCM?</h2>
+        <h2>What is Medical Billing &amp; RCM?</h2>
 
-    <a href="images/rcm-cycle.png" target="_blank">
-  <img src="images/rcm-cycle.png" class="cycle-image">
-</a>
+        <a href="images/rcm-cycle.png" target="_blank">
+          <img src="images/rcm-cycle.png" class="cycle-image" alt="RCM Cycle Diagram">
+        </a>
 
+        <p>
+          Medical Billing is the process that ensures healthcare providers get paid for the services they deliver.
+          It begins the moment a patient schedules an appointment and continues until the final payment is collected.
+          Medical billers take the clinical information from doctors and convert it into standardized codes, prepare claims,
+          and submit them to insurance companies for reimbursement. They also follow up on unpaid claims, correct errors,
+          appeal denials, and communicate with both patients and insurers to make sure every service is billed accurately.
+        </p>
 
-    <p>
-      Medical Billing is the process that ensures healthcare providers get paid for the services they deliver.
-      It begins the moment a patient schedules an appointment and continues until the final payment is collected.
-      Medical billers take the clinical information from doctors and convert it into standardized codes, prepare claims,
-      and submit them to insurance companies for reimbursement. They also follow up on unpaid claims, correct errors,
-      appeal denials, and communicate with both patients and insurers to make sure every service is billed accurately.
-    </p>
+        <p>
+          Revenue Cycle Management (RCM) is the complete financial ecosystem behind medical billing. It covers every step
+          of a patient’s financial journey—from verifying insurance eligibility, obtaining prior authorizations, capturing
+          charges, coding diagnoses and procedures, submitting claims, posting payments, to handling denials and patient
+          billing. RCM brings together the administrative, financial, and clinical aspects of healthcare into one streamlined
+          process, ensuring providers receive timely and accurate revenue.
+        </p>
 
-    <p>
-      Revenue Cycle Management (RCM) is the complete financial ecosystem behind medical billing. It covers every step
-      of a patient’s financial journey—from verifying insurance eligibility, obtaining prior authorizations, capturing
-      charges, coding diagnoses and procedures, submitting claims, posting payments, to handling denials and patient
-      billing. RCM brings together the administrative, financial, and clinical aspects of healthcare into one streamlined
-      process, ensuring providers receive timely and accurate revenue.
-    </p>
+      </div>
+    </section>
 
-  </div>
-</section>
     <!-- ============= CLAIM FORMS ============= -->
     <section id="claims" class="section">
-  <div class="container section-inner">
+      <div class="container section-inner">
 
-    <div class="section-header">
-      <h2>What Are Claim Forms in Medical Billing?</h2>
-    </div>
-
-    <p>
-      Claim forms are official documents used to request reimbursement from insurance payers for healthcare services
-      provided to patients. They act as the financial communication bridge between healthcare providers and insurance
-      companies, ensuring all clinical, demographic, and billing information is accurately submitted.
-      In the U.S. healthcare system, there are two primary claim forms, each designed for specific types of services:
-    </p>
-
-    <div class="cards-grid">
-      <!-- ⭐ CMS-1500 -->
-      <article class="card">
-        <h3>⭐ 1. CMS-1500 Claim Form (Professional Claims)</h3>
-
-        <p>
-          The CMS-1500 (also known as the HCFA-1500) is used by individual healthcare providers, such as:
-        </p>
-
-        <ul>
-          <li>Physicians</li>
-          <li>Nurse practitioners</li>
-          <li>Therapists</li>
-          <li>Durable Medical Equipment (DME) suppliers</li>
-          <li>Independent labs</li>
-          <li>Ambulance services</li>
-        </ul>
-
-        <p>
-          It contains 33 form fields (“boxes”) where the provider enters all required billing information.
-        </p>
-
-        <p><span style="color:#1d4ed8;font-weight:600;">🟦 BOXES 1–13 →</span> Patient & Insurance Information</p>
-        <p><span style="color:#059669;font-weight:600;">🟩 BOXES 14–20 →</span> Clinical & Episode Information</p>
-        <p><span style="color:#ea580c;font-weight:600;">🟧 BOXES 21–24 →</span> Coding & Charge Details</p>
-        <p><span style="color:#dc2626;font-weight:600;">🟥 BOXES 25–33 →</span> Provider, Facility & Payment Information</p>
-        <p>
-        </p>
-        <p>
-        </p>
-        <p>
-        </p>
-        
-        <div class="section-actions">
-          <a href="https://a2zrcm.co.in/CMS Form"
-             target="_blank"
-             class="btn btn-outline">
-            More Details on HFCA
-          </a>
+        <div class="section-header">
+          <h2>What Are Claim Forms in Medical Billing?</h2>
         </div>
-      </article>
-
-      <!-- ⭐ UB-04 -->
-      <article class="card">
-        <h3>⭐ 2. UB-04 / CMS-1450 Claim Form (Institutional Claims)</h3>
-
-        <p>The UB-04 is used by facilities, such as:</p>
-
-        <ul>
-          <li>Hospitals</li>
-          <li>Skilled Nursing Facilities (SNF)</li>
-          <li>Inpatient rehabilitation centers</li>
-          <li>Outpatient hospitals</li>
-          <li>Home health & hospice</li>
-          <li>Residential facilities</li>
-        </ul>
 
         <p>
-          The UB-04 has over 80 fields ("FL - Form Locators") and covers more complex billing, including:
+          Claim forms are official documents used to request reimbursement from insurance payers for healthcare services
+          provided to patients. They act as the financial communication bridge between healthcare providers and insurance
+          companies, ensuring all clinical, demographic, and billing information is accurately submitted.
+          In the U.S. healthcare system, there are two primary claim forms, each designed for specific types of services:
         </p>
 
-        <ul>
-          <li>Room & board</li>
-          <li>Occurrence codes</li>
-          <li>Value codes</li>
-          <li>Revenue codes</li>
-          <li>Condition codes</li>
-          <li>DRG classifications</li>
-          <li>Inpatient details</li>
-          <li>Institutional charges</li>
-        </ul>
-        <div class="section-actions">
-          <a href="https://a2zrcm.co.in/UB04 Form"
-             target="_blank"
-             class="btn btn-outline">
-            More Details on UB04
-          </a>
+        <div class="cards-grid">
+          <!-- ⭐ CMS-1500 -->
+          <article class="card">
+            <h3>⭐ 1. CMS-1500 Claim Form (Professional Claims)</h3>
+
+            <p>
+              The CMS-1500 (also known as the HCFA-1500) is used by individual healthcare providers, such as:
+            </p>
+
+            <ul>
+              <li>Physicians</li>
+              <li>Nurse practitioners</li>
+              <li>Therapists</li>
+              <li>Durable Medical Equipment (DME) suppliers</li>
+              <li>Independent labs</li>
+              <li>Ambulance services</li>
+            </ul>
+
+            <p>
+              It contains 33 form fields (“boxes”) where the provider enters all required billing information.
+            </p>
+
+            <p><span style="color:#1d4ed8;font-weight:600;">🟦 BOXES 1–13 →</span> Patient & Insurance Information</p>
+            <p><span style="color:#059669;font-weight:600;">🟩 BOXES 14–20 →</span> Clinical & Episode Information</p>
+            <p><span style="color:#ea580c;font-weight:600;">🟧 BOXES 21–24 →</span> Coding & Charge Details</p>
+            <p><span style="color:#dc2626;font-weight:600;">🟥 BOXES 25–33 →</span> Provider, Facility & Payment Information</p>
+
+            <div class="section-actions">
+              <a href="https://a2zrcm.co.in/CMS Form"
+                 target="_blank"
+                 class="btn btn-outline">
+                More Details on HFCA
+              </a>
+            </div>
+          </article>
+
+          <!-- ⭐ UB-04 -->
+          <article class="card">
+            <h3>⭐ 2. UB-04 / CMS-1450 Claim Form (Institutional Claims)</h3>
+
+            <p>The UB-04 is used by facilities, such as:</p>
+
+            <ul>
+              <li>Hospitals</li>
+              <li>Skilled Nursing Facilities (SNF)</li>
+              <li>Inpatient rehabilitation centers</li>
+              <li>Outpatient hospitals</li>
+              <li>Home health & hospice</li>
+              <li>Residential facilities</li>
+            </ul>
+
+            <p>
+              The UB-04 has over 80 fields ("FL - Form Locators") and covers more complex billing, including:
+            </p>
+
+            <ul>
+              <li>Room & board</li>
+              <li>Occurrence codes</li>
+              <li>Value codes</li>
+              <li>Revenue codes</li>
+              <li>Condition codes</li>
+              <li>DRG classifications</li>
+              <li>Inpatient details</li>
+              <li>Institutional charges</li>
+            </ul>
+            <div class="section-actions">
+              <a href="https://a2zrcm.co.in/UB04 Form"
+                 target="_blank"
+                 class="btn btn-outline">
+                More Details on UB04
+              </a>
+            </div>
+          </article>
+
         </div>
-      </article>
+      </div>
+    </section>
 
-    </div>
-  </div>
-</section>
-<!-- ============= RCM BASICS + ADVANCED RCM (BUBBLE DESKTOP / CARD MOBILE) ============= -->
-<section id="rcm-section" class="section section-alt">
-  <div class="container section-inner">
+    <!-- ============= RCM BASICS + ADVANCED RCM ============= -->
+    <section id="rcm-section" class="section section-alt">
+      <div class="container section-inner">
 
-    <div class="section-header">
-      <h2>RCM Learning Categories</h2>
-    </div>
+        <div class="section-header">
+          <h2>RCM Learning Categories</h2>
+        </div>
 
-    <div class="rcm-wrapper">
-      <div class="cards-grid">
+        <div class="rcm-wrapper">
+          <div class="cards-grid">
 
-        <!-- ⭐ RCM Basics -->
-        <article class="card">
-          <h3>⭐ RCM Basics</h3>
+            <!-- ⭐ RCM Basics -->
+            <article class="card">
+              <h3>⭐ RCM Basics</h3>
 
-          <ul class="rcm-list">
-            <li onclick="handleRcmClick('pos', 'right', this)">
-              <span class="arrow">▶</span>
-              <span class="rcm-label">POS – Place of Service</span>
+              <ul class="rcm-list">
+                <!-- POS -->
+                <li onclick="handleRcmClick('pos', 'right', this)">
+                  <span class="arrow">▶</span>
+                  <span class="rcm-label">POS – Place of Service</span>
 
-              <!-- MOBILE CARD HOLDER -->
-              <div class="rcm-mobile-card"></div>
-            </li>
+                  <!-- MOBILE DROPDOWN HOLDER -->
+                  <div class="rcm-mobile-card"></div>
+                </li>
 
-            <li onclick="handleRcmClick('clearing', 'right', this)">
-              <span class="arrow">▶</span>
-              <span class="rcm-label">Clearing House</span>
+                <!-- Clearing House -->
+                <li onclick="handleRcmClick('clearing', 'right', this)">
+                  <span class="arrow">▶</span>
+                  <span class="rcm-label">Clearing House</span>
 
-              <!-- MOBILE CARD HOLDER -->
-              <div class="rcm-mobile-card"></div>
-            </li>
-          </ul>
-        </article>
+                  <!-- MOBILE DROPDOWN HOLDER -->
+                  <div class="rcm-mobile-card"></div>
+                </li>
+              </ul>
+            </article>
 
-        <!-- ⭐ Advanced RCM -->
-        <article class="card">
-          <h3>⭐ Advanced RCM</h3>
+            <!-- ⭐ Advanced RCM -->
+            <article class="card">
+              <h3>⭐ Advanced RCM</h3>
 
-          <ul class="rcm-list">
-            <li onclick="handleRcmClick('edi', 'left', this)">
-              <span class="arrow">▶</span>
-              <span class="rcm-label">EDI – Electronic Data Interchange</span>
+              <ul class="rcm-list">
+                <!-- EDI -->
+                <li onclick="handleRcmClick('edi', 'left', this)">
+                  <span class="arrow">▶</span>
+                  <span class="rcm-label">EDI – Electronic Data Interchange</span>
 
-              <!-- MOBILE CARD HOLDER -->
-              <div class="rcm-mobile-card"></div>
-            </li>
+                  <!-- MOBILE DROPDOWN HOLDER -->
+                  <div class="rcm-mobile-card"></div>
+                </li>
 
-            <li onclick="handleRcmClick('pfs', 'left', this)">
-              <span class="arrow">▶</span>
-              <span class="rcm-label">PFS – Provider Fee Schedule</span>
+                <!-- PFS -->
+                <li onclick="handleRcmClick('pfs', 'left', this)">
+                  <span class="arrow">▶</span>
+                  <span class="rcm-label">PFS – Provider Fee Schedule</span>
 
-              <!-- MOBILE CARD HOLDER -->
-              <div class="rcm-mobile-card"></div>
-            </li>
-          </ul>
-        </article>
+                  <!-- MOBILE DROPDOWN HOLDER -->
+                  <div class="rcm-mobile-card"></div>
+                </li>
+              </ul>
+            </article>
+
+          </div>
+
+          <!-- DESKTOP FLOATING BUBBLE (SINGLE GLOBAL) -->
+          <div id="rcm-bubble" class="rcm-bubble">
+            <button class="bubble-close" onclick="closeRcmBubble(event)">✕</button>
+            <h3 id="rcm-bubble-title"></h3>
+            <p id="rcm-bubble-body"></p>
+            <a id="rcm-bubble-btn" class="btn btn-outline" target="_blank">Open</a>
+          </div>
+        </div>
 
       </div>
+    </section>
 
-      <!-- DESKTOP FLOATING BUBBLE -->
-      <div id="rcm-bubble" class="rcm-bubble">
-        <button class="bubble-close" onclick="closeRcmBubble(event)">✕</button>
-        <h3 id="rcm-bubble-title"></h3>
-        <p id="rcm-bubble-body"></p>
-        <a id="rcm-bubble-btn" class="btn btn-outline" target="_blank">Open</a>
-      </div>
-    </div>
-
-  </div>
-</section>
     <!-- ============= POS SECTION ============= -->
     <section id="pos" class="section section-alt">
       <div class="container section-inner">
@@ -307,6 +304,7 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
           <a href="https://a2zrcm.co.in/Clearing House" target="_blank" rel="noopener" class="btn btn-primary">
             Learn About Clearing House
           </a>
+        </div>
       </div>
     </section>
 
@@ -338,32 +336,33 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
         </div>
       </div>
     </section>
-    <!-- ============= PFS============= -->
+
+    <!-- ============= PFS ============= -->
     <section id="PFS" class="section section-alt">
-  <div class="container section-inner">
+      <div class="container section-inner">
 
-    <div class="section-header">
-      <h2>Provider Fee Schedule (PFS)</h2>
-    </div>
+        <div class="section-header">
+          <h2>Provider Fee Schedule (PFS)</h2>
+        </div>
 
-    <p>
-      The Provider Fee Schedule (PFS) determines how much a provider gets reimbursed
-      for each medical service. It uses RVUs (Work, Practice Expense, and Malpractice),
-      geographic adjustments (GPCI), and a yearly Conversion Factor to calculate the 
-      final allowed amount for every CPT/HCPCS code.
-    </p>
+        <p>
+          The Provider Fee Schedule (PFS) determines how much a provider gets reimbursed
+          for each medical service. It uses RVUs (Work, Practice Expense, and Malpractice),
+          geographic adjustments (GPCI), and a yearly Conversion Factor to calculate the 
+          final allowed amount for every CPT/HCPCS code.
+        </p>
 
-    <p>
-      PFS helps ensure standardized payments, reduces pricing variations, and brings 
-      transparency to the healthcare reimbursement process.
-    </p>
+        <p>
+          PFS helps ensure standardized payments, reduces pricing variations, and brings 
+          transparency to the healthcare reimbursement process.
+        </p>
 
-    <div class="section-actions">
-      <a href="pfs.html" class="btn btn-primary">More Details</a>
-    </div>
+        <div class="section-actions">
+          <a href="pfs.html" class="btn btn-primary">More Details</a>
+        </div>
 
-  </div>
-</section>
+      </div>
+    </section>
 
     <!-- ============= CONTACT ============= -->
     <section id="Contact" class="section">
@@ -404,163 +403,156 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
     </div>
   </footer>
 
-<!-- ============= RCM COLLAPSE JAVASCRIPT ============= -->
-<script>
-// Shared data for all topics
-const RCM_DATA = {
-  pos: {
-    title: "POS – Place of Service",
-    body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
-    href: "https://a2zrcm.co.in/POS",
-    btnText: "View Full POS List"
-  },
-  clearing: {
-    title: "Clearing House",
-    body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance before they reach the payer.",
-    href: "https://a2zrcm.co.in/Clearing House",
-    btnText: "Learn About Clearing House"
-  },
-  edi: {
-    title: "EDI – Electronic Data Interchange",
-    body: "EDI enables digital exchange of claims, eligibility checks, ERAs, and claim status updates between providers and payers.",
-    href: "https://a2zrcm.co.in/EDI",
-    btnText: "Learn About EDI"
-  },
-  pfs: {
-    title: "PFS – Provider Fee Schedule",
-    body: "PFS determines allowed amounts for each CPT/HCPCS code using RVUs, GPCI, and the CMS Conversion Factor.",
-    href: "https://a2zrcm.co.in/PFS",
-    btnText: "More Details on PFS"
-  }
-};
+  <!-- ============= RCM COLLAPSE JAVASCRIPT ============= -->
+  <script>
+  // Shared data for all topics
+  const RCM_DATA = {
+    pos: {
+      title: "POS – Place of Service",
+      body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
+      href: "https://a2zrcm.co.in/POS",
+      btnText: "View Full POS List"
+    },
+    clearing: {
+      title: "Clearing House",
+      body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance before they reach the payer.",
+      href: "https://a2zrcm.co.in/Clearing House",
+      btnText: "Learn About Clearing House"
+    },
+    edi: {
+      title: "EDI – Electronic Data Interchange",
+      body: "EDI enables digital exchange of claims, eligibility checks, ERAs, and claim status updates between providers and payers.",
+      href: "https://a2zrcm.co.in/EDI",
+      btnText: "Learn About EDI"
+    },
+    pfs: {
+      title: "PFS – Provider Fee Schedule",
+      body: "PFS determines allowed amounts for each CPT/HCPCS code using RVUs, GPCI, and the CMS Conversion Factor.",
+      href: "pfs.html",
+      btnText: "More Details on PFS"
+    }
+  };
 
-let rcmActiveItem = null;
-let rcmOpenType  = null;
+  let rcmActiveItem = null;
+  let rcmOpenType  = null;
 
-// Main click handler (called from HTML)
-function handleRcmClick(type, side, li) {
-  const isMobile = window.innerWidth <= 768;
+  // Main click handler (called from HTML)
+  function handleRcmClick(type, side, li) {
+    const isMobile = window.innerWidth <= 768;
 
-  if (isMobile) {
-    openRcmMobileCard(type, li);
-  } else {
-    openRcmDesktopBubble(type, side, li);
-  }
-}
-
-/* ---------- DESKTOP BUBBLE LOGIC ---------- */
-
-function openRcmDesktopBubble(type, side, li) {
-  const bubble   = document.getElementById("rcm-bubble");
-  const titleEl  = document.getElementById("rcm-bubble-title");
-  const bodyEl   = document.getElementById("rcm-bubble-body");
-  const btnEl    = document.getElementById("rcm-bubble-btn");
-  const arrow    = li.querySelector(".arrow");
-
-  // If clicking same item again → close
-  if (rcmOpenType === type && bubble.style.display === "block") {
-    closeRcmBubble();
-    return;
+    if (isMobile) {
+      openRcmMobileCard(type, li);
+    } else {
+      openRcmDesktopBubble(type, side, li);
+    }
   }
 
-  // Reset any open mobile cards just in case
-  document.querySelectorAll(".rcm-mobile-card.open").forEach(card => {
-    card.classList.remove("open");
-    card.innerHTML = "";
-  });
+  /* ---------- DESKTOP BUBBLE LOGIC ---------- */
 
-  // Reset previous arrow rotation
-  if (rcmActiveItem) {
-    const prevArrow = rcmActiveItem.querySelector(".arrow");
-    if (prevArrow) prevArrow.classList.remove("rotate");
+  function openRcmDesktopBubble(type, side, li) {
+    const bubble   = document.getElementById("rcm-bubble");
+    const titleEl  = document.getElementById("rcm-bubble-title");
+    const bodyEl   = document.getElementById("rcm-bubble-body");
+    const btnEl    = document.getElementById("rcm-bubble-btn");
+    const arrow    = li.querySelector(".arrow");
+
+    // If clicking same item again → close
+    if (rcmOpenType === type && bubble.style.display === "block") {
+      closeRcmBubble();
+      return;
+    }
+
+    // Reset any open mobile cards
+    document.querySelectorAll(".rcm-mobile-card.open").forEach(card => {
+      card.classList.remove("open");
+      card.innerHTML = "";
+    });
+
+    // Reset previous arrow rotation
+    if (rcmActiveItem) {
+      const prevArrow = rcmActiveItem.querySelector(".arrow");
+      if (prevArrow) prevArrow.classList.remove("rotate");
+    }
+
+    // Rotate current arrow
+    arrow.classList.add("rotate");
+    rcmActiveItem = li;
+
+    // Set content
+    const d = RCM_DATA[type];
+    titleEl.textContent = d.title;
+    bodyEl.textContent  = d.body;
+    btnEl.href          = d.href;
+    btnEl.textContent   = d.btnText;
+
+    // Set side position (Basics → right, Advanced → left)
+    bubble.classList.remove("left-side", "right-side");
+    bubble.classList.add(side === "left" ? "left-side" : "right-side");
+
+    bubble.style.display = "block";
+    rcmOpenType = type;
   }
 
-  // Rotate current arrow
-  arrow.classList.add("rotate");
-  rcmActiveItem = li;
+  function closeRcmBubble(event) {
+    if (event) event.stopPropagation();
 
-  // Set content
-  const d = RCM_DATA[type];
-  titleEl.textContent = d.title;
-  bodyEl.textContent  = d.body;
-  btnEl.href          = d.href;
-  btnEl.textContent   = d.btnText;
+    const bubble = document.getElementById("rcm-bubble");
+    bubble.style.display = "none";
 
-  // Set side position (Basics → right, Advanced → left)
-  bubble.classList.remove("left-side", "right-side");
-  bubble.classList.add(side === "left" ? "left-side" : "right-side");
+    if (rcmActiveItem) {
+      const prevArrow = rcmActiveItem.querySelector(".arrow");
+      if (prevArrow) prevArrow.classList.remove("rotate");
+    }
 
-  bubble.style.display = "block";
-  rcmOpenType = type;
-}
-
-function closeRcmBubble(event) {
-  if (event) event.stopPropagation();
-
-  const bubble = document.getElementById("rcm-bubble");
-  bubble.style.display = "none";
-
-  if (rcmActiveItem) {
-    const prevArrow = rcmActiveItem.querySelector(".arrow");
-    if (prevArrow) prevArrow.classList.remove("rotate");
-  }
-
-  rcmActiveItem = null;
-  rcmOpenType   = null;
-}
-
-/* ---------- MOBILE CARD LOGIC ---------- */
-
-function openRcmMobileCard(type, li) {
-  const card = li.querySelector(".rcm-mobile-card");
-  const arrow = li.querySelector(".arrow");
-
-  const alreadyOpen = card.classList.contains("open");
-
-  // Close any open bubble (if resized from desktop)
-  closeRcmBubble();
-
-  // Close all other mobile cards
-  document.querySelectorAll(".rcm-mobile-card.open").forEach(c => {
-    c.classList.remove("open");
-    c.innerHTML = "";
-  });
-  document.querySelectorAll(".rcm-list .arrow.rotate").forEach(a => {
-    a.classList.remove("rotate");
-  });
-
-  if (alreadyOpen) {
-    // If this one was open → just close it
-    card.classList.remove("open");
-    card.innerHTML = "";
     rcmActiveItem = null;
     rcmOpenType   = null;
-    return;
   }
 
-  // Rotate current arrow
-  arrow.classList.add("rotate");
-  rcmActiveItem = li;
-  rcmOpenType   = type;
+  /* ---------- MOBILE CARD LOGIC ---------- */
 
-  const d = RCM_DATA[type];
+  function openRcmMobileCard(type, li) {
+    const card  = li.querySelector(".rcm-mobile-card");
+    const arrow = li.querySelector(".arrow");
 
-  card.innerHTML = `
-    <div class="rcm-mobile-card-inner">
-      <h4>${d.title}</h4>
-      <p>${d.body}</p>
-      <a href="${d.href}" target="_blank" class="btn btn-outline">${d.btnText}</a>
-    </div>
-  `;
-  card.classList.add("open");
-}
-</script>
+    const alreadyOpen = card.classList.contains("open");
+
+    // Close any open desktop bubble
+    closeRcmBubble();
+
+    // Close all other mobile cards & reset arrows
+    document.querySelectorAll(".rcm-mobile-card.open").forEach(c => {
+      c.classList.remove("open");
+      c.innerHTML = "";
+    });
+    document.querySelectorAll(".rcm-list .arrow.rotate").forEach(a => {
+      a.classList.remove("rotate");
+    });
+
+    if (alreadyOpen) {
+      card.classList.remove("open");
+      card.innerHTML = "";
+      rcmActiveItem = null;
+      rcmOpenType   = null;
+      return;
+    }
+
+    // Rotate current arrow
+    arrow.classList.add("rotate");
+    rcmActiveItem = li;
+    rcmOpenType   = type;
+
+    const d = RCM_DATA[type];
+
+    card.innerHTML = `
+      <div class="rcm-mobile-card-inner">
+        <h4>${d.title}</h4>
+        <p>${d.body}</p>
+        <a href="${d.href}" target="_blank" class="btn btn-outline">${d.btnText}</a>
+      </div>
+    `;
+    card.classList.add("open");
+  }
+  </script>
 
 </body>
 </html>
-
-
-
-
-
-
