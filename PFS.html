@@ -1,106 +1,188 @@
-<!-- ============= PROVIDER FEE SCHEDULE (PFS) ============= -->
-<section id="pfs" class="section">
-  <div class="container section-inner">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provider Fee Schedule (Complete Guide)</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #d9e6ff;
+        margin: 0;
+        padding: 40px 0;
+    }
+
+    .container {
+        width: 70%;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 18px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #000;
+    }
+
+    .box {
+        background: #f7f9ff;
+        padding: 20px;
+        border-left: 6px solid #4a68ff;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #1a3db1;
+    }
+
+    ul, ol {
+        margin-left: 20px;
+        line-height: 1.6;
+    }
+
+    pre {
+        background: #eef3ff;
+        padding: 12px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border-left: 4px solid #4a68ff;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Provider Fee Schedule (Complete Guide)</h1>
+
+    <!-- WHAT IS PFS -->
+    <div class="box">
+        <h2>📌 What Is the Provider Fee Schedule?</h2>
+        <p>
+            The Provider Fee Schedule (PFS) defines how payers such as Medicare, Medicaid, 
+            or commercial insurers determine the allowed amount for each CPT/HCPCS code. 
+            Payments are calculated using components such as RVUs, GPCIs, and the Conversion Factor.
+        </p>
+    </div>
+    <!-- TYPES OF FEE SCHEDULES -->
+    <div class="box">
+        <h2>📑 Types of Provider Fee Schedules</h2>
+        <ul>
+            <li>Medicare Fee Schedule (MFS): Uses the RBRVS system.</li>
+            <li>Medicaid Fee Schedule: State-specific, generally lower.</li>
+            <li>Commercial Fee Schedule: Negotiated between payer and provider.</li>
+            <li>Workers' Compensation Fee Schedule: Separate state rules.</li>
+            <li>Facility vs. Non-Facility PFS: Payments differ based on where services are performed.</li>
+        </ul>
+    </div>
     
-    <div class="section-header">
-      
+      <!-- WHY WE NEED PFS -->
+    <div class="box">
+        <h2>🎯 Why Do We Need a Provider Fee Schedule?</h2>
+        <ul>
+            <li>Ensures standardized payment for services.</li>
+            <li>Improves transparency in reimbursement.</li>
+            <li>Helps reduce healthcare cost variations.</li>
+            <li>Allows RCM teams to detect underpayments.</li>
+            <li>Supports contract negotiation for providers.</li>
+        </ul>
     </div>
 
-    <p>
-      The Provider Fee Schedule (PFS) defines how payers such as Medicare, Medicaid, 
-      or commercial insurers determine the allowed amount for each CPT/HCPCS code.
-      Payments are calculated using components such as RVUs, GPCIs, and the Conversion Factor.
-    </p>
+    <!-- RVUs -->
+    <div class="box">
+        <h2>🧩 What Are RVUs?</h2>
+        <p>
+            The Resource-Based Relative Value Scale (RBRVS) uses three types of Relative Value Units (RVUs) 
+            to determine the value of a medical service:
+        </p>
+        <ul>
+            <li><strong>Work RVU (wRVU):</strong> Measures provider effort, time, skill, and intensity.</li>
+            <li><strong>Practice Expense RVU (peRVU):</strong> Covers overhead such as staff, rent, and equipment.</li>
+            <li><strong>Malpractice RVU (mpRVU):</strong> Represents the cost of liability insurance required to protect providers from legal claims.</li>
+        </ul>
+    </div>
 
-    <!-- RVU Explanation -->
-    <h3>What Are RVUs?</h3>
-    <p>
-      The Resource-Based Relative Value Scale (RBRVS) uses three types of Relative Value Units (RVUs)
-      to determine the value of a medical service:
-    </p>
-    <ul>
-      <li><strong>Work RVU (wRVU):</strong> Measures provider effort, time, skill, and intensity.</li>
-      <li><strong>Practice Expense RVU (peRVU):</strong> Covers overhead such as staff, rent, and equipment.</li>
-      <li><strong>Malpractice RVU (mpRVU):</strong> Represents the cost of liability insurance required to protect providers from legal claims.</li>
-    </ul>
+    <!-- MALPRACTICE -->
+    <div class="box">
+        <h2>⚖️ What Is Malpractice in PFS?</h2>
+        <p>
+            Malpractice RVU is based on the cost of professional liability insurance. 
+            Specialties with higher legal risks (such as surgery or OB-GYN) have higher malpractice RVUs, 
+            while low-risk specialties have lower values. This ensures payment aligns with the level of legal exposure.
+        </p>
+    </div>
 
-    <!-- Malpractice Explanation -->
-    <h3>What Is Malpractice in PFS?</h3>
-    <p>
-      Malpractice RVU is based on the cost of professional liability insurance. 
-      Specialties with higher legal risks (such as surgery or OB-GYN) have higher malpractice RVUs, 
-      while low-risk specialties have lower values. This ensures payment aligns with the level of legal exposure.
-    </p>
+    <!-- GPCI -->
+    <div class="box">
+        <h2>🌍 What Is GPCI?</h2>
+        <p>
+            Geographic Practice Cost Index (GPCI) adjusts RVUs based on cost differences in different locations. 
+            Each RVU component has its own GPCI:
+        </p>
+        <ul>
+            <li>Work GPCI</li>
+            <li>Practice Expense GPCI</li>
+            <li>Malpractice GPCI</li>
+        </ul>
+        <p>
+            High-cost cities receive higher adjustments, while low-cost regions receive lower ones.
+        </p>
+    </div>
 
-    <!-- GPCI Explanation -->
-    <h3>What Is GPCI?</h3>
-    <p>
-      Geographic Practice Cost Index (GPCI) adjusts RVUs based on cost differences in different locations.
-      Each RVU component has its own GPCI:
-    </p>
-    <ul>
-      <li>Work GPCI</li>
-      <li>Practice Expense GPCI</li>
-      <li>Malpractice GPCI</li>
-    </ul>
-    <p>
-      High-cost cities receive higher adjustments, while low-cost regions receive lower ones.
-    </p>
+    <!-- CONVERSION FACTOR -->
+    <div class="box">
+        <h2>💵 What Is the Conversion Factor (CF)?</h2>
+        <p>
+            The Conversion Factor is a fixed dollar amount updated annually by CMS. 
+            It converts total RVUs into the final allowed payment amount.
+            For example: 1 RVU × CF = Payment.
+        </p>
+    </div>
 
-    <!-- Conversion Factor Explanation -->
-    <h3>What Is the Conversion Factor (CF)?</h3>
-    <p>
-      The Conversion Factor is a fixed dollar amount updated annually by CMS. 
-      It converts total RVUs into the final allowed payment amount.
-      For example: <em>1 RVU × CF = Payment</em>.
-    </p>
+    <!-- FORMULA -->
+    <div class="box">
+        <h2>🧮 How Is the Final Allowed Amount Calculated?</h2>
+        <p>The Medicare payment formula includes three steps:</p>
+        <ol>
+            <li>Multiply each RVU by its corresponding GPCI.</li>
+            <li>Add the adjusted RVUs to get the Total RVU.</li>
+            <li>Multiply the Total RVU by the Conversion Factor (CF).</li>
+        </ol>
 
-    <!-- Formula -->
-    <h3>How Is the Final Allowed Amount Calculated?</h3>
-    <p>The Medicare payment formula includes three steps:</p>
-    <ol>
-      <li>Multiply each RVU by its corresponding GPCI.</li>
-      <li>Add the adjusted RVUs to get the Total RVU.</li>
-      <li>Multiply the Total RVU by the Conversion Factor (CF).</li>
-    </ol>
-
-    <pre>
+<pre>
 Final Allowed Amount = (wRVU × wGPCI) 
                      + (peRVU × peGPCI) 
                      + (mpRVU × mpGPCI)
                      × CF
-    </pre>
+</pre>
+    </div>
 
-    <!-- Example -->
-    <h3>Example Calculation (CPT 99213)</h3>
-    <p>Using sample values:</p>
-    <ul>
-      <li>wRVU: 1.30, PE RVU: 1.00, MP RVU: 0.10</li>
-      <li>wGPCI: 1.02, PE GPCI: 1.05, MP GPCI: 0.90</li>
-      <li>Conversion Factor (CF): $36.09</li>
-    </ul>
+    <!-- EXAMPLE -->
+    <div class="box">
+        <h2>📘 Example Calculation (CPT 99213)</h2>
+        <p>Using sample values:</p>
+        <ul>
+            <li>wRVU: 1.30, PE RVU: 1.00, MP RVU: 0.10</li>
+            <li>wGPCI: 1.02, PE GPCI: 1.05, MP GPCI: 0.90</li>
+            <li>Conversion Factor (CF): $36.09</li>
+        </ul>
 
-    <p>Total Final Allowed Amount = <strong>$88.95</strong></p>
+        <p><strong>Total Final Allowed Amount = $88.95</strong></p>
+    </div>
 
-    <!-- Types of Fee Schedules -->
-    <h3>Types of Provider Fee Schedules</h3>
-    <ul>
-      <li><strong>Medicare Fee Schedule (MFS):</strong> Uses the RBRVS system.</li>
-      <li><strong>Medicaid Fee Schedule:</strong> State-specific, generally lower.</li>
-      <li><strong>Commercial Fee Schedule:</strong> Negotiated between payer and provider.</li>
-      <li><strong>Workers' Compensation Fee Schedule:</strong> Separate state rules.</li>
-      <li><strong>Facility vs. Non-Facility PFS:</strong> Payments differ based on where services are performed.</li>
-    </ul>
 
-    <!-- Why We Need PFS -->
-    <h3>Why Do We Need a Provider Fee Schedule?</h3>
-    <ul>
-      <li>Ensures standardized payment for services.</li>
-      <li>Improves transparency in reimbursement.</li>
-      <li>Helps reduce healthcare cost variations.</li>
-      <li>Allows RCM teams to detect underpayments.</li>
-      <li>Supports contract negotiation for providers.</li>
-    </ul>
 
-  </div>
-</section>
+
+
+</div>
+
+</body>
+</html>
