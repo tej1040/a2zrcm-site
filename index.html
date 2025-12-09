@@ -387,59 +387,93 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
   </footer>
 
 <!-- ============= RCM COLLAPSE JAVASCRIPT ============= -->
-  <script>
-    let activeItem = null;
+<script>
+let activeItem = null;   // which list item is active
+let openType = null;     // which topic is open
 
-    function toggleContent(type, element) {
-        let panel = document.getElementById("rcm-content-panel");
-        let content = document.getElementById("rcm-content");
-        let arrow = element.querySelector(".arrow");
+function toggleBubble(type, element, side) {
+    const bubble = document.getElementById("rcm-bubble");
+    const titleEl = document.getElementById("rcm-bubble-title");
+    const bodyEl  = document.getElementById("rcm-bubble-body");
+    const btnEl   = document.getElementById("rcm-bubble-btn");
+    const arrow   = element.querySelector(".arrow");
 
-        if (panel.dataset.open === type) {
-            panel.classList.remove("active");
-            arrow.classList.remove("rotate");
-            panel.dataset.open = "";
-            return;
-        }
-
-        if (activeItem) {
-            activeItem.querySelector(".arrow").classList.remove("rotate");
-        }
-
-        arrow.classList.add("rotate");
-        activeItem = element;
-
-        let data = {
-            pos: `
-              <h3>POS – Place of Service</h3>
-              <p>POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).</p>
-              <a class="rcm-btn" href="https://a2zrcm.co.in/POS" target="_blank">View Full POS List</a>
-            `,
-            clearing: `
-              <h3>Clearing House</h3>
-              <p>A clearinghouse checks claims for errors, applies payer edits, and sends clean claims to insurance.</p>
-              <a class="rcm-btn" href="https://a2zrcm.co.in/Clearing House" target="_blank">Learn More</a>
-            `,
-            edi: `
-              <h3>EDI – Electronic Data Interchange</h3>
-              <p>EDI enables digital exchange of claims, eligibility checks, remits, and claim status.</p>
-              <a class="rcm-btn" href="https://a2zrcm.co.in/EDI" target="_blank">Learn About EDI</a>
-            `,
-            pfs: `
-              <h3>PFS – Provider Fee Schedule</h3>
-              <p>PFS determines allowed amounts using RVUs, GPCI, and the CMS Conversion Factor.</p>
-              <a class="rcm-btn" href="pfs.html" target="_blank">More Details</a>
-            `
-        };
-
-        content.innerHTML = data[type];
-
-        panel.classList.add("active");
-        panel.dataset.open = type;
+    // If clicking same item again → close
+    if (openType === type && bubble.style.display === "block") {
+        closeBubble();
+        return;
     }
-  </script>
+
+    // Reset previous arrow
+    if (activeItem) {
+        const prevArrow = activeItem.querySelector(".arrow");
+        if (prevArrow) prevArrow.classList.remove("rotate");
+    }
+
+    // Rotate current arrow
+    arrow.classList.add("rotate");
+    activeItem = element;
+
+    // Content for each topic
+    const data = {
+        pos: {
+            title: "POS – Place of Service",
+            body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
+            href: "https://a2zrcm.co.in/POS",
+            btnText: "View Full POS List"
+        },
+        clearing: {
+            title: "Clearing House",
+            body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance.",
+            href: "https://a2zrcm.co.in/Clearing House",
+            btnText: "Learn About Clearing House"
+        },
+        edi: {
+            title: "EDI – Electronic Data Interchange",
+            body: "EDI enables digital exchange of claims, eligibility checks, remits, and claim status between providers and payers.",
+            href: "https://a2zrcm.co.in/EDI",
+            btnText: "Learn About EDI"
+        },
+        pfs: {
+            title: "PFS – Provider Fee Schedule",
+            body: "PFS determines allowed amounts using RVUs, GPCI, and the CMS Conversion Factor for each CPT/HCPCS code.",
+            href: "pfs.html",
+            btnText: "More Details on PFS"
+        }
+    };
+
+    const d = data[type];
+    titleEl.textContent = d.title;
+    bodyEl.textContent  = d.body;
+    btnEl.href          = d.href;
+    btnEl.textContent   = d.btnText;
+
+    // Side (left/right) positioning
+    bubble.classList.remove("left-side", "right-side");
+    bubble.classList.add(side === "left" ? "left-side" : "right-side");
+
+    bubble.style.display = "block";
+    openType = type;
+}
+
+function closeBubble(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const bubble = document.getElementById("rcm-bubble");
+    bubble.style.display = "none";
+
+    if (activeItem) {
+        const prevArrow = activeItem.querySelector(".arrow");
+        if (prevArrow) prevArrow.classList.remove("rotate");
+    }
+    activeItem = null;
+    openType = null;
+}
+</script>
 
 </body>
 </html>
+
 
 
