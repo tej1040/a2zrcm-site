@@ -12,6 +12,17 @@
 
   <link rel="stylesheet" href="style.css" />
 </head>
+  <script>
+    // Check if we came here via a redirect and load the correct page
+    (function() {
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+            sessionStorage.removeItem('redirect');
+            window.location.replace(redirect);
+        }
+    })();
+</script>
+
 <body>
 
   <!-- ============= HEADER ============= -->
@@ -297,6 +308,7 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
 
 </body>
 </html>
+
 
 
 
