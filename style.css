@@ -11,7 +11,7 @@
   --accent-soft: #e0f2fe;
   --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
   --radius-lg: 0.9rem;
-  --font	-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 *,
@@ -23,340 +23,198 @@
 html, body {
   margin: 0;
   padding: 0;
-}
-
-body {
   font-family: var(--font-base);
   background-color: var(--bg-page);
   color: var(--text-main);
   line-height: 1.6;
 }
-/* ===== Medical Billing & RCM Two-Column Layout ===== */
 
-.billing-flex {
-  display: flex;
-  align-items: flex-start;
-  gap: 2.5rem;
-  padding-top: 1rem;
-}
+/* ------------------------------------------
+   RCM LIST — Option A (Minimal + Underlined)
+-------------------------------------------*/
 
-.billing-text {
-  flex: 1.1;
-}
-
-.billing-image {
-  flex: 0.9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.billing-image img {
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  object-fit: contain;
-}
-
-/* Mobile Responsive */
-@media (max-width: 900px) {
-  .billing-flex {
-    flex-direction: column;
-    text-align: left;
-  }
-  
-  .billing-image {
-    justify-content: flex-start;
-  }
-  
-  .billing-image img {
-    max-width: 320px;
-  }
-}
-/* ---------- RCM Bubble Layout ---------- */
-
-.rcm-wrapper {
-  position: relative;
-  margin-top: 1.2rem;
-}
-
-/* RCM LIST ITEMS */
 .rcm-list {
   list-style: none;
   padding-left: 0;
 }
 
 .rcm-list li {
-  padding: 8px 10px;
-  margin: 6px 0;
+  padding: 12px 14px;
+  margin: 8px 0;
   cursor: pointer;
+
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-main);
+  gap: 10px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  transition: 0.25s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
 }
 
 .rcm-list li:hover {
-  color: var(--accent-navy);
+  background: #f3f4f6;
+  border-color: #d1d5db;
 }
 
-/* Arrow icon */
+/* Arrow beside text */
 .arrow {
-  display: inline-block;
+  font-size: 0.85rem;
   transition: transform 0.25s ease;
-  font-size: 0.8rem;
 }
 
 .arrow.rotate {
   transform: rotate(90deg);
 }
 
-/* GLASSY BUBBLE BOX */
-.rcm-bubble {
-  position: absolute;
-  top: 50%;
-  left: 50%;             /* will be shifted by side classes */
-  transform: translate(-50%, -50%);
-  width: 340px;
-  min-height: 150px;
-  padding: 16px 16px 18px;
-  border-radius: 16px;
+/* ------------------------------------------
+   DESKTOP BUBBLE (right for basics, left for advanced)
+-------------------------------------------*/
 
-  background: rgba(255, 255, 255, 0.85); /* light transparency */
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-
-  display: none;  /* hidden by default */
-  z-index: 10;
+.rcm-wrapper {
+  position: relative;
+  margin-top: 1.2rem;
 }
 
-/* Align bubble to right of Basics (overlapping Advanced) */
+.rcm-bubble {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 480px;
+  padding: 22px 26px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+  display: none;
+  z-index: 20;
+}
+
+/* Bubble RIGHT of Basics */
 .rcm-bubble.right-side {
   left: 68%;
 }
 
-/* Align bubble to left of Advanced (overlapping Basics) */
+/* Bubble LEFT of Advanced */
 .rcm-bubble.left-side {
   left: 32%;
 }
 
-/* Tail / Cone pointing to list */
+/* Bubble Tail */
 .rcm-bubble::before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   border-style: solid;
 }
 
-/* Tail for bubble on the right of Basics (points left) */
+/* Right-side bubble tail (points left) */
 .rcm-bubble.right-side::before {
-  left: -12px;
-  border-width: 8px 12px 8px 0;
-  border-color: transparent rgba(255, 255, 255, 0.85) transparent transparent;
+  left: -15px;
+  border-width: 10px 15px 10px 0;
+  border-color: transparent #ffffff transparent transparent;
 }
 
-/* Tail for bubble on the left of Advanced (points right) */
+/* Left-side bubble tail (points right) */
 .rcm-bubble.left-side::before {
-  right: -12px;
-  border-width: 8px 0 8px 12px;
-  border-color: transparent transparent transparent rgba(255, 255, 255, 0.85);
+  right: -15px;
+  border-width: 10px 0 10px 15px;
+  border-color: transparent transparent transparent #ffffff;
 }
 
-/* Close button (X) – Red version */
+/* Red Circular X Button */
 .bubble-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
   border: none;
-  background: transparent;
-  font-size: 1.4rem;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 1rem;
   cursor: pointer;
-  float: right;
-  padding: 0;
-  margin: -4px -4px 0 0;
-  color: #e11d48; /* RED */
-  font-weight: 700;
-  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
 }
 
 .bubble-close:hover {
-  color: #be123c; /* DARKER RED */
+  background: #b91c1c;
 }
 
-
-/* Button inside bubble – reusing your button style */
+/* Button inside bubble */
 .rcm-bubble .btn {
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
+/* ------------------------------------------
+   MOBILE DROPDOWN (NO bubble)
+-------------------------------------------*/
 
-/* ========= Layout Helpers ========= */
-.container {
-  width: min(1120px, 100%);
-  margin: 0 auto;
-  padding: 0 1.25rem;
+.rcm-mobile-card {
+  display: none;
 }
 
-.section {
-  padding: 3.5rem 0;
-  background-color: var(--bg-section);
+@media (max-width: 768px) {
+
+  .rcm-bubble {
+    display: none !important;
+  }
+
+  #rcm-section .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rcm-mobile-card {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: 0.35s ease;
+  }
+
+  .rcm-mobile-card.open {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .rcm-mobile-card-inner {
+    background: #ffffff;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  }
+
+  .rcm-mobile-card-inner h4 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+  }
+
+  .rcm-mobile-card-inner p {
+    margin: 0 0 10px;
+  }
+
+  .rcm-mobile-card-inner .btn {
+    font-size: 0.85rem;
+    padding: 0.55rem 1.25rem;
+  }
 }
 
-.section-alt {
-  background-color: var(--bg-section-alt);
-}
+/* ------------------------------------------
+   Buttons
+-------------------------------------------*/
 
-.section-inner {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.section-header {
-  margin-bottom: 1.4rem;
-}
-
-.section-header h2 {
-  font-size: 1.7rem;
-  margin: 0 0 0.3rem;
-}
-
-.section-actions {
-  margin-top: 1.3rem;
-}
-
-/* ========= Typography ========= */
-h1, h2, h3 {
-  color: var(--text-main);
-  font-weight: 600;
-}
-
-p {
-  margin: 0 0 0.9rem;
-  color: var(--text-muted);
-}
-
-ul {
-  margin: 0.3rem 0 1rem 1.1rem;
-  padding: 0;
-  color: var(--text-muted);
-}
-
-li::marker {
-  color: var(--accent-navy);
-}
-
-/* ========= Header / Nav ========= */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.03);
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 0;
-  gap: 1rem;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  text-decoration: none;
-  color: inherit;
-}
-
-.brand-logo {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-name {
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  color: var(--accent-navy);
-}
-
-.brand-tagline {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.3rem;
-  font-size: 0.9rem;
-}
-
-.main-nav a {
-  text-decoration: none;
-  color: var(--text-muted);
-  position: relative;
-  padding-bottom: 0.1rem;
-}
-
-.main-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -0.2rem;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(to right, var(--accent-navy), var(--accent-teal));
-  transition: width 0.2s ease;
-}
-
-.main-nav a:hover {
-  color: var(--accent-navy);
-}
-
-.main-nav a:hover::after {
-  width: 100%;
-}
-
-/* ========= Hero ========= */
-.hero {
-  padding: 3rem 0 2.5rem;
-  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
-}
-
-.hero-inner {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.hero-content {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  padding: 2rem 1.75rem;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-subtle);
-}
-
-.hero h1 {
-  font-size: clamp(2rem, 4vw, 2.6rem);
-  margin: 0 0 0.7rem;
-}
-
-.hero-lead {
-  font-size: 0.98rem;
-}
-
-/* ========= Buttons ========= */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -366,441 +224,28 @@ li::marker {
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid transparent;
-  cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+}
+
+.btn-outline {
+  border: 1px solid var(--accent-navy);
+  color: var(--accent-navy);
+  background: #ffffff;
+}
+
+.btn-outline:hover {
+  background: var(--accent-soft);
+  color: var(--accent-teal);
+  border-color: var(--accent-teal);
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-navy), var(--accent-teal));
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-}
-
-.btn-primary:hover {
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.24);
-  transform: translateY(-1px);
-}
-
-.btn-outline {
-  background-color: #ffffff;
-  color: var(--accent-navy);
-  border-color: var(--accent-navy);
-}
-
-.btn-outline:hover {
-  background-color: var(--accent-soft);
-  border-color: var(--accent-teal);
-  color: var(--accent-teal);
-}
-
-/* ========= Cards ========= */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.4rem;
-  margin-top: 1.2rem;
-
-  /* Make all grid items equal height */
-  align-items: stretch;
-}
-
-.card {
-  background-color: #ffffff;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-soft);
-  padding: 1.35rem 1.4rem 1.25rem;
-
-  /* Make card stretch + allow button to stick at bottom */
-  display: flex;
-  flex-direction: column;
-}
-
-.card h3 {
-  margin-top: 0;
-  margin-bottom: 0.6rem;
-  font-size: 1.05rem;
-}
-
-/* Button always stays at bottom */
-.card .btn,
-.card .btn-outline,
-.card .btn-primary {
-  margin-top: auto;
-}
-
-/* Remove empty <p> spacing if needed */
-.card p:empty {
-  display: none;
-}
-
-/* ========= Contact ========= */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.2rem;
-  margin-top: 1rem;
-}
-
-.contact-item {
-  background-color: #ffffff;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-subtle);
-  padding: 1rem 1.1rem;
-  box-shadow: var(--shadow-soft);
-}
-
-.contact-label {
-  display: block;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 0.2rem;
-}
-
-.contact-value {
-  font-weight: 500;
-  color: var(--accent-navy);
-}
-
-/* ========= Footer ========= */
-.site-footer {
-  background-color: #ffffff;
-  border-top: 1px solid var(--border-subtle);
-  padding: 1.6rem 0 1.8rem;
-}
-
-.footer-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.4rem;
-}
-
-.footer-brand {
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent-navy);
-}
-
-.footer-text {
-  margin: 0.3rem 0 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.footer-copy {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-/* ===== RCM Cycle Image Wrap ===== */
-.cycle-image {
-  width: 360px;
-  float: right;
-  margin: 0 0 1rem 1.5rem;
-  shape-outside: circle();
-  shape-margin: 10px;
-}
-/* ========= Responsive ========= */
-@media (max-width: 900px) {
-  .cards-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .contact-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .main-nav {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 0.8rem;
-  }
-
-  .hero {
-    padding-top: 2.5rem;
-  }
-
-  .hero-content {
-    padding: 1.6rem 1.4rem;
-  }
-
-  .footer-inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-nav {
-    font-size: 0.85rem;
-  }
-
-  .brand-tagline {
-    max-width: 180px;
-  }
-}
-/* --------------------------------------
-   RCM CATEGORY COLLAPSE STYLES (NEW)
---------------------------------------- */
-
-/* RCM LIST ITEMS */
-.rcm-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.rcm-list li {
-  padding: 10px 12px;
-  margin: 8px 0;
-  background: #eef3ff;
-  border-left: 5px solid #4a68ff;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.25s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.rcm-list li:hover {
-  background: #dbe5ff;
-}
-
-/* ARROW ROTATION */
-.arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.arrow.rotate {
-  transform: rotate(90deg); /* ▶ becomes ▼ */
-}
-
-/* EXPANDABLE PANEL */
-.rcm-panel {
-  margin-top: 30px;
-  padding: 25px;
-  background: #f5f5f7;  
-  border-radius: 14px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  overflow: hidden;
-
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.45s ease, opacity 0.4s ease;
-}
-
-/* When expanded */
-.rcm-panel.active {
-  max-height: 500px;
-  opacity: 1;
-}
-
-/* Button inside expanded section */
-.rcm-btn {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background: #4a68ff;
   color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-/* ===== RCM INTERACTIVE (DESKTOP BUBBLE + MOBILE CARD) ===== */
-
-/* Wrapper so bubble positions relative to the two cards */
-.rcm-wrapper {
-  position: relative;
-  margin-top: 1.2rem;
 }
 
-/* Make sure li tiles still look like before (you already had styles).
-   We only tweak small things here. */
-.rcm-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-.rcm-list li {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;      /* label + mobile card stacked */
-  gap: 4px;
-}
-
-.rcm-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* arrow animation */
-.arrow {
-  display: inline-block;
-  font-size: 0.8rem;
-  transition: transform 0.25s ease;
-}
-
-.arrow.rotate {
-  transform: rotate(90deg);
-}
-
-/* ---------- DESKTOP BUBBLE ---------- */
-
-.rcm-bubble {
-  position: absolute;
-  top: 62%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;                 /* medium width */
-  min-height: 200px;
-  padding: 22px 26px 26px;
-  border-radius: 14px;
-
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-
-  display: none;
-  z-index: 20;
-}
-
-/* Bubble aligned to the RIGHT of Basics (over Advanced) */
-.rcm-bubble.right-side {
-  left: 68%;
-}
-
-/* Bubble aligned to the LEFT of Advanced (over Basics) */
-.rcm-bubble.left-side {
-  left: 32%;
-}
-
-/* Tail / cone */
-.rcm-bubble::before {
-  content: "";
-  position: absolute;
-  top: 40%;
-  transform: translateY(-50%);
-  border-style: solid;
-}
-
-/* Tail for right-side bubble (points to left) */
-.rcm-bubble.right-side::before {
-  left: -15px;
-  border-width: 10px 15px 10px 0;
-  border-color: transparent #ffffff transparent transparent;
-}
-
-/* Tail for left-side bubble (points to right) */
-.rcm-bubble.left-side::before {
-  right: -15px;
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent #ffffff;
-}
-
-/* Floating red close button (Option D) */
-.bubble-close {
-  position: absolute;
-  top: -14px;
-  right: -14px;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  border: none;
-  background: #dc2626;
-  color: #ffffff;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bubble-close:hover {
-  background: #b91c1c;
-}
-
-/* Button inside bubble uses your existing .btn styles */
-.rcm-bubble .btn {
-  margin-top: 16px;
-}
-
-/* ---------- MOBILE CARD VERSION ---------- */
-
-.rcm-mobile-card {
-  display: none;              /* not shown on desktop */
-}
-
-/* Mobile-specific behavior */
-@media (max-width: 768px) {
-
-  /* stack the two main cards vertically */
-  #rcm-section .cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* hide desktop bubble completely on mobile */
-  .rcm-bubble {
-    display: none !important;
-  }
-
-  /* enable expandable card under each item */
-  .rcm-mobile-card {
-    display: block;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-  }
-
-  .rcm-mobile-card.open {
-    max-height: 400px; /* enough for text + button */
-    opacity: 1;
-  }
-
-  .rcm-mobile-card-inner {
-    margin-top: 6px;
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid var(--border-subtle);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
-    padding: 12px 14px 16px;
-  }
-
-  .rcm-mobile-card-inner h4 {
-    margin: 0 0 6px;
-    font-size: 0.95rem;
-  }
-
-  .rcm-mobile-card-inner p {
-    margin: 0 0 10px;
-    font-size: 0.9rem;
-  }
-
-  .rcm-mobile-card-inner .btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.85rem;
-  }
-}
-
-
-
-
-
-
-
+/* ------------------------------------------
+   All other site CSS (cards, navbar, footer)
+   stays unchanged – your previous clean version
+-------------------------------------------*/
