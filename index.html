@@ -192,7 +192,7 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
     </div>
   </div>
 </section>
-<!-- ============= RCM BASICS + ADVANCED RCM (BUBBLE VERSION) ============= -->
+<!-- ============= RCM BASICS + ADVANCED RCM (BUBBLE DESKTOP / CARD MOBILE) ============= -->
 <section id="rcm-section" class="section section-alt">
   <div class="container section-inner">
 
@@ -208,11 +208,20 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
           <h3>⭐ RCM Basics</h3>
 
           <ul class="rcm-list">
-            <li onclick="toggleBubble('pos', this, 'right')">
-              <span class="arrow">▶</span> POS – Place of Service
+            <li onclick="handleRcmClick('pos', 'right', this)">
+              <span class="arrow">▶</span>
+              <span class="rcm-label">POS – Place of Service</span>
+
+              <!-- MOBILE CARD HOLDER -->
+              <div class="rcm-mobile-card"></div>
             </li>
-            <li onclick="toggleBubble('clearing', this, 'right')">
-              <span class="arrow">▶</span> Clearing House
+
+            <li onclick="handleRcmClick('clearing', 'right', this)">
+              <span class="arrow">▶</span>
+              <span class="rcm-label">Clearing House</span>
+
+              <!-- MOBILE CARD HOLDER -->
+              <div class="rcm-mobile-card"></div>
             </li>
           </ul>
         </article>
@@ -222,20 +231,29 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
           <h3>⭐ Advanced RCM</h3>
 
           <ul class="rcm-list">
-            <li onclick="toggleBubble('edi', this, 'left')">
-              <span class="arrow">▶</span> EDI – Electronic Data Interchange
+            <li onclick="handleRcmClick('edi', 'left', this)">
+              <span class="arrow">▶</span>
+              <span class="rcm-label">EDI – Electronic Data Interchange</span>
+
+              <!-- MOBILE CARD HOLDER -->
+              <div class="rcm-mobile-card"></div>
             </li>
-            <li onclick="toggleBubble('pfs', this, 'left')">
-              <span class="arrow">▶</span> PFS – Provider Fee Schedule
+
+            <li onclick="handleRcmClick('pfs', 'left', this)">
+              <span class="arrow">▶</span>
+              <span class="rcm-label">PFS – Provider Fee Schedule</span>
+
+              <!-- MOBILE CARD HOLDER -->
+              <div class="rcm-mobile-card"></div>
             </li>
           </ul>
         </article>
 
       </div>
 
-      <!-- GLASSY BUBBLE BOX -->
+      <!-- DESKTOP FLOATING BUBBLE -->
       <div id="rcm-bubble" class="rcm-bubble">
-        <button class="bubble-close" onclick="closeBubble(event)">✕</button>
+        <button class="bubble-close" onclick="closeRcmBubble(event)">✕</button>
         <h3 id="rcm-bubble-title"></h3>
         <p id="rcm-bubble-body"></p>
         <a id="rcm-bubble-btn" class="btn btn-outline" target="_blank">Open</a>
@@ -474,6 +492,7 @@ function closeBubble(event) {
 
 </body>
 </html>
+
 
 
 
