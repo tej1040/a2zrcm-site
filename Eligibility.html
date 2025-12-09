@@ -1,0 +1,299 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eligibility</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #dce6f7, #f1f5ff);
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    #searchInput {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #aaa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    /* TILE STYLE (OPTION C) */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+    }
+    .tile {
+        background: #eef3ff;
+        border-left: 6px solid #4a68ff;
+        padding: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .tile:hover {
+        background: #dbe5ff;
+    }
+
+    /* MODAL */
+    #detailModal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+    }
+    #detailBox {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 700px;
+        width: 90%;
+        max-height: 80%;
+        overflow-y: auto;
+    }
+    #closeBtn {
+        margin-top: 10px;
+        background: red;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    /* HEADER COLOR INSIDE DETAILS */
+    #detailDesc strong {
+        color: #1a3db1;   /* solid blue */
+        font-size: 17px;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Eligibility Checker</h1>
+
+    <input type="text" id="searchInput" placeholder="Search payer or eligibility details..." onkeyup="searchEligibility()">
+
+    <div class="grid">
+        <div class="tile" data-key="Medicare">Medicare</div>
+        <div class="tile" data-key="Medicaid">Medicaid</div>
+        <div class="tile" data-key="Tricare">Tricare</div>
+        <div class="tile" data-key="CHAMPVA">CHAMPVA</div>
+        <div class="tile" data-key="Auto">Auto Liability</div>
+        <div class="tile" data-key="WC">Workers' Compensation</div>
+        <div class="tile" data-key="COBRA">COBRA</div>
+        <div class="tile" data-key="BCBS">BCBS</div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div id="detailModal">
+    <div id="detailBox">
+        <h2 id="detailTitle"></h2>
+        <p id="detailDesc" style="white-space: pre-line; line-height: 1.5;"></p>
+        <div id="closeBtn">Close</div>
+    </div>
+</div>
+
+<script>
+const details = {
+
+/* ------------------ MEDICARE ------------------ */
+"Medicare": `
+<strong>General Eligibility</strong>
+&#8226; Age 65 or older<br>
+&#8226; OR under 65 if and only if:<br>
+&nbsp;&nbsp;&nbsp;&#8226; have received 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=SSDI" target="_blank">Social Security Disability Insurance (SSDI)</a> benefits for 24 months<br>
+&nbsp;&nbsp;&nbsp;&#8226; OR diagnosed with 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=ALS" target="_blank">ALS (Amyotrophic Lateral Sclerosis)</a><br>
+&nbsp;&nbsp;&nbsp;&#8226; OR diagnosed with 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=ESRD" target="_blank">End-Stage Renal Disease (ESRD)</a> – requires dialysis or transplant<br>
+
+<strong>Medicare Parts</strong><br>
+• Part A – Hospital Insurance<br>
+• Part B – Medical/Provider Services<br>
+• Part C – Medicare Advantage<br>
+• Part D – Prescription Drugs<br>
+
+<strong>Verification Notes</strong><br>
+• Confirm MBI number<br>
+• Check Part A/B effective dates<br>
+• Verify if Part C replaces A/B billing<br>
+• ESRD requires special eligibility checks<br>
+`,
+
+/* ------------------ MEDICAID ------------------ */
+"Medicaid": `
+<strong>Medicaid – Detailed Eligibility Rules</strong><br>
+
+<strong>General Eligibility</strong><br>
+&#8226; Low income, and income limits vary by state<br>
+&#8226; Pregnant women<br>
+&#8226; Children under 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=CHIP" target="_blank">CHIP</a><br>
+&#8226; Low-income adults under 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=ACA" target="_blank">ACA expansion</a><br>
+&#8226; Individuals with disabilities or long-term care needs, offering coverage such as nursing home care and extensive 
+<a href="https://tej1040.github.io/Abbreviations/index.html?search=HCBS" target="_blank">HCBS</a><br>
+`,
+
+/* ------------------ TRICARE ------------------ */
+"Tricare": `
+<strong>Tricare Eligibility:</strong><br>
+• Active duty military<br>
+• Retired military<br>
+• National Guard/Reserves<br>
+• Spouses & dependents<br>
+
+<strong>Plan Types:</strong><br>
+• Tricare Prime – HMO style<br>
+• Tricare Select – PPO style<br>
+• Tricare For Life – Secondary to Medicare A/B<br>
+• Tricare East & West – Regional plans<br>
+• Tricare Reserve Select<br>
+• Tricare Young Adult (till 26)<br>
+
+<strong>Verification:</strong><br>
+• Must check DEERS eligibility<br>
+`,
+
+/* ------------------ CHAMPVA ------------------ */
+"CHAMPVA": `
+<strong>CHAMPVA Eligibility:</strong><br>
+• Spouses & dependents of permanently disabled veterans<br>
+• Not eligible if patient qualifies for TRICARE<br>
+• Medicare A/B required after age 65<br>
+
+<strong>Coverage Notes:</strong><br>
+• Acts as secondary payer<br>
+• Some services require VA authorization<br>
+`,
+
+/* ------------------ AUTO LIABILITY ------------------ */
+"Auto": `
+<strong>Auto Liability (MVA) Eligibility:</strong><br>
+
+<strong>Coverage Applies When:</strong><br>
+• Injury caused by motor vehicle accident<br>
+• Claim number must be verified<br>
+• Adjuster, carrier, and policy must be valid<br>
+
+<strong>Coverage Types:</strong><br>
+• Med-Pay – Pays regardless of fault<br>
+• PIP – Pays medical + lost wages<br>
+• At-Fault Liability – If insured caused accident<br>
+
+<strong>Verification:</strong><br>
+• Determine primary payer (Auto vs Health)<br>
+• No-fault states → Auto pays first<br>
+• At-fault states → Based on responsible party<br>
+`,
+
+/* ------------------ WORKERS' COMP ------------------ */
+"WC": `
+<strong>Workers' Compensation Eligibility:</strong><br>
+• Must be work-related injury<br>
+
+<strong>Required Info:</strong><br>
+• Claim number<br>
+• Employer name<br>
+• Adjuster or TPA<br>
+• Date of injury<br>
+
+<strong>Coverage Notes:</strong><br>
+• WC pays 100% for approved injuries<br>
+• No copay or deductible<br>
+• Authorization needed for imaging, PT/OT, surgeries<br>
+`,
+
+/* ------------------ COBRA ------------------ */
+"COBRA": `
+<strong>COBRA Eligibility:</strong><br>
+• Job loss or reduction in work hours<br>
+• Divorce, death of employee, dependents aging out<br>
+
+<strong>Coverage Duration:</strong><br>
+• 18 months standard<br>
+• 29 months with disability<br>
+• 36 months for dependents<br>
+
+<strong>Notes:</strong><br>
+• Patient pays full premium + fees<br>
+• Same coverage as employer group plan<br>
+`,
+
+/* ------------------ BCBS ------------------ */
+"BCBS": `
+<strong>BCBS Eligibility:</strong><br>
+
+<strong>Home Plan:</strong><br>
+• Identified using the 3-letter prefix<br>
+
+<strong>Local (Host) Plan:</strong><br>
+• State where provider treats patient<br>
+• Handles eligibility, authorization & claims<br>
+
+<strong>Plan Types:</strong><br>
+• PPO<br>
+• HMO<br>
+• BlueCard PPO (out-of-state)<br>
+• Federal BCBS (FEP)<br>
+
+<strong>Verification:</strong><br>
+• Prefix determines routing<br>
+• Use BCBS portal for out-of-area members<br>
+`
+};
+
+/* ------------------ SEARCH FUNCTION ------------------ */
+function searchEligibility() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll(".tile").forEach(tile => {
+        let key = tile.dataset.key;
+        let text = (key + " " + details[key]).toLowerCase();
+        tile.style.display = text.includes(input) ? "block" : "none";
+    });
+}
+
+/* ------------------ OPEN MODAL ------------------ */
+document.querySelectorAll(".tile").forEach(tile => {
+    tile.addEventListener("click", () => {
+        let key = tile.dataset.key;
+        document.getElementById("detailTitle").innerText = key;
+        document.getElementById("detailDesc").innerHTML = details[key];
+        document.getElementById("detailModal").style.display = "flex";
+    });
+});
+
+/* ------------------ CLOSE MODAL ------------------ */
+document.getElementById("closeBtn").onclick = () => {
+    document.getElementById("detailModal").style.display = "none";
+};
+</script>
+
+</body>
+</html>
