@@ -54,9 +54,7 @@
           <p className="eyebrow">RCM Learning Hub</p>
           <h1>Your Partner in AR Knowledge</h1>
           <p class="hero-lead">
-            Here, you’ll find everything you need to build strong AR and RCM skills, from industry abbreviations and payer eligibility rules to real AR scenarios and interactive mock tests. Whether you're just starting your journey or leveling up for a team lead/QA role, this platform will guide you step-by-step with clarity and confidence. We are continuously adding more features, including payer guidelines, denial management, appeal strategies, and interview prep content, so keep checking back!
-            If you have suggestions, corrections, or ideas you'd like to see on the site, feel free to reach out.
-            Your feedback helps us improve and grow this knowledge hub for everyone.
+            Here, you’ll find everything you need to build strong AR and RCM skills...
           </p>
         </div>
       </div>
@@ -184,7 +182,7 @@
       </div>
     </section>
 
-    <!-- ============= RCM BASICS + ADVANCED RCM ============= -->
+    <!-- ============= RCM BASICS + ADVANCED RCM (REPLACED COMPLETELY) ============= -->
     <section id="rcm-section" class="section section-alt">
       <div class="container section-inner">
 
@@ -200,23 +198,33 @@
               <h3>⭐ RCM Basics</h3>
 
               <ul class="rcm-list">
-                <!-- POS -->
-                <li onclick="handleRcmClick('pos', 'right', this)">
-                  <span class="arrow">▶</span>
-                  <span class="rcm-label">POS – Place of Service</span>
 
-                  <!-- MOBILE DROPDOWN HOLDER -->
-                  <div class="rcm-mobile-card"></div>
+                <!-- POS -->
+                <li class="rcm-item" data-type="pos">
+                  <div class="rcm-item-header">
+                    <span class="arrow">▶</span>
+                    <span class="rcm-label">POS – Place of Service</span>
+                  </div>
+
+                  <div class="rcm-expand">
+                    <p>POS codes identify where the service was provided (office, hospital, home, telehealth, etc.).</p>
+                    <a href="https://a2zrcm.co.in/POS" target="_blank" class="btn btn-outline">View Full POS List</a>
+                  </div>
                 </li>
 
                 <!-- Clearing House -->
-                <li onclick="handleRcmClick('clearing', 'right', this)">
-                  <span class="arrow">▶</span>
-                  <span class="rcm-label">Clearing House</span>
+                <li class="rcm-item" data-type="clearing">
+                  <div class="rcm-item-header">
+                    <span class="arrow">▶</span>
+                    <span class="rcm-label">Clearing House</span>
+                  </div>
 
-                  <!-- MOBILE DROPDOWN HOLDER -->
-                  <div class="rcm-mobile-card"></div>
+                  <div class="rcm-expand">
+                    <p>A clearing house checks claims, applies payer edits, and forwards clean claims to insurance companies.</p>
+                    <a href="https://a2zrcm.co.in/Clearing House" target="_blank" class="btn btn-outline">Learn About Clearing House</a>
+                  </div>
                 </li>
+
               </ul>
             </article>
 
@@ -225,40 +233,41 @@
               <h3>⭐ Advanced RCM</h3>
 
               <ul class="rcm-list">
-                <!-- EDI -->
-                <li onclick="handleRcmClick('edi', 'left', this)">
-                  <span class="arrow">▶</span>
-                  <span class="rcm-label">EDI – Electronic Data Interchange</span>
 
-                  <!-- MOBILE DROPDOWN HOLDER -->
-                  <div class="rcm-mobile-card"></div>
+                <!-- EDI -->
+                <li class="rcm-item" data-type="edi">
+                  <div class="rcm-item-header">
+                    <span class="arrow">▶</span>
+                    <span class="rcm-label">EDI – Electronic Data Interchange</span>
+                  </div>
+
+                  <div class="rcm-expand">
+                    <p>EDI enables digital transmission of claims, eligibility checks, ERAs, and claim status inquiries.</p>
+                    <a href="https://a2zrcm.co.in/EDI" target="_blank" class="btn btn-outline">Learn About EDI</a>
+                  </div>
                 </li>
 
                 <!-- PFS -->
-                <li onclick="handleRcmClick('pfs', 'left', this)">
-                  <span class="arrow">▶</span>
-                  <span class="rcm-label">PFS – Provider Fee Schedule</span>
+                <li class="rcm-item" data-type="pfs">
+                  <div class="rcm-item-header">
+                    <span class="arrow">▶</span>
+                    <span class="rcm-label">PFS – Provider Fee Schedule</span>
+                  </div>
 
-                  <!-- MOBILE DROPDOWN HOLDER -->
-                  <div class="rcm-mobile-card"></div>
+                  <div class="rcm-expand">
+                    <p>PFS determines allowed amounts using RVUs, GPCI, and CMS conversion factors for each CPT code.</p>
+                    <a href="https://a2zrcm.co.in/PFS" target="_blank" class="btn btn-outline">More Details</a>
+                  </div>
                 </li>
+
               </ul>
             </article>
 
-          </div>
-
-          <!-- DESKTOP FLOATING BUBBLE (SINGLE GLOBAL) -->
-          <div id="rcm-bubble" class="rcm-bubble">
-            <button class="bubble-close" onclick="closeRcmBubble(event)">✕</button>
-            <h3 id="rcm-bubble-title"></h3>
-            <p id="rcm-bubble-body"></p>
-            <a id="rcm-bubble-btn" class="btn btn-outline" target="_blank">Open</a>
           </div>
         </div>
 
       </div>
     </section>
-
     <!-- ============= POS SECTION ============= -->
     <section id="pos" class="section section-alt">
       <div class="container section-inner">
@@ -402,159 +411,29 @@
       </div>
     </div>
   </footer>
+<!-- ============= RCM EXPAND JAVASCRIPT (NEW) ============= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const items = document.querySelectorAll(".rcm-item");
 
-  <!-- ============= RCM COLLAPSE JAVASCRIPT ============= -->
-  <script>
-  // Shared data for all topics
-  const RCM_DATA = {
-    pos: {
-      title: "POS – Place of Service",
-      body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
-      href: "https://a2zrcm.co.in/POS",
-      btnText: "View Full POS List"
-    },
-    clearing: {
-      title: "Clearing House",
-      body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance before they reach the payer.",
-      href: "https://a2zrcm.co.in/Clearing House",
-      btnText: "Learn About Clearing House"
-    },
-    edi: {
-      title: "EDI – Electronic Data Interchange",
-      body: "EDI enables digital exchange of claims, eligibility checks, ERAs, and claim status updates between providers and payers.",
-      href: "https://a2zrcm.co.in/EDI",
-      btnText: "Learn About EDI"
-    },
-    pfs: {
-      title: "PFS – Provider Fee Schedule",
-      body: "PFS determines allowed amounts for each CPT/HCPCS code using RVUs, GPCI, and the CMS Conversion Factor.",
-      href: "https://a2zrcm.co.in/PFS",
-      btnText: "More Details on PFS"
-    }
-  };
+  items.forEach(item => {
+    const header = item.querySelector(".rcm-item-header");
 
-  let rcmActiveItem = null;
-  let rcmOpenType  = null;
+    header.addEventListener("click", () => {
 
-  // Main click handler (called from HTML)
-  function handleRcmClick(type, side, li) {
-    const isMobile = window.innerWidth <= 768;
+      // Close all others
+      items.forEach(other => {
+        if (other !== item) {
+          other.classList.remove("open");
+        }
+      });
 
-    if (isMobile) {
-      openRcmMobileCard(type, li);
-    } else {
-      openRcmDesktopBubble(type, side, li);
-    }
-  }
-
-  /* ---------- DESKTOP BUBBLE LOGIC ---------- */
-
-  function openRcmDesktopBubble(type, side, li) {
-    const bubble   = document.getElementById("rcm-bubble");
-    const titleEl  = document.getElementById("rcm-bubble-title");
-    const bodyEl   = document.getElementById("rcm-bubble-body");
-    const btnEl    = document.getElementById("rcm-bubble-btn");
-    const arrow    = li.querySelector(".arrow");
-
-    // If clicking same item again → close
-    if (rcmOpenType === type && bubble.style.display === "block") {
-      closeRcmBubble();
-      return;
-    }
-
-    // Reset any open mobile cards
-    document.querySelectorAll(".rcm-mobile-card.open").forEach(card => {
-      card.classList.remove("open");
-      card.innerHTML = "";
+      // Toggle current
+      item.classList.toggle("open");
     });
+  });
+});
+</script>
 
-    // Reset previous arrow rotation
-    if (rcmActiveItem) {
-      const prevArrow = rcmActiveItem.querySelector(".arrow");
-      if (prevArrow) prevArrow.classList.remove("rotate");
-    }
-
-    // Rotate current arrow
-    arrow.classList.add("rotate");
-    rcmActiveItem = li;
-
-    // Set content
-    const d = RCM_DATA[type];
-    titleEl.textContent = d.title;
-    bodyEl.textContent  = d.body;
-    btnEl.href          = d.href;
-    btnEl.textContent   = d.btnText;
-
-    // Set side position (Basics → right, Advanced → left)
-    bubble.classList.remove("left-side", "right-side");
-    bubble.classList.add(side === "left" ? "left-side" : "right-side");
-
-    bubble.style.display = "block";
-    rcmOpenType = type;
-  }
-
-  function closeRcmBubble(event) {
-    if (event) event.stopPropagation();
-
-    const bubble = document.getElementById("rcm-bubble");
-    bubble.style.display = "none";
-
-    if (rcmActiveItem) {
-      const prevArrow = rcmActiveItem.querySelector(".arrow");
-      if (prevArrow) prevArrow.classList.remove("rotate");
-    }
-
-    rcmActiveItem = null;
-    rcmOpenType   = null;
-  }
-
-  /* ---------- MOBILE CARD LOGIC ---------- */
-
-  function openRcmMobileCard(type, li) {
-    const card  = li.querySelector(".rcm-mobile-card");
-    const arrow = li.querySelector(".arrow");
-
-    const alreadyOpen = card.classList.contains("open");
-
-    // Close any open desktop bubble
-    closeRcmBubble();
-
-    // Close all other mobile cards & reset arrows
-    document.querySelectorAll(".rcm-mobile-card.open").forEach(c => {
-      c.classList.remove("open");
-      c.innerHTML = "";
-    });
-    document.querySelectorAll(".rcm-list .arrow.rotate").forEach(a => {
-      a.classList.remove("rotate");
-    });
-
-    if (alreadyOpen) {
-      card.classList.remove("open");
-      card.innerHTML = "";
-      rcmActiveItem = null;
-      rcmOpenType   = null;
-      return;
-    }
-
-    // Rotate current arrow
-    arrow.classList.add("rotate");
-    rcmActiveItem = li;
-    rcmOpenType   = type;
-
-    const d = RCM_DATA[type];
-
-    card.innerHTML = `
-      <div class="rcm-mobile-card-inner">
-        <h4>${d.title}</h4>
-        <p>${d.body}</p>
-        <a href="${d.href}" target="_blank" class="btn btn-outline">${d.btnText}</a>
-      </div>
-    `;
-    card.classList.add("open");
-  }
-  </script>
-
-</body>
-</html>
 
 
