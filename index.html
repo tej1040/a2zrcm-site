@@ -205,28 +205,40 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
       <!-- ⭐ RCM Basics -->
       <article class="card">
         <h3>⭐ RCM Basics</h3>
-        <p>
-          Learn foundational Revenue Cycle concepts including POS, EDI, Clearinghouse,
-          Eligibility, COB, and payer fundamentals.
-        </p>
-        <div class="section-actions">
-          <a href="rcmbasics.html" class="btn btn-outline">Open</a>
-        </div>
+
+        <ul class="rcm-list">
+          <li onclick="toggleContent('pos', this)">
+            <span class="arrow">▶</span> POS – Place of Service
+          </li>
+
+          <li onclick="toggleContent('clearing', this)">
+            <span class="arrow">▶</span> Clearing House
+          </li>
+        </ul>
       </article>
 
       <!-- ⭐ Advanced RCM -->
       <article class="card">
         <h3>⭐ Advanced RCM</h3>
-        <p>
-          Explore advanced topics such as Denials, Modifiers, Appeals, Payer Rules,
-          Contract Management, and Fee Schedules.
-        </p>
-        <div class="section-actions">
-          <a href="advancedrcm.html" class="btn btn-outline">Open</a>
-        </div>
+
+        <ul class="rcm-list">
+          <li onclick="toggleContent('edi', this)">
+            <span class="arrow">▶</span> EDI – Electronic Data Interchange
+          </li>
+
+          <li onclick="toggleContent('pfs', this)">
+            <span class="arrow">▶</span> PFS – Provider Fee Schedule
+          </li>
+        </ul>
       </article>
 
     </div>
+
+    <!-- EXPANDABLE FULL-WIDTH PANEL -->
+    <div id="rcm-content-panel" class="rcm-panel">
+      <div id="rcm-content"></div>
+    </div>
+
   </div>
 </section>
     
