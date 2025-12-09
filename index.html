@@ -406,92 +406,159 @@ Your feedback helps us improve and grow this knowledge hub for everyone.
 
 <!-- ============= RCM COLLAPSE JAVASCRIPT ============= -->
 <script>
-let activeItem = null;   // which list item is active
-let openType = null;     // which topic is open
+// Shared data for all topics
+const RCM_DATA = {
+  pos: {
+    title: "POS – Place of Service",
+    body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
+    href: "https://a2zrcm.co.in/POS",
+    btnText: "View Full POS List"
+  },
+  clearing: {
+    title: "Clearing House",
+    body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance before they reach the payer.",
+    href: "https://a2zrcm.co.in/Clearing House",
+    btnText: "Learn About Clearing House"
+  },
+  edi: {
+    title: "EDI – Electronic Data Interchange",
+    body: "EDI enables digital exchange of claims, eligibility checks, ERAs, and claim status updates between providers and payers.",
+    href: "https://a2zrcm.co.in/EDI",
+    btnText: "Learn About EDI"
+  },
+  pfs: {
+    title: "PFS – Provider Fee Schedule",
+    body: "PFS determines allowed amounts for each CPT/HCPCS code using RVUs, GPCI, and the CMS Conversion Factor.",
+    href: "pfs.html",
+    btnText: "More Details on PFS"
+  }
+};
 
-function toggleBubble(type, element, side) {
-    const bubble = document.getElementById("rcm-bubble");
-    const titleEl = document.getElementById("rcm-bubble-title");
-    const bodyEl  = document.getElementById("rcm-bubble-body");
-    const btnEl   = document.getElementById("rcm-bubble-btn");
-    const arrow   = element.querySelector(".arrow");
+let rcmActiveItem = null;
+let rcmOpenType  = null;
 
-    // If clicking same item again → close
-    if (openType === type && bubble.style.display === "block") {
-        closeBubble();
-        return;
-    }
+// Main click handler (called from HTML)
+function handleRcmClick(type, side, li) {
+  const isMobile = window.innerWidth <= 768;
 
-    // Reset previous arrow
-    if (activeItem) {
-        const prevArrow = activeItem.querySelector(".arrow");
-        if (prevArrow) prevArrow.classList.remove("rotate");
-    }
-
-    // Rotate current arrow
-    arrow.classList.add("rotate");
-    activeItem = element;
-
-    // Content for each topic
-    const data = {
-        pos: {
-            title: "POS – Place of Service",
-            body: "POS codes identify where the service was provided (hospital, office, home, telehealth, etc.).",
-            href: "https://a2zrcm.co.in/POS",
-            btnText: "View Full POS List"
-        },
-        clearing: {
-            title: "Clearing House",
-            body: "A clearing house checks claims for errors, applies payer edits, and sends clean claims to insurance.",
-            href: "https://a2zrcm.co.in/Clearing House",
-            btnText: "Learn About Clearing House"
-        },
-        edi: {
-            title: "EDI – Electronic Data Interchange",
-            body: "EDI enables digital exchange of claims, eligibility checks, remits, and claim status between providers and payers.",
-            href: "https://a2zrcm.co.in/EDI",
-            btnText: "Learn About EDI"
-        },
-        pfs: {
-            title: "PFS – Provider Fee Schedule",
-            body: "PFS determines allowed amounts using RVUs, GPCI, and the CMS Conversion Factor for each CPT/HCPCS code.",
-            href: "pfs.html",
-            btnText: "More Details on PFS"
-        }
-    };
-
-    const d = data[type];
-    titleEl.textContent = d.title;
-    bodyEl.textContent  = d.body;
-    btnEl.href          = d.href;
-    btnEl.textContent   = d.btnText;
-
-    // Side (left/right) positioning
-    bubble.classList.remove("left-side", "right-side");
-    bubble.classList.add(side === "left" ? "left-side" : "right-side");
-
-    bubble.style.display = "block";
-    openType = type;
+  if (isMobile) {
+    openRcmMobileCard(type, li);
+  } else {
+    openRcmDesktopBubble(type, side, li);
+  }
 }
 
-function closeBubble(event) {
-    if (event) {
-        event.stopPropagation();
-    }
-    const bubble = document.getElementById("rcm-bubble");
-    bubble.style.display = "none";
+/* ---------- DESKTOP BUBBLE LOGIC ---------- */
 
-    if (activeItem) {
-        const prevArrow = activeItem.querySelector(".arrow");
-        if (prevArrow) prevArrow.classList.remove("rotate");
-    }
-    activeItem = null;
-    openType = null;
+function openRcmDesktopBubble(type, side, li) {
+  const bubble   = document.getElementById("rcm-bubble");
+  const titleEl  = document.getElementById("rcm-bubble-title");
+  const bodyEl   = document.getElementById("rcm-bubble-body");
+  const btnEl    = document.getElementById("rcm-bubble-btn");
+  const arrow    = li.querySelector(".arrow");
+
+  // If clicking same item again → close
+  if (rcmOpenType === type && bubble.style.display === "block") {
+    closeRcmBubble();
+    return;
+  }
+
+  // Reset any open mobile cards just in case
+  document.querySelectorAll(".rcm-mobile-card.open").forEach(card => {
+    card.classList.remove("open");
+    card.innerHTML = "";
+  });
+
+  // Reset previous arrow rotation
+  if (rcmActiveItem) {
+    const prevArrow = rcmActiveItem.querySelector(".arrow");
+    if (prevArrow) prevArrow.classList.remove("rotate");
+  }
+
+  // Rotate current arrow
+  arrow.classList.add("rotate");
+  rcmActiveItem = li;
+
+  // Set content
+  const d = RCM_DATA[type];
+  titleEl.textContent = d.title;
+  bodyEl.textContent  = d.body;
+  btnEl.href          = d.href;
+  btnEl.textContent   = d.btnText;
+
+  // Set side position (Basics → right, Advanced → left)
+  bubble.classList.remove("left-side", "right-side");
+  bubble.classList.add(side === "left" ? "left-side" : "right-side");
+
+  bubble.style.display = "block";
+  rcmOpenType = type;
+}
+
+function closeRcmBubble(event) {
+  if (event) event.stopPropagation();
+
+  const bubble = document.getElementById("rcm-bubble");
+  bubble.style.display = "none";
+
+  if (rcmActiveItem) {
+    const prevArrow = rcmActiveItem.querySelector(".arrow");
+    if (prevArrow) prevArrow.classList.remove("rotate");
+  }
+
+  rcmActiveItem = null;
+  rcmOpenType   = null;
+}
+
+/* ---------- MOBILE CARD LOGIC ---------- */
+
+function openRcmMobileCard(type, li) {
+  const card = li.querySelector(".rcm-mobile-card");
+  const arrow = li.querySelector(".arrow");
+
+  const alreadyOpen = card.classList.contains("open");
+
+  // Close any open bubble (if resized from desktop)
+  closeRcmBubble();
+
+  // Close all other mobile cards
+  document.querySelectorAll(".rcm-mobile-card.open").forEach(c => {
+    c.classList.remove("open");
+    c.innerHTML = "";
+  });
+  document.querySelectorAll(".rcm-list .arrow.rotate").forEach(a => {
+    a.classList.remove("rotate");
+  });
+
+  if (alreadyOpen) {
+    // If this one was open → just close it
+    card.classList.remove("open");
+    card.innerHTML = "";
+    rcmActiveItem = null;
+    rcmOpenType   = null;
+    return;
+  }
+
+  // Rotate current arrow
+  arrow.classList.add("rotate");
+  rcmActiveItem = li;
+  rcmOpenType   = type;
+
+  const d = RCM_DATA[type];
+
+  card.innerHTML = `
+    <div class="rcm-mobile-card-inner">
+      <h4>${d.title}</h4>
+      <p>${d.body}</p>
+      <a href="${d.href}" target="_blank" class="btn btn-outline">${d.btnText}</a>
+    </div>
+  `;
+  card.classList.add("open");
 }
 </script>
 
 </body>
 </html>
+
 
 
 
