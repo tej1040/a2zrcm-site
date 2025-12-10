@@ -107,12 +107,20 @@ h1 {
     color:white;
 }
 
+/* Result box — make CARC and RARC same size */
 .definition {
     background:#0f172a;
     padding:15px;
     border-radius:8px;
     margin-top:15px;
-    min-height:50px;
+    min-height:60px;   /* increased from 50 */
+    height:auto;
+}
+
+/* When empty, keep same compact size */
+.definition:empty {
+    min-height:60px;
+    height:60px;
 }
 
 .close-btn {
@@ -479,5 +487,6 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
 
