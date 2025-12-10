@@ -412,7 +412,7 @@ document.getElementById("codeInput").addEventListener("input", function () {
     }
 });
 
-/* ------------------- AUTOSUGGEST ------------------- */
+/* ------------------- AUTOSUGGEST (LIMIT 10 + CLEAN UI) ------------------- */
 document.getElementById("codeInput").addEventListener("keyup", function () {
     const type = document.getElementById("lookupType").value;
     const group = document.getElementById("carcGroup").value;
@@ -426,6 +426,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     let matches = [];
 
+    // RARC lookup
     if (type === "remark") {
         for (let key in remarkData) {
             Object.keys(remarkData[key]).forEach(code => {
@@ -434,6 +435,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
         }
     }
 
+    // CARC lookup
     if (type === "denial" && group) {
         Object.keys(carcData[group]).forEach(code => {
             if (code.startsWith(keyword)) matches.push(code);
@@ -442,19 +444,29 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     if (matches.length === 0) return;
 
+    // Limit to 10 results only
+    matches = matches.slice(0, 10);
+
     suggestBox.style.display = "block";
 
     matches.forEach(code => {
         const div = document.createElement("div");
         div.textContent = code;
+
+        div.style.padding = "10px";
+        div.style.cursor = "pointer";
+        div.style.borderBottom = "1px solid #334155";
+
         div.onclick = () => {
             document.getElementById("codeInput").value = code;
             suggestBox.style.display = "none";
             document.getElementById("codeInput").dispatchEvent(new Event("input"));
         };
+
         suggestBox.appendChild(div);
     });
 });
+
 </script>
 
 </body>
