@@ -210,12 +210,11 @@ h1 {
 <script src="carcData.js"></script>
 
 <script>
-// open modal
+// Open / Close modal
 function openLookup(){ document.getElementById("lookupModal").style.display="flex"; }
-// close modal
 function closeLookup(){ document.getElementById("lookupModal").style.display="none"; }
 
-// Switching logic
+// When user changes type (RARC / CARC)
 document.getElementById("lookupType").addEventListener("change", function () {
     const type = this.value;
 
@@ -224,36 +223,131 @@ document.getElementById("lookupType").addEventListener("change", function () {
     document.getElementById("codeResult").innerHTML = "";
 });
 
-// Code search logic
+/* ---------- RARC SEARCH (Remark Codes) ---------- */
+function searchRARC(code, resultBox) {
+    for (let key in remarkData) {
+        if (remarkData[key][code]) {
+            const info = remarkData[key][code];   // { short, full }
+
+            resultBox.innerHTML = `
+                <b>${code}</b>: ${info.short}
+                <br><br>
+                <button id="showFullBtn" style="
+                    padding:6px 10px; border:none; border-radius:6px;
+                    background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
+                    Show full description
+                </button>
+            `;
+
+            document.getElementById("showFullBtn").onclick = () => {
+                resultBox.innerHTML = `<b>${code}</b>: ${info.full}`;
+            };
+
+            return true;
+        }
+    }
+    return false;
+}
+
+/* ---------- CARC SEARCH (Denial Codes) ---------- */
+function searchCARC(group, code, resultBox) {
+    if (carcData[group] && carcData[group][code]) {
+        const info = carcData[group][code];   // { short, full }
+
+        resultBox.innerHTML = `
+            <b>${group}${code}</b>: ${info.short}
+            <br><br>
+            <button id="showFullBtn" style="
+                padding:6px 10px; border:none; border-radius:6px;
+                background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
+                Show full description
+            </button>
+        `;
+
+        document.getElementById("showFullBtn").onclick = () => {
+            resultBox.innerHTML = `<b>${group}${code}</b>: ${info.full}`;
+        };
+
+        return true;
+    }
+    return false;
+}
+
+/* ---------- MAIN INPUT HANDLER ---------- */
 document.getElementById("codeInput").addEventListener("input", function () {
     const type = document.getElementById("lookupType").value;
+    const group = document.getElementById("carcGroup").value;
     const code = this.value.trim().toUpperCase();
     const resultBox = document.getElementById("codeResult");
 
+    if (!code) { 
+        resultBox.innerHTML = ""; 
+        return; 
+    }
+
     if (type === "remark") {
-        for (let key in remarkData) {
-            if (remarkData[key][code]) {
-                resultBox.innerHTML = `<b>${code}</b>: ${remarkData[key][code]}`;
-                return;
-            }
+        if (!searchRARC(code, resultBox)) {
+            resultBox.innerHTML = "No remark code found.";
         }
-        resultBox.innerHTML = "No remark code found.";
     }
 
     if (type === "denial") {
-        const group = document.getElementById("carcGroup").value;
         if (!group) {
             resultBox.innerHTML = "Select a group code first.";
             return;
         }
-        if (carcData[group] && carcData[group][code]) {
-            resultBox.innerHTML = `<b>${group}${code}</b>: ${carcData[group][code]}`;
-            return;
+        if (!searchCARC(group, code, resultBox)) {
+            resultBox.innerHTML = "No denial code found.";
         }
-        resultBox.innerHTML = "No denial code found.";
     }
 });
-</script>
 
+/* ---------- AUTOCOMPLETE / SUGGESTIONS ---------- */
+document.getElementById("codeInput").addEventListener("keyup", function () {
+    const type = document.getElementById("lookupType").value;
+    const group = document.getElementById("carcGroup").value;
+    const keyword = this.value.trim().toUpperCase();
+    const suggestBox = document.getElementById("suggestBox");
+
+    suggestBox.innerHTML = "";
+    suggestBox.style.display = "none";
+
+    if (!keyword) return;
+
+    let matches = [];
+
+    // RARC suggestions
+    if (type === "remark") {
+        for (let key in remarkData) {
+            Object.keys(remarkData[key]).forEach(code => {
+                if (code.startsWith(keyword)) matches.push(code);
+            });
+        }
+    }
+
+    // CARC suggestions
+    if (type === "denial" && group) {
+        Object.keys(carcData[group]).forEach(code => {
+            if (code.startsWith(keyword)) matches.push(code);
+        });
+    }
+
+    if (matches.length === 0) return;
+
+    suggestBox.style.display = "block";
+
+    matches.forEach(code => {
+        const div = document.createElement("div");
+        div.textContent = code;
+        div.onclick = () => {
+            document.getElementById("codeInput").value = code;
+            suggestBox.style.display = "none";
+            document.getElementById("codeInput").dispatchEvent(new Event("input"));
+        };
+        suggestBox.appendChild(div);
+    });
+});
+</script>
 </body>
 </html>
+
