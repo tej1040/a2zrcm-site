@@ -26,7 +26,7 @@ h1 {
     margin-bottom:40px;
 }
 
-/* Section Style - Same as Clearing House */
+/* Section Style */
 .section {
     background:white;
     padding:25px;
@@ -86,6 +86,27 @@ h1 {
     color:white;
 }
 
+#suggestBox {
+    position:absolute;
+    background:#1e293b;
+    width:100%;
+    border-radius:8px;
+    max-height:150px;
+    overflow-y:auto;
+    display:none;
+    z-index:10;
+}
+
+#suggestBox div {
+    padding:10px;
+    cursor:pointer;
+    border-bottom:1px solid #334155;
+}
+
+#suggestBox div:hover {
+    background:#334155;
+}
+
 .definition {
     background:#0f172a;
     padding:15px;
@@ -118,7 +139,7 @@ h1 {
 <!-- Guide Sections -->
 <div class="section">
 <h2>What Are Remark Codes (RARC)?</h2>
-<p>Remark Codes (RARC) provide additional explanation on a claim outcome. They assist AR teams by offering detailed payer messages that accompany denial or payment decisions.</p>
+<p>Remark Codes (RARC) provide additional explanation on a claim outcome. They accompany CARC codes to give clarity behind payer decisions.</p>
 </div>
 
 <div class="section">
@@ -133,21 +154,21 @@ h1 {
 
 <div class="section">
 <h2>Who Updates RARC Codes?</h2>
-<p>X12 maintains and updates RARC codes regularly. Insurance payers follow these updates to ensure consistent remittance messaging.</p>
+<p>X12 maintains and updates RARC codes regularly. Insurance payers adopt the updates to ensure consistent remittance messaging.</p>
 </div>
 
 <div class="section">
 <h2>How Often Are RARC Codes Updated?</h2>
-<p>RARC codes change multiple times per year. New codes may be added, some removed, and definitions may be updated.</p>
+<p>RARC codes change multiple times yearly. New codes are added, old ones may be removed, and definitions often get updated.</p>
 </div>
 
 <div class="section">
 <h2>How Do RARC Codes Help AR?</h2>
 <ul>
-<li>Provide specific instructions (e.g., submit medical records).</li>
-<li>Help AR teams decide next steps.</li>
-<li>Reduce back-and-forth with payers.</li>
-<li>Speed up resolution of denials.</li>
+<li>Provide specific correction instructions.</li>
+<li>Help AR teams determine next steps.</li>
+<li>Reduce repeated payer calls.</li>
+<li>Speed up denial resolution.</li>
 </ul>
 </div>
 
@@ -179,25 +200,12 @@ h1 {
             </select>
         </div>
 
-        <!-- Step 3: Code Input -->
+        <!-- Step 3: Code Input + Suggestions -->
         <div id="codeEntryBox" style="display:none; position:relative;">
-    <label>Enter Code</label>
-    <input id="codeInput" class="dropdown" placeholder="Example: N130 or 45" autocomplete="off">
-
-    <!-- Suggestions dropdown -->
-    <div id="suggestBox" 
-         style="
-            display:none; 
-            position:absolute;
-            top:80px;
-            width:100%;
-            background:#1e293b;
-            border-radius:8px;
-            max-height:150px;
-            overflow-y:auto;
-            z-index:10;">
-    </div>
-</div>
+            <label>Enter Code</label>
+            <input id="codeInput" class="dropdown" placeholder="Example: N130 or 45" autocomplete="off">
+            <div id="suggestBox"></div>
+        </div>
 
         <div id="codeResult" class="definition"></div>
 
@@ -206,15 +214,14 @@ h1 {
     </div>
 </div>
 
+<!-- Your Data Files -->
 <script src="remarkData.js"></script>
 <script src="carcData.js"></script>
 
 <script>
-// Open / Close modal
 function openLookup(){ document.getElementById("lookupModal").style.display="flex"; }
 function closeLookup(){ document.getElementById("lookupModal").style.display="none"; }
 
-// When user changes type (RARC / CARC)
 document.getElementById("lookupType").addEventListener("change", function () {
     const type = this.value;
 
@@ -223,11 +230,11 @@ document.getElementById("lookupType").addEventListener("change", function () {
     document.getElementById("codeResult").innerHTML = "";
 });
 
-/* ---------- RARC SEARCH (Remark Codes) ---------- */
+/* ------------------- RARC SEARCH ------------------- */
 function searchRARC(code, resultBox) {
     for (let key in remarkData) {
         if (remarkData[key][code]) {
-            const info = remarkData[key][code];   // { short, full }
+            const info = remarkData[key][code];
 
             resultBox.innerHTML = `
                 <b>${code}</b>: ${info.short}
@@ -249,10 +256,10 @@ function searchRARC(code, resultBox) {
     return false;
 }
 
-/* ---------- CARC SEARCH (Denial Codes) ---------- */
+/* ------------------- CARC SEARCH ------------------- */
 function searchCARC(group, code, resultBox) {
     if (carcData[group] && carcData[group][code]) {
-        const info = carcData[group][code];   // { short, full }
+        const info = carcData[group][code];
 
         resultBox.innerHTML = `
             <b>${group}${code}</b>: ${info.short}
@@ -273,36 +280,36 @@ function searchCARC(group, code, resultBox) {
     return false;
 }
 
-/* ---------- MAIN INPUT HANDLER ---------- */
+/* ------------------- CODE INPUT EVENT ------------------- */
 document.getElementById("codeInput").addEventListener("input", function () {
     const type = document.getElementById("lookupType").value;
     const group = document.getElementById("carcGroup").value;
     const code = this.value.trim().toUpperCase();
     const resultBox = document.getElementById("codeResult");
 
-    if (!code) { 
-        resultBox.innerHTML = ""; 
-        return; 
-    }
+    if (!code) { resultBox.innerHTML = ""; return; }
 
+    // REMARK
     if (type === "remark") {
         if (!searchRARC(code, resultBox)) {
             resultBox.innerHTML = "No remark code found.";
         }
     }
 
+    // CARC
     if (type === "denial") {
         if (!group) {
             resultBox.innerHTML = "Select a group code first.";
             return;
         }
+
         if (!searchCARC(group, code, resultBox)) {
             resultBox.innerHTML = "No denial code found.";
         }
     }
 });
 
-/* ---------- AUTOCOMPLETE / SUGGESTIONS ---------- */
+/* ------------------- AUTOSUGGEST (LIMIT 5 + CLEAN UI) ------------------- */
 document.getElementById("codeInput").addEventListener("keyup", function () {
     const type = document.getElementById("lookupType").value;
     const group = document.getElementById("carcGroup").value;
@@ -316,7 +323,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     let matches = [];
 
-    // RARC suggestions
+    // RARC lookup
     if (type === "remark") {
         for (let key in remarkData) {
             Object.keys(remarkData[key]).forEach(code => {
@@ -325,7 +332,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
         }
     }
 
-    // CARC suggestions
+    // CARC lookup
     if (type === "denial" && group) {
         Object.keys(carcData[group]).forEach(code => {
             if (code.startsWith(keyword)) matches.push(code);
@@ -334,20 +341,30 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     if (matches.length === 0) return;
 
+    // Limit to 5 results only
+    matches = matches.slice(0, 5);
+
     suggestBox.style.display = "block";
 
     matches.forEach(code => {
         const div = document.createElement("div");
         div.textContent = code;
+
+        div.style.padding = "10px";
+        div.style.cursor = "pointer";
+        div.style.borderBottom = "1px solid #334155";
+
         div.onclick = () => {
             document.getElementById("codeInput").value = code;
             suggestBox.style.display = "none";
             document.getElementById("codeInput").dispatchEvent(new Event("input"));
         };
+
         suggestBox.appendChild(div);
     });
 });
+
 </script>
+
 </body>
 </html>
-
