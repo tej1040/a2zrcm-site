@@ -1,6 +1,6 @@
 const rarcData = {
     "RARC": {
-    "M1": {"X-ray not taken within the past 12 months or near enough to the start of treatment."}
+    "M1": {"X-ray not taken within the past 12 months or near enough to the start of treatment."},
     "M2": "Not paid separately when the patient is an inpatient.",
     "M3": "Equipment is the same or similar to equipment already being used.",
     "M4": "Alert: This is the last monthly installment payment for this durable medical equipment.",
