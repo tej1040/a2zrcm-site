@@ -238,18 +238,7 @@ function searchRARC(code, resultBox) {
 
             resultBox.innerHTML = `
                 <b>${code}</b>: ${info.short}
-                <br><br>
-                <button id="showFullBtn" style="
-                    padding:6px 10px; border:none; border-radius:6px;
-                    background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
-                    Show full description
-                </button>
             `;
-
-            document.getElementById("showFullBtn").onclick = () => {
-                resultBox.innerHTML = `<b>${code}</b>: ${info.full}`;
-            };
-
             return true;
         }
     }
@@ -365,6 +354,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
 
 
