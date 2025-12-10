@@ -340,7 +340,7 @@ Adjustments based on <b>payer policy or medical review</b>.
 </div>
 
 <!-- Your Data Files -->
-<script src="remarkData.js"></script>
+<script src="rarcData.js"></script>
 <script src="carcData.js"></script>
 
 <script>
@@ -357,9 +357,9 @@ document.getElementById("lookupType").addEventListener("change", function () {
 
 /* ------------------- RARC SEARCH ------------------- */
 function searchRARC(code, resultBox) {
-    for (let key in remarkData) {
-        if (remarkData[key][code]) {
-            const info = remarkData[key][code];
+    for (let key in rarcData) {
+        if (rarcData[key][code]) {
+            const info = rarcData[key][code];
 
             resultBox.innerHTML = `
                 <b>${code}</b>: ${info.short}
@@ -450,8 +450,8 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     // RARC lookup
     if (type === "remark") {
-        for (let key in remarkData) {
-            Object.keys(remarkData[key]).forEach(code => {
+        for (let key in rarcData) {
+            Object.keys(rarcData[key]).forEach(code => {
                 if (code.startsWith(keyword)) matches.push(code);
             });
         }
@@ -493,4 +493,5 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
