@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MUE & MAI – Complete Guide</title>
+
+<style>
+body {
+    background:#eef4ff;
+    font-family:Arial;
+    padding:40px;
+    color:#111;
+    margin:0;
+}
+
+.page {
+    max-width:900px;
+    margin:auto;
+    position:relative;
+}
+
+/* Title */
+h1 {
+    text-align:center;
+    font-size:32px;
+    margin-bottom:40px;
+}
+
+/* Section Box */
+.section {
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 12px rgba(0,0,0,0.05);
+    margin-bottom:25px;
+    border-left:5px solid #2563eb;
+}
+
+.section h2 { margin-top:0; }
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<h1>MUE & MAI – Complete Guide</h1>
+
+<!-- SECTION 1 -->
+<div class="section">
+<h2>What Is MUE?</h2>
+<p>
+MUE stands for <b>Medically Unlikely Edit</b>.  
+It is the <b>maximum number of units</b> Medicare will pay for a CPT/HCPCS code for a <b>single patient on a single date of service</b>.  
+MUEs prevent:
+</p>
+
+<ul>
+<li>Billing typos (like adding an extra zero)</li>
+<li>Medically impossible units</li>
+<li>Fraud or abusive billing</li>
+<li>Duplicate billing of the same service</li>
+</ul>
+
+<p>
+Example:  
+If the MUE for a code is <b>1</b> and a provider bills <b>3 units</b>, Medicare will pay only <b>1</b> and deny the rest as “Units exceed MUE.”
+</p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+<h2>Why Does Medicare Use MUE?</h2>
+<ul>
+<li>To enforce medically reasonable limits</li>
+<li>To prevent incorrect billing patterns</li>
+<li>To ensure national claim consistency</li>
+<li>To reduce unnecessary appeals and reviews</li>
+<li>To stop system errors and duplicate lines</li>
+</ul>
+
+<p>
+For coders and AR teams, understanding MUEs helps prevent denials and ensures claims are billed with correct unit structure.
+</p>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+<h2>What Is MAI?</h2>
+<p>
+<b>MAI</b> stands for <b>MUE Adjudication Indicator</b>.  
+MAI tells Medicare <b>how strictly an MUE is enforced</b> and whether an <b>appeal is possible</b>.
+</p>
+
+<p>There are <b>three</b> MAI categories used for MUE edits:</p>
+
+<ul>
+<li><b>MAI 1</b> – Claim-level edit (appeals may be possible)</li>
+<li><b>MAI 2</b> – Absolute edit (no appeals allowed)</li>
+<li><b>MAI 3</b> – Clinical edit (appeals allowed only in rare cases)</li>
+</ul>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+<h2>MAI Types Explained</h2>
+
+<h3>🟦 MAI 1 – Claim-Level Edit (Appeals Allowed)</h3>
+<p>
+These limits are based on clinical judgment, policy, or data.  
+If extra units are medically justified, <b>appeals may be successful</b>.
+</p>
+<p><b>Example:</b> CPT 96372 – Injection (MUE 4). If documentation shows 4 injections were given, excess denied units can be appealed.</p>
+
+<br>
+
+<h3>🟧 MAI 2 – Absolute Edit (No Appeals)</h3>
+<p>
+These are strict limits. Medicare considers it <b>impossible</b> to bill more than the allowed units.  
+<b>No appeal will overturn this denial.</b>
+</p>
+<p><b>Example:</b> CPT 45378 – Colonoscopy (MUE 1). You cannot bill more than 1 colonoscopy per day.</p>
+
+<br>
+
+<h3>🟩 MAI 3 – Clinical Edit (Appealable in Rare Cases)</h3>
+<p>
+These limits are strict but may have rare exceptions. Appeals are possible if strong medical necessity is documented.
+</p>
+<p><b>Example:</b> CPT 97110 – Therapeutic Exercise (MUE 6). A long post-surgical session might justify extra units.</p>
+
+</div>
+
+<!-- SECTION 5 -->
+<div class="section">
+<h2>MAI Comparison Table</h2>
+
+<table border="1" cellpadding="10" style="border-collapse:collapse; width:100%;">
+<tr style="background:#dbeafe;">
+<th>MAI Type</th>
+<th>Meaning</th>
+<th>Appeal Possible?</th>
+<th>Strictness</th>
+</tr>
+
+<tr>
+<td><b>MAI 1</b></td>
+<td>Claim-level, based on data or clinical judgment</td>
+<td>✅ Yes</td>
+<td>Medium strict</td>
+</tr>
+
+<tr>
+<td><b>MAI 2</b></td>
+<td>Absolute limit — never exceeded</td>
+<td>❌ No</td>
+<td>Very strict</td>
+</tr>
+
+<tr>
+<td><b>MAI 3</b></td>
+<td>Clinical limit, rare exceptions possible</td>
+<td>⚠ Sometimes</td>
+<td>Strict but appealable</td>
+</tr>
+</table>
+
+</div>
+
+<!-- SECTION 6 -->
+<div class="section">
+<h2>Handling MUE Denials in AR</h2>
+<ul>
+<li>Check if the units billed match documentation</li>
+<li>Correct duplicate lines or incorrect units</li>
+<li>For <b>MAI 1 or MAI 3</b> → appeal with medical necessity</li>
+<li>For <b>MAI 2</b> → do not appeal (write-off or correct claim)</li>
+<li>Review coding to ensure correct CPT/HCPCS selection</li>
+</ul>
+
+<p>
+AR teams save time by understanding which MUE denials can be corrected and which should not be appealed.
+</p>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section">
+<h2>Summary</h2>
+<p>
+MUEs define the maximum payable units per day, and MAI tells how strictly these limits are enforced.  
+Understanding MUE + MAI improves billing accuracy, prevents unnecessary denials, and guides AR teams on when appeals are worth pursuing.
+</p>
+</div>
+
+</div>
+
+</body>
+</html>
