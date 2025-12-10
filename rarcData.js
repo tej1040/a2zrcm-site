@@ -1,5 +1,6 @@
 const rarcData = {
-    "M1": "X-ray not taken within the past 12 months or near enough to the start of treatment.",
+    "RARC": {
+    "M1": {"X-ray not taken within the past 12 months or near enough to the start of treatment."}
     "M2": "Not paid separately when the patient is an inpatient.",
     "M3": "Equipment is the same or similar to equipment already being used.",
     "M4": "Alert: This is the last monthly installment payment for this durable medical equipment.",
@@ -1116,3 +1117,4 @@ const rarcData = {
     "N915": "Predetermination of services is not allowed under the member's plan.",
     "N916": "The third party will render payment to the provider, and they will reimburse you for covered services."
    }
+};
