@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CARC – Complete Guide</title>
+
+<style>
+body {
+    background:#eef4ff;
+    font-family:Arial;
+    padding:40px;
+    color:#111;
+    margin:0;
+}
+
+.page {
+    max-width:900px;
+    margin:auto;
+    position:relative;
+}
+
+/* Title */
+h1 {
+    text-align:center;
+    font-size:32px;
+    margin-bottom:40px;
+}
+
+/* Section Box */
+.section {
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 12px rgba(0,0,0,0.05);
+    margin-bottom:25px;
+    border-left:5px solid #2563eb;
+}
+
+.section h2 { margin-top:0; }
+
+/* Lookup Button */
+.lookup-btn {
+    position:absolute;
+    top:0;
+    right:0;
+    padding:10px 16px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+}
+
+/* Modal */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.modal-content {
+    background:#1e293b;
+    padding:25px;
+    width:90%;
+    max-width:500px;
+    border-radius:12px;
+    color:white;
+}
+
+.dropdown {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+    font-size:15px;
+    background:#0f172a;
+    color:white;
+}
+
+.definition {
+    background:#0f172a;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+    min-height:50px;
+}
+
+.close-btn {
+    margin-top:20px;
+    padding:12px;
+    width:100%;
+    background:#ef4444;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+/* Suggestion dropdown */
+#suggestBox div {
+    padding:10px;
+    cursor:pointer;
+}
+#suggestBox div:hover {
+    background:#334155;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+<button class="lookup-btn" onclick="openLookup()">🔍 Lookup Codes</button>
+
+<h1>CARC – Complete Guide</h1>
+
+<!-- SECTION 1 -->
+<div class="section">
+<h2>What Are CARC Denial Codes?</h2>
+<p>
+Claim Adjustment Reason Codes (CARCs) explain the **financial reason** behind a denial or adjustment.  
+They help AR teams identify what went wrong and what action is needed.
+</p>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section">
+<h2>Why Do We Use CARC Codes?</h2>
+<ul>
+<li>Quickly understand payer decisions</li>
+<li>Know if denial is appealable or needs correction</li>
+<li>Reduce repeat denials</li>
+<li>Improve AR workflow accuracy</li>
+<li>Provide clear communication between payer & provider</li>
+</ul>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section">
+<h2>Who Maintains CARC Codes?</h2>
+<p>
+CARC codes are maintained by **X12**.  
+Insurance payers update their systems multiple times per year to match new codes or definitions.
+</p>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section">
+<h2>How CARC Codes Work</h2>
+<p>
+Every denial includes 2 parts:
+</p>
+
+<ul>
+<li><b>Group Code</b> → High-level category (PR, CO, OA, PI)</li>
+<li><b>Reason Code</b> → Specific denial reason (1–299 or alphanumeric)</li>
+</ul>
+
+<p>
+Example: <b>PR45</b> → Patient responsibility + exceeds fee schedule.
+</p>
+</div>
+
+<!-- SECTION 5 — NEW CONTENT YOU REQUESTED -->
+<div class="section">
+<h2>Understanding Group Codes (PR, CO, OA, PI)</h2>
+
+<h3>🟦 PR – Patient Responsibility</h3>
+<p>
+These amounts the <b>patient is legally responsible</b> to pay.
+</p>
+<ul>
+<li>Deductible</li>
+<li>Coinsurance</li>
+<li>Copayment</li>
+<li>Non-covered service (policy says patient pays)</li>
+</ul>
+<p><b>AR Action:</b> Bill patient or check secondary payer.</p>
+<p><b>Example:</b> PR1 – Deductible Amount</p>
+
+<br>
+
+<h3>🟧 CO – Contractual Obligation</h3>
+<p>
+Adjustments required due to <b>provider–payer contract rules</b>.  
+Cannot be billed to patient.
+</p>
+<ul>
+<li>Fee schedule reductions</li>
+<li>Bundled services</li>
+<li>PPO write-offs</li>
+<li>Contractual allowances</li>
+</ul>
+<p><b>AR Action:</b> Write off; provider cannot collect.</p>
+<p><b>Example:</b> CO45 – Exceeds fee schedule</p>
+
+<br>
+
+<h3>🟩 OA – Other Adjustment</h3>
+<p>
+Payer adjustments that do not fall under PR or CO.
+</p>
+<ul>
+<li>Prior payer impact</li>
+<li>System edits</li>
+<li>Duplicate claims</li>
+<li>Coordination of Benefits issues</li>
+</ul>
+<p><b>AR Action:</b> Review payer instructions; sometimes appealable.</p>
+<p><b>Example:</b> OA18 – Duplicate claim</p>
+
+<br>
+
+<h3>🟪 PI – Payer Initiated Adjustment</h3>
+<p>
+Adjustments based on <b>payer policy or medical review</b>.
+</p>
+<ul>
+<li>Not medically necessary</li>
+<li>Authorization issues</li>
+<li>Coding or modifier issues</li>
+<li>Coverage restrictions</li>
+</ul>
+<p><b>AR Action:</b> Correct and resubmit or appeal.</p>
+<p><b>Example:</b> PI96 – Non-covered charge</p>
+
+<br>
+
+<h3>🌟 Summary Table</h3>
+
+<table border="1" cellpadding="10" style="border-collapse:collapse; width:100%;">
+<tr style="background:#dbeafe;">
+<th>Group Code</th>
+<th>Meaning</th>
+<th>Bill Patient?</th>
+<th>Notes</th>
+</tr>
+
+<tr>
+<td><b>PR</b></td>
+<td>Patient Responsibility</td>
+<td>✅ Yes</td>
+<td>Deductible, Copay, Coinsurance</td>
+</tr>
+
+<tr>
+<td><b>CO</b></td>
+<td>Contractual Obligation</td>
+<td>❌ No</td>
+<td>Payer–provider agreement</td>
+</tr>
+
+<tr>
+<td><b>OA</b></td>
+<td>Other Adjustment</td>
+<td>❌ No</td>
+<td>System or payer policy edits</td>
+</tr>
+
+<tr>
+<td><b>PI</b></td>
+<td>Payer Initiated Adjustment</td>
+<td>❌ No</td>
+<td>Authorization, medical necessity</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+<!-- CODE LOOKUP MODAL -->
+<div class="modal" id="lookupModal">
+    <div class="modal-content">
+
+        <h2>Code Lookup</h2>
+
+        <!-- Step 1: Choose Type -->
+        <label>Select Code Type</label>
+        <select id="lookupType" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="remark">Remark (RARC)</option>
+            <option value="denial">Denial (CARC)</option>
+        </select>
+
+        <!-- Step 2 for CARC ONLY: Select Group Code -->
+        <div id="carcGroupBox" style="display:none;">
+            <label>Select Group Code</label>
+            <select id="carcGroup" class="dropdown">
+                <option value="">-- Choose Group --</option>
+                <option value="PR">PR – Patient Responsibility</option>
+                <option value="CO">CO – Contractual Obligation</option>
+                <option value="OA">OA – Other Adjustment</option>
+                <option value="PI">PI – Payer Initiated Adjustment</option>
+            </select>
+        </div>
+
+        <!-- Step 3: Code Input + Suggestions -->
+        <div id="codeEntryBox" style="display:none; position:relative;">
+            <label>Enter Code</label>
+            <input id="codeInput" class="dropdown" placeholder="Example: N130 or 45" autocomplete="off">
+            <div id="suggestBox"></div>
+        </div>
+
+        <div id="codeResult" class="definition"></div>
+
+        <button class="close-btn" onclick="closeLookup()">Close</button>
+
+    </div>
+</div>
+
+<!-- Your Data Files -->
+<script src="remarkData.js"></script>
+<script src="carcData.js"></script>
+
+<script>
+function openLookup(){ document.getElementById("lookupModal").style.display="flex"; }
+function closeLookup(){ document.getElementById("lookupModal").style.display="none"; }
+
+document.getElementById("lookupType").addEventListener("change", function () {
+    const type = this.value;
+
+    document.getElementById("carcGroupBox").style.display = (type === "denial") ? "block" : "none";
+    document.getElementById("codeEntryBox").style.display = (type !== "") ? "block" : "none";
+    document.getElementById("codeResult").innerHTML = "";
+});
+
+/* ------------------- RARC SEARCH ------------------- */
+function searchRARC(code, resultBox) {
+    for (let key in remarkData) {
+        if (remarkData[key][code]) {
+            const info = remarkData[key][code];
+
+            resultBox.innerHTML = `
+                <b>${code}</b>: ${info.short}
+                <br><br>
+                <button id="showFullBtn" style="
+                    padding:6px 10px; border:none; border-radius:6px;
+                    background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
+                    Show full description
+                </button>
+            `;
+
+            document.getElementById("showFullBtn").onclick = () => {
+                resultBox.innerHTML = `<b>${code}</b>: ${info.full}`;
+            };
+
+            return true;
+        }
+    }
+    return false;
+}
+
+/* ------------------- CARC SEARCH ------------------- */
+function searchCARC(group, code, resultBox) {
+    if (carcData[group] && carcData[group][code]) {
+        const info = carcData[group][code];
+
+        resultBox.innerHTML = `
+            <b>${group}${code}</b>: ${info.short}
+            <br><br>
+            <button id="showFullBtn" style="
+                padding:6px 10px; border:none; border-radius:6px;
+                background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
+                Show full description
+            </button>
+        `;
+
+        document.getElementById("showFullBtn").onclick = () => {
+            resultBox.innerHTML = `<b>${group}${code}</b>: ${info.full}`;
+        };
+
+        return true;
+    }
+    return false;
+}
+
+/* ------------------- CODE INPUT EVENT ------------------- */
+document.getElementById("codeInput").addEventListener("input", function () {
+    const type = document.getElementById("lookupType").value;
+    const group = document.getElementById("carcGroup").value;
+    const code = this.value.trim().toUpperCase();
+    const resultBox = document.getElementById("codeResult");
+
+    if (!code) { resultBox.innerHTML = ""; return; }
+
+    // REMARK
+    if (type === "remark") {
+        if (!searchRARC(code, resultBox)) {
+            resultBox.innerHTML = "No remark code found.";
+        }
+    }
+
+    // CARC
+    if (type === "denial") {
+        if (!group) {
+            resultBox.innerHTML = "Select a group code first.";
+            return;
+        }
+
+        if (!searchCARC(group, code, resultBox)) {
+            resultBox.innerHTML = "No denial code found.";
+        }
+    }
+});
+
+/* ------------------- AUTOSUGGEST ------------------- */
+document.getElementById("codeInput").addEventListener("keyup", function () {
+    const type = document.getElementById("lookupType").value;
+    const group = document.getElementById("carcGroup").value;
+    const keyword = this.value.trim().toUpperCase();
+    const suggestBox = document.getElementById("suggestBox");
+
+    suggestBox.innerHTML = "";
+    suggestBox.style.display = "none";
+
+    if (!keyword) return;
+
+    let matches = [];
+
+    if (type === "remark") {
+        for (let key in remarkData) {
+            Object.keys(remarkData[key]).forEach(code => {
+                if (code.startsWith(keyword)) matches.push(code);
+            });
+        }
+    }
+
+    if (type === "denial" && group) {
+        Object.keys(carcData[group]).forEach(code => {
+            if (code.startsWith(keyword)) matches.push(code);
+        });
+    }
+
+    if (matches.length === 0) return;
+
+    suggestBox.style.display = "block";
+
+    matches.forEach(code => {
+        const div = document.createElement("div");
+        div.textContent = code;
+        div.onclick = () => {
+            document.getElementById("codeInput").value = code;
+            suggestBox.style.display = "none";
+            document.getElementById("codeInput").dispatchEvent(new Event("input"));
+        };
+        suggestBox.appendChild(div);
+    });
+});
+</script>
+
+</body>
+</html>
