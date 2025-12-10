@@ -309,7 +309,7 @@ document.getElementById("codeInput").addEventListener("input", function () {
     }
 });
 
-/* ------------------- AUTOSUGGEST (LIMIT 5 + CLEAN UI) ------------------- */
+/* ------------------- AUTOSUGGEST (LIMIT 10 + CLEAN UI) ------------------- */
 document.getElementById("codeInput").addEventListener("keyup", function () {
     const type = document.getElementById("lookupType").value;
     const group = document.getElementById("carcGroup").value;
@@ -341,8 +341,8 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     if (matches.length === 0) return;
 
-    // Limit to 5 results only
-    matches = matches.slice(0, 8);
+    // Limit to 10 results only
+    matches = matches.slice(0, 10);
 
     suggestBox.style.display = "block";
 
@@ -368,4 +368,5 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
