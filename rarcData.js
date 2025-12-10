@@ -1,4 +1,4 @@
-const carcData = {
+const rarcData = {
     "PR": {
         "M1": {
             "short": "X-ray not taken within the past 12 months or near enough to the start of treatment",
