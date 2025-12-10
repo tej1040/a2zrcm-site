@@ -135,6 +135,17 @@ h1 {
 #suggestBox div:hover {
     background:#334155;
 }
+    /* ---- FIX: Make CARC box same size as RARC ---- */
+#carcGroupBox {
+    margin: 0;
+    padding: 0;
+}
+
+#carcGroupBox .dropdown {
+    margin: 5px 0 !important;
+    padding: 10px !important;
+}
+
 </style>
 </head>
 
@@ -478,3 +489,4 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
