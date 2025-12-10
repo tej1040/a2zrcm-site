@@ -232,9 +232,9 @@ document.getElementById("lookupType").addEventListener("change", function () {
 
 /* ------------------- RARC SEARCH ------------------- */
 function searchRARC(code, resultBox) {
-    for (let key in rarcData) {
-        if (rarcData[key][code]) {
-            const info = rarcData[key][code];
+    for (let group in rarcData) {
+        if (rarcData[group][code]) {
+            const info = rarcData[group][code];
 
             resultBox.innerHTML = `
                 <b>${code}</b>: ${info.short}
@@ -255,7 +255,6 @@ function searchRARC(code, resultBox) {
     }
     return false;
 }
-
 /* ------------------- CARC SEARCH ------------------- */
 function searchCARC(group, code, resultBox) {
     if (carcData[group] && carcData[group][code]) {
@@ -368,4 +367,5 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
