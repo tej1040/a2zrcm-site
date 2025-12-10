@@ -232,26 +232,14 @@ document.getElementById("lookupType").addEventListener("change", function () {
 
 /* ------------------- RARC SEARCH ------------------- */
 function searchRARC(code, resultBox) {
-    for (let key in rarcData) {
-        if (rarcData[key][code]) {
-            const info = rarcData[key][code];
+    if (rarcData[code]) {
+        const info = rarcData[code];
 
-            resultBox.innerHTML = `
-                <b>${code}</b>: ${info.short}
-                <br><br>
-                <button id="showFullBtn" style="
-                    padding:6px 10px; border:none; border-radius:6px;
-                    background:#3b82f6; color:white; cursor:pointer; font-size:13px;">
-                    Show full description
-                </button>
-            `;
+        resultBox.innerHTML = `
+            <b>${code}</b>: ${info}
+        `;
 
-            document.getElementById("showFullBtn").onclick = () => {
-                resultBox.innerHTML = `<b>${code}</b>: ${info.full}`;
-            };
-
-            return true;
-        }
+        return true;
     }
     return false;
 }
@@ -324,13 +312,13 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
     let matches = [];
 
     // RARC lookup
-    if (type === "remark") {
-        for (let key in rarcData) {
-            Object.keys(rarcData[key]).forEach(code => {
-                if (code.startsWith(keyword)) matches.push(code);
-            });
+if (type === "remark") {
+    Object.keys(rarcData).forEach(code => {
+        if (code.startsWith(keyword)) {
+            matches.push(code);
         }
-    }
+    });
+}
 
     // CARC lookup
     if (type === "denial" && group) {
@@ -368,6 +356,7 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
 
 
