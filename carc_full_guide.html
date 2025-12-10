@@ -18,7 +18,29 @@ body {
     margin:auto;
     position:relative;
 }
+/* ----------------------------SUGGESTION BOX SCROLL FIX (ADD THIS PART) ----------------------------- */
+#suggestBox {
+    display:none;
+    position:absolute;
+    top:80px;
+    width:100%;
+    background:#1e293b;
+    border-radius:8px;
+    max-height:150px !important;
+    overflow-y:auto !important;
+    z-index:9999;
+    color:white;
+}
 
+#suggestBox div {
+    padding:10px;
+    border-bottom:1px solid #334155;
+    cursor:pointer;
+}
+
+#suggestBox div:hover {
+    background:#334155;
+}
 /* Title */
 h1 {
     text-align:center;
@@ -471,3 +493,4 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
