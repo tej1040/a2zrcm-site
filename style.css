@@ -317,7 +317,7 @@ li::marker {
 /* ========= Contact ========= */
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.2rem;
   margin-top: 1rem;
 }
@@ -387,15 +387,28 @@ li::marker {
 }
 
 /* ========= Responsive ========= */
-@media (max-width: 900px) {
-  .cards-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
+/* Desktop */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
 
+/* Tablet */
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
   .contact-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
 
 @media (max-width: 768px) {
   .header-inner {
@@ -525,4 +538,5 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
 
