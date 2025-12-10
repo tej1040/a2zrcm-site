@@ -1,4 +1,5 @@
 const rarcData = {
+   "RARC" : {
     "M1": "X-ray not taken within the past 12 months or near enough to the start of treatment.",
     "Start:": "07/01/2025",
     "M2": "Not paid separately when the patient is an inpatient.",
@@ -1118,6 +1119,5 @@ const rarcData = {
     "N914": "This claim was priced and processed in accordance with California AB-72 Health care coverage.",
     "N915": "Predetermination of services is not allowed under the member's plan.",
     "N916": "The third party will render payment to the provider, and they will reimburse you for covered services."
+   }
 };
-
-export default rarcData;
