@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RARC – Complete Guide</title>
+
+<style>
+body {
+    background:#eef4ff;
+    font-family:Arial;
+    padding:40px;
+    color:#111;
+    margin:0;
+}
+
+.page {
+    max-width:900px;
+    margin:auto;
+    position:relative;
+}
+
+/* Guide Title */
+h1 {
+    text-align:center;
+    font-size:32px;
+    margin-bottom:40px;
+}
+
+/* Section Style - Same as Clearing House */
+.section {
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 12px rgba(0,0,0,0.05);
+    margin-bottom:25px;
+    border-left:5px solid #2563eb;
+}
+
+.section h2 {
+    margin-top:0;
+}
+
+/* Lookup Button (Top Right) */
+.lookup-btn {
+    position:absolute;
+    top:0;
+    right:0;
+    padding:10px 16px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+}
+
+/* Modal */
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content {
+    background:#1e293b;
+    padding:25px;
+    width:90%;
+    max-width:500px;
+    border-radius:12px;
+    color:white;
+}
+
+.dropdown {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+    font-size:15px;
+    background:#0f172a;
+    color:white;
+}
+
+.definition {
+    background:#0f172a;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.close-btn {
+    margin-top:20px;
+    padding:12px;
+    width:100%;
+    background:#ef4444;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<button class="lookup-btn" onclick="openLookup()">🔍 Lookup Codes</button>
+
+<h1>RARC – Complete Guide</h1>
+
+<!-- Guide Sections -->
+<div class="section">
+<h2>What Are Remark Codes (RARC)?</h2>
+<p>Remark Codes (RARC) provide additional explanation on a claim outcome. They assist AR teams by offering detailed payer messages that accompany denial or payment decisions.</p>
+</div>
+
+<div class="section">
+<h2>Why Do We Use RARC Codes?</h2>
+<ul>
+<li>Clarify payer reasoning behind denials.</li>
+<li>Identify missing documentation or errors.</li>
+<li>Know what correction or action is required.</li>
+<li>Improve accuracy in AR follow-up.</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Who Updates RARC Codes?</h2>
+<p>X12 maintains and updates RARC codes regularly. Insurance payers follow these updates to ensure consistent remittance messaging.</p>
+</div>
+
+<div class="section">
+<h2>How Often Are RARC Codes Updated?</h2>
+<p>RARC codes change multiple times per year. New codes may be added, some removed, and definitions may be updated.</p>
+</div>
+
+<div class="section">
+<h2>How Do RARC Codes Help AR?</h2>
+<ul>
+<li>Provide specific instructions (e.g., submit medical records).</li>
+<li>Help AR teams decide next steps.</li>
+<li>Reduce back-and-forth with payers.</li>
+<li>Speed up resolution of denials.</li>
+</ul>
+</div>
+
+</div>
+
+<!-- CODE LOOKUP MODAL -->
+<div class="modal" id="lookupModal">
+    <div class="modal-content">
+
+        <h2>Code Lookup</h2>
+
+        <!-- Step 1: Choose Type -->
+        <label>Select Code Type</label>
+        <select id="lookupType" class="dropdown">
+            <option value="">-- Select --</option>
+            <option value="remark">Remark (RARC)</option>
+            <option value="denial">Denial (CARC)</option>
+        </select>
+
+        <!-- Step 2 for CARC ONLY: Select Group Code -->
+        <div id="carcGroupBox" style="display:none;">
+            <label>Select Group Code</label>
+            <select id="carcGroup" class="dropdown">
+                <option value="">-- Choose Group --</option>
+                <option value="PR">PR – Patient Responsibility</option>
+                <option value="CO">CO – Contractual Obligation</option>
+                <option value="OA">OA – Other Adjustment</option>
+                <option value="PI">PI – Payer Initiated Adjustment</option>
+            </select>
+        </div>
+
+        <!-- Step 3: Code Input -->
+        <div id="codeEntryBox" style="display:none; position:relative;">
+    <label>Enter Code</label>
+    <input id="codeInput" class="dropdown" placeholder="Example: N130 or 45" autocomplete="off">
+
+    <!-- Suggestions dropdown -->
+    <div id="suggestBox" 
+         style="
+            display:none; 
+            position:absolute;
+            top:80px;
+            width:100%;
+            background:#1e293b;
+            border-radius:8px;
+            max-height:150px;
+            overflow-y:auto;
+            z-index:10;">
+    </div>
+</div>
+
+        <div id="codeResult" class="definition"></div>
+
+        <button class="close-btn" onclick="closeLookup()">Close</button>
+
+    </div>
+</div>
+
+<script src="remarkData.js"></script>
+<script src="carcData.js"></script>
+
+<script>
+// open modal
+function openLookup(){ document.getElementById("lookupModal").style.display="flex"; }
+// close modal
+function closeLookup(){ document.getElementById("lookupModal").style.display="none"; }
+
+// Switching logic
+document.getElementById("lookupType").addEventListener("change", function () {
+    const type = this.value;
+
+    document.getElementById("carcGroupBox").style.display = (type === "denial") ? "block" : "none";
+    document.getElementById("codeEntryBox").style.display = (type !== "") ? "block" : "none";
+    document.getElementById("codeResult").innerHTML = "";
+});
+
+// Code search logic
+document.getElementById("codeInput").addEventListener("input", function () {
+    const type = document.getElementById("lookupType").value;
+    const code = this.value.trim().toUpperCase();
+    const resultBox = document.getElementById("codeResult");
+
+    if (type === "remark") {
+        for (let key in remarkData) {
+            if (remarkData[key][code]) {
+                resultBox.innerHTML = `<b>${code}</b>: ${remarkData[key][code]}`;
+                return;
+            }
+        }
+        resultBox.innerHTML = "No remark code found.";
+    }
+
+    if (type === "denial") {
+        const group = document.getElementById("carcGroup").value;
+        if (!group) {
+            resultBox.innerHTML = "Select a group code first.";
+            return;
+        }
+        if (carcData[group] && carcData[group][code]) {
+            resultBox.innerHTML = `<b>${group}${code}</b>: ${carcData[group][code]}`;
+            return;
+        }
+        resultBox.innerHTML = "No denial code found.";
+    }
+});
+</script>
+
+</body>
+</html>
