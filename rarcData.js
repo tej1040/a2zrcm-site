@@ -1,7 +1,6 @@
 const rarcData = {
    "RARC" : {
     "M1": "X-ray not taken within the past 12 months or near enough to the start of treatment.",
-    "Start:": "07/01/2025",
     "M2": "Not paid separately when the patient is an inpatient.",
     "M3": "Equipment is the same or similar to equipment already being used.",
     "M4": "Alert: This is the last monthly installment payment for this durable medical equipment.",
@@ -28,7 +27,6 @@ const rarcData = {
     "M24": "Missing/incomplete/invalid number of doses per vial.",
     "M25": "The information furnished does not substantiate the need for this level of service. If you believe the service should have been fully covered as billed, or if you did not know and could not reasonably have been expected to know that we would not pay for this level of service, or if you notified the patient in writing in advance that we would not pay for this level of service and he/she agreed in writing to pay, ask us to review your claim within 120 days of the date of this notice. If you do not request an appeal, we will, upon application from the patient, reimburse him/her for the amount you have collected from him/her in excess of any deductible and coinsurance amounts. We will recover the reimbursement from you as an overpayment.",
     "M26": "The information furnished does not substantiate the need for this level of service. If you have collected any amount from the patient for this level of service/any amount that exceeds the limiting charge for the less extensive service, the law requires you to refund that amount to the patient within 30 days of receiving this notice.",
-    "": "",
     "The": "patient has received a separate notice of this denial decision. The notice advises that he/she may be entitled to a refund of any amounts paid, if you should have known that we would not pay and did not tell him/her. It also instructs the patient to contact our office if he/she does not hear anything about a refund within 30 days",
     "M27": "Alert: The patient has been relieved of liability of payment of these items and services under the limitation of liability provision of the law. The provider is ultimately liable for the patient's waived charges, including any charges for coinsurance, since the items or services were not reasonable and necessary or constituted custodial care, and you knew or could reasonably have been expected to know, that they were not covered. You may appeal this determination. You may ask for an appeal regarding both the coverage determination and the issue of whether you exercised due care. The appeal request must be filed within 120 days of the date you receive this notice. You must make the request through this office.",
     "M28": "This does not qualify for payment under Part B when Part A coverage is exhausted or not otherwise available.",
