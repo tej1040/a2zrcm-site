@@ -324,12 +324,10 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
     // RARC lookup
     if (type === "remark") {
-        for (let key in rarcData) {
-            Object.keys(rarcData[key]).forEach(code => {
-                if (code.startsWith(keyword)) matches.push(code);
-            });
-        }
-    }
+    Object.keys(rarcData["RARC"]).forEach(code => {
+        if (code.startsWith(keyword)) matches.push(code);
+    });
+}
 
     // CARC lookup
     if (type === "denial" && group) {
@@ -367,5 +365,6 @@ document.getElementById("codeInput").addEventListener("keyup", function () {
 
 </body>
 </html>
+
 
 
