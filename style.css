@@ -398,6 +398,11 @@ li::marker {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+@media (max-width: 900px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 768px) {
   .header-inner {
@@ -527,6 +532,7 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
 
 
 
