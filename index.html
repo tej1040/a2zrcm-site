@@ -508,8 +508,20 @@ document.querySelectorAll(".claim-card").forEach(card => {
   });
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".claim-card").forEach(card => {
+    const header = card.querySelector(".claim-header");
+    
+    header.addEventListener("click", () => {
+      card.classList.toggle("open");
+    });
+  });
+});
+</script>
 </body>
 </html>
+
 
 
 
