@@ -296,6 +296,7 @@ li::marker {
   padding: 1.35rem 1.4rem 1.25rem;
   display: flex;
   flex-direction: column;
+  height: 100%;  /* <-- added to test*/
 }
 
 .card h3 {
@@ -521,6 +522,7 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
 
 
 
