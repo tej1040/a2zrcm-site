@@ -105,10 +105,15 @@
         </p>
 
         <div class="cards-grid">
-          <!-- ⭐ CMS-1500 -->
-          <article class="card">
-            <h3>⭐ 1. CMS-1500 Claim Form (Professional Claims)</h3>
 
+  <!-- CMS-1500 -->
+  <article class="card claim-card">
+    <div class="claim-header">
+      <h3>⭐ 1. CMS-1500 Claim Form (Professional Claims)</h3>
+      <span class="claim-arrow">▶</span>
+    </div>
+
+    <div class="claim-body">
             <p>
               The CMS-1500 (also known as the HCFA-1500) is used by individual healthcare providers, such as:
             </p>
@@ -493,8 +498,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+  <script>
+document.querySelectorAll(".claim-card").forEach(card => {
+  const header = card.querySelector(".claim-header");
+
+  header.addEventListener("click", () => {
+    card.classList.toggle("open");
+  });
+});
+</script>
 </body>
 </html>
+
 
 
 
