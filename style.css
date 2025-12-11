@@ -286,14 +286,13 @@ li::marker {
   gap: 1.4rem;
   margin-top: 1.2rem;
   align-items: stretch;
- grid-auto-rows: auto;
+  grid-auto-rows: 1fr; 
 }
 .cards-grid .card {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: auto; /* allow card to expand naturally */
 }
-
 .card {
   background-color: #ffffff;
   border-radius: var(--radius-lg);
@@ -528,82 +527,6 @@ li::marker {
     padding: 12px 16px;
   }
 }
-/* Collapse containers */
-.claim-card {
-  overflow: hidden;
-}
-
-/* Header clickable area */
-.claim-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Arrow style */
-.claim-arrow {
-  font-size: 20px;
-  transition: transform 0.25s ease;
-}
-
-/* Rotate when open */
-.claim-card.open .claim-arrow {
-  transform: rotate(90deg);
-}
-
-/* Body section */
-.claim-body {
-  display: none;
-  margin-top: 1rem;
-  animation: fadeSlide 0.25s ease;
-}
-
-/* Show when open */
-.claim-card.open .claim-body {
-  display: block;
-}
-
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-/* Claim Card Dropdown Fix */
-.claim-card {
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.claim-body {
-  display: none;
-  margin-top: 1rem;
-}
-
-.claim-card.open .claim-body {
-  display: block;
-}
-
-.claim-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-
-.claim-arrow {
-  transition: transform 0.3s ease;
-}
-
-.claim-card.open .claim-arrow {
-  transform: rotate(90deg);
-}
-
-/* Important: let cards expand naturally */
-.cards-grid .card {
-  height: auto !important;
-}
-
 
 
 
