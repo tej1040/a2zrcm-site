@@ -308,6 +308,7 @@ li::marker {
 .card .btn-outline,
 .card .btn-primary {
   margin-top: auto;
+  margin-bottom: 30px; /* fixed leangth form bottom */
 }
 
 .card p:empty {
@@ -521,6 +522,7 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
 
 
 
