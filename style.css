@@ -311,7 +311,7 @@ li::marker {
 }
 
 .card p:empty {
-  display: none;
+  margin-bottom: 1.6rem;
 }
 
 /* ========= Contact ========= */
@@ -521,6 +521,7 @@ li::marker {
     padding: 12px 16px;
   }
 }
+
 
 
 
