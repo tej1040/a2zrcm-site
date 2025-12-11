@@ -569,7 +569,40 @@ li::marker {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+/* Claim Card Dropdown Fix */
+.claim-card {
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
 
+.claim-body {
+  display: none;
+  margin-top: 1rem;
+}
+
+.claim-card.open .claim-body {
+  display: block;
+}
+
+.claim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.claim-arrow {
+  transition: transform 0.3s ease;
+}
+
+.claim-card.open .claim-arrow {
+  transform: rotate(90deg);
+}
+
+/* Important: let cards expand naturally */
+.cards-grid .card {
+  height: auto !important;
+}
 
 
 
