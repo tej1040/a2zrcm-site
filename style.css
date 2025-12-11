@@ -286,13 +286,14 @@ li::marker {
   gap: 1.4rem;
   margin-top: 1.2rem;
   align-items: stretch;
-  grid-auto-rows: 1fr; 
+ grid-auto-rows: auto;
 }
 .cards-grid .card {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: auto; /* allow card to expand naturally */
 }
+
 .card {
   background-color: #ffffff;
   border-radius: var(--radius-lg);
@@ -568,6 +569,7 @@ li::marker {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
 
 
 
