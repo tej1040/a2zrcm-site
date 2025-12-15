@@ -221,7 +221,7 @@ const rarcData = {
 
   "N52": {
     short: "Patient not enrolled in plan.",
-    full: "Patient not enrolled in provider's managed care plan on date of service."
+    full: "Patient not enrolled in providers managed care plan on date of service."
   },
 
   "N53": {
@@ -530,7 +530,7 @@ const rarcData = {
 
   "N117": {
     short: "Payable once per lifetime.",
-    full: "This service is paid only once in a patient’s lifetime."
+    full: "This service is paid only once in a patients lifetime."
   },
 
   "N118": {
@@ -589,7 +589,7 @@ const rarcData = {
 
   "N129": {
     short: "Not eligible due to age.",
-    full: "Not eligible due to the patient's age."
+    full: "Not eligible due to the patients age."
   },
 
   "N130": {
@@ -1864,7 +1864,7 @@ const rarcData = {
 
   "N387": {
     short: "Submit to other insurer.",
-    full: "Submit this claim to the patient’s other insurer for potential payment."
+    full: "Submit this claim to the patients other insurer for potential payment."
   },
 
   "N388": {
@@ -1954,12 +1954,12 @@ const rarcData = {
 
   "N405": {
     short: "Donor coverage rule.",
-    full: "Covered only when donor’s insurer does not cover the service."
+    full: "Covered only when donors insurer does not cover the service."
   },
 
   "N406": {
     short: "Recipient coverage rule.",
-    full: "Covered only when recipient’s insurer does not cover the service."
+    full: "Covered only when recipients insurer does not cover the service."
   },
 
   "N407": {
@@ -2646,12 +2646,12 @@ const rarcData = {
 
   "N548": {
     short: "Deductible met.",
-    full: "Patient’s calendar year deductible has been met."
+    full: "Patients calendar year deductible has been met."
   },
 
   "N549": {
     short: "Out-of-pocket max met.",
-    full: "Patient’s calendar year out-of-pocket maximum has been met."
+    full: "Patients calendar year out-of-pocket maximum has been met."
   },
 
   "N550": {
@@ -3592,7 +3592,7 @@ const rarcData = {
 
   "N740": {
     short: "Insufficient consumer spending funds.",
-    full: "The member's Consumer Spending Account does not contain sufficient funds to cover the member's liability."
+    full: "The members Consumer Spending Account does not contain sufficient funds to cover the members liability."
   },
 
   "N741": {
@@ -3722,7 +3722,7 @@ const rarcData = {
 
   "N767": {
     short: "Medicaid enrollment required.",
-    full: "Provider must be enrolled in the member's Medicaid state program prior to claim processing."
+    full: "Provider must be enrolled in the members Medicaid state program prior to claim processing."
   },
 
   "N768": {
@@ -4444,13 +4444,13 @@ const rarcData = {
 
   "N915": {
     short: "Predetermination not allowed.",
-    full: "Predetermination of services is not allowed under the member's plan."
+    full: "Predetermination of services is not allowed under the members plan."
   },
 
   "N916": {
     short: "Third-party payment.",
     full: "Third party will render payment to the provider and reimburse covered services."
-  }
+  },
 
   "M1": {
     short: "X-ray not taken within required time frame.",
@@ -4504,7 +4504,7 @@ const rarcData = {
 
   "M11": {
     short: "Bill DME carrier by ZIP code.",
-    full: "DME, orthotics, and prosthetics must be billed to the DME carrier who services the patient's ZIP code."
+    full: "DME, orthotics, and prosthetics must be billed to the DME carrier who services the patients ZIP code."
   },
 
   "M12": {
@@ -4539,7 +4539,7 @@ const rarcData = {
 
   "M18": {
     short: "Service approved only for home use.",
-    full: "Certain services may be approved for home use. Neither a hospital nor a skilled nursing facility is considered a patient's home."
+    full: "Certain services may be approved for home use. Neither a hospital nor a skilled nursing facility is considered a patients home."
   },
 
   "M19": {
@@ -4608,7 +4608,7 @@ const rarcData = {
 
   "M32": {
     short: "Conditional payment pending primary payer decision.",
-    full: "Alert: This is a conditional payment made pending a decision on this service by the patient's primary payer."
+    full: "Alert: This is a conditional payment made pending a decision on this service by the patients primary payer."
   },
 
   "M33": {
@@ -4648,7 +4648,7 @@ const rarcData = {
 
   "M40": {
     short: "Claim must be assigned and billed by employer.",
-    full: "Claim must be assigned and must be filed by the practitioner's employer."
+    full: "Claim must be assigned and must be filed by the practitioners employer."
   },
 
   "M41": {
@@ -5134,7 +5134,7 @@ const rarcData = {
 
   "MA10": {
     short: "Patient overpaid.",
-    full: "Alert: The patient's payment was in excess of the amount owed. Refund required."
+    full: "Alert: The patients payment was in excess of the amount owed. Refund required."
   },
 
   "MA12": {
@@ -5169,7 +5169,7 @@ const rarcData = {
 
   "MA18": {
     short: "Forwarded to supplemental insurer.",
-    full: "Alert: Claim information forwarded to the patient's supplemental insurer."
+    full: "Alert: Claim information forwarded to the patients supplemental insurer."
   },
 
   "MA19": {
@@ -5258,7 +5258,7 @@ const rarcData = {
 
   "MA37": {
     short: "Invalid patient address.",
-    full: "Missing, incomplete, or invalid patient's address."
+    full: "Missing, incomplete, or invalid patients address."
   },
 
   "MA39": {
