@@ -5567,6 +5567,6 @@ const rarcData = {
   "MA114": {
     short: "Service location missing.",
     full: "Missing, incomplete, or invalid information on where services were furnished."
-  }
+  },
     }
 };
