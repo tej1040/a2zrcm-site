@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoPro Break Monitoring</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginScreen">
+
+        <div class="loginCard">
+
+            <h1>GeoPro Break Monitoring</h1>
+
+            <h3>Welcome</h3>
+
+            <label>Select Your Name</label>
+
+            <select id="employeeName">
+
+                <option value="">-- Select --</option>
+
+                <option>Ram Gopal</option>
+                <option>Yashwanth</option>
+                <option>Eslavath Manisha</option>
+                <option>Funish Bahadur</option>
+                <option>Cheyvarthi Raju</option>
+                <option>Sravanthi Yadav</option>
+                <option>Bandaru Vani</option>
+                <option>Ritesh Kumar</option>
+                <option>Yamini Saraswathi V</option>
+                <option>Pathakoti Siddeshwar</option>
+                <option>Chippada Sunil</option>
+                <option>Abhishek Adike</option>
+                <option>Varun Teja Devarapalli</option>
+
+            </select>
+
+            <button id="loginBtn">
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Employee Dashboard -->
+
+    <div id="dashboard" style="display:none;">
+
+        <div class="header">
+
+            <h2 id="welcomeUser"></h2>
+
+            <button id="logoutBtn">
+                Logout
+            </button>
+
+        </div>
+
+        <div class="statusCard">
+
+            <h3>Status</h3>
+
+            <h1 id="statusText">
+                🟢 ON FLOOR
+            </h1>
+
+        </div>
+
+        <div class="buttonArea">
+
+            <button id="breakOutBtn">
+                Break Out
+            </button>
+
+            <button id="breakInBtn" style="display:none;">
+                Break In
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
