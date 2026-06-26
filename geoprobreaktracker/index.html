@@ -597,7 +597,33 @@ Started at --
         <div class="mc"><div class="ml" style="color:#1E8449">On floor</div><div class="mv" style="color:#1E8449" id="mgr-fl">0</div></div>
         <div class="mc"><div class="ml" style="color:#784212">On break</div><div class="mv" style="color:#784212" id="mgr-bk">0</div></div>
       </div>
-      <div class="sec">Employee status</div>
+      <div class="frow" style="margin-bottom:15px;">
+
+<select id="statusFilter" onchange="applyFilters()">
+
+<option value="all">All Status</option>
+
+<option value="floor">🟢 On Floor</option>
+
+<option value="break">🟠 On Break</option>
+
+</select>
+
+<select id="teamFilter" onchange="applyFilters()">
+
+<option value="all">All Team Leads</option>
+
+<option value="Ashwin Kumar Gudala">Ashwin Kumar Gudala</option>
+
+<option value="Bathula Sai Parimala">Bathula Sai Parimala</option>
+
+<option value="Sathyanna Sai Kumar">Sathyanna Sai Kumar</option>
+
+</select>
+
+</div>
+
+<div class="sec">Employee Status</div>
       <div class="ecards" id="ecards"><div class="empty">No employees logged in today.</div></div>
     </div>
     <div id="tab-rep" style="display:none;">
@@ -797,6 +823,38 @@ let sess = null,
     breakTicker = null;
 
 let resetReady = false;
+let mgrFilter = "all";
+const TEAMS = {
+
+"Ashwin Kumar Gudala":[
+
+"Ram Gopal",
+"Yashwanth",
+"Eslavath Manisha",
+"Funish Bahadur",
+"Cheyvarthi Raju"
+
+],
+
+"Bathula Sai Parimala":[
+
+"Sravanthi Yadav",
+"Bandaru Vani",
+"Ritesh Kumar",
+"Yamini Saraswathi V",
+"Pathakoti Siddeshwar"
+
+],
+
+"Sathyanna Sai Kumar":[
+
+"Chippada Sunil",
+"Abhishek Adike",
+"Varun Teja Devarapalli"
+
+]
+
+};
 function today(){
 
     return new Date().toLocaleDateString(
@@ -867,9 +925,16 @@ async function doLogin() {
     // Live listener — updates UI whenever Firestore changes
     if (liveUnsub) liveUnsub();
     liveUnsub = ref.onSnapshot(doc => {
+
     if(doc.exists){
 
         renderEmp(doc.data());
+
+    }else{
+
+        alert("Today's session has been reset by the manager.");
+
+        logout();
 
     }
 
@@ -1147,11 +1212,19 @@ async function endBreak() {
 }
 
 // ── MANAGER ───────────────────────────────────────────────────
+function applyFilters(){
+
+renderMgr();
+
+}
+
+
 function mgrTab(t){
   document.getElementById('tab-live').style.display  = t==='live'?'':'none';
   document.getElementById('tab-rep').style.display   = t==='report'?'':'none';
   document.getElementById('t-live').className = 'tab'+(t==='live'?' active':'');
   document.getElementById('t-rep').className  = 'tab'+(t==='report'?' active':'');
+  
   if(t==='live')   renderMgr();
   if(t==='report') renderRep();
 }
@@ -1160,14 +1233,58 @@ async function renderMgr(){
   loading(true);
   const snap = await db.collection('employees').where('date','==',today()).get();
   const emps = snap.docs.map(d=>d.data());
+  let display=[...emps];
+  const status = document.getElementById("statusFilter").value;
+
+const team = document.getElementById("teamFilter").value;
+if(status==="floor"){
+
+display = display.filter(e=>!e.onBreak);
+
+}
+
+if(status==="break"){
+
+display = display.filter(e=>e.onBreak);
+
+}
+
+if(team!=="all"){
+
+display = display.filter(e=>TEAMS[team].includes(e.name));
+
+}
+  if(status==="floor"){
+
+display=display.filter(e=>!e.onBreak);
+
+}
+
+if(status==="break"){
+
+display=display.filter(e=>e.onBreak);
+
+}
+
+if(team!=="all"){
+
+display=display.filter(e=>
+
+TEAMS[team].includes(e.name)
+
+);
+
+}
+
+
   const onB  = emps.filter(e=>e.onBreak).length;
   document.getElementById('mgr-tot').textContent = emps.length;
   document.getElementById('mgr-fl').textContent  = emps.length-onB;
   document.getElementById('mgr-bk').textContent  = onB;
   const ec = document.getElementById('ecards');
   if(!emps.length){ec.innerHTML='<div class="empty">No employees logged in today.</div>';loading(false);return;}
-  emps.sort((a,b)=>a.onBreak===b.onBreak?0:a.onBreak?-1:1);
-  ec.innerHTML=emps.map(e=>{
+  display.sort((a,b)=>a.onBreak===b.onBreak?0:a.onBreak?-1:1);
+  ec.innerHTML=display.map(e=>{
     const bCnt=(e.breaks||[]).length+(e.onBreak?1:0);
     const bMin=Math.floor(usedMs(e)/60000);
     return `<div class="ecard"><div class="av">${initials(e.name)}</div><div style="flex:1"><div class="en">${e.name}</div><div class="em">${e.role} · ${bCnt} break${bCnt!==1?'s':''} · ${bMin} min used</div></div><span class="stag ${e.onBreak?'sb':'sf'}">${e.onBreak?'On break':'On floor'}</span></div>`;
@@ -1204,9 +1321,8 @@ function buildRows(emps, filter){
 }
 
 async function dlCSV(){
-
+alert("CSV function started");
 loading(true);
-
 try{
 
 const snap = await db.collection("employees")
