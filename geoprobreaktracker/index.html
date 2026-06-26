@@ -350,7 +350,7 @@ Employee Break Tracker
   </div>
 </div>
 
-<<!-- EMPLOYEE DASHBOARD -->
+<!-- EMPLOYEE DASHBOARD -->
 <div class="screen" id="s-employee">
 
 <div class="topbar">
@@ -867,16 +867,9 @@ async function doLogin() {
     // Live listener — updates UI whenever Firestore changes
     if (liveUnsub) liveUnsub();
     liveUnsub = ref.onSnapshot(doc => {
-
     if(doc.exists){
 
         renderEmp(doc.data());
-
-    }else{
-
-        alert("Today's session has been reset by the manager.");
-
-        logout();
 
     }
 
@@ -1211,30 +1204,77 @@ function buildRows(emps, filter){
 }
 
 async function dlCSV(){
-  loading(true);
-  const snap=await db.collection('employees').where('date','==',today()).get();
-  const emps=snap.docs.map(d=>d.data());
-  const filter=document.getElementById('f-emp').value;
-  const period=document.getElementById('f-per').value;
-  let csv='Employee,Role,Date,Break #,Start,End,Duration (min),Reason\n';
-  emps.forEach(e=>{
-    if(filter!=='all'&&e.name!==filter)return;
-    const active=e.onBreak&&e.breakStart?[{s:e.breakStart,e:null,dur:Date.now()-(e.breakStart.toDate?e.breakStart.toDate().getTime():e.breakStart),r:e.currentReason}]:[];
-    const all=[...(e.breaks||[]),...active];
-    all.forEach((b,i)=>csv+=`"${e.name}","${e.role}",${today()},${i+1},${fmtT(b.s)},${b.e?fmtT(b.e):'ongoing'},${Math.floor((b.dur||(Date.now()-b.s?.toDate?b.s.toDate().getTime():b.s))/60000)},"${b.r||''}"\n`);
-  });
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=`breaks-${period}-${today()}.csv`;
-  a.click();
-  loading(false);
+
+loading(true);
+
+try{
+
+const snap = await db.collection("employees")
+.where("date","==",today())
+.get();
+
+const emps = snap.docs.map(d=>d.data());
+
+const filter = document.getElementById("f-emp").value;
+
+let csv = "Employee,Role,Date,Break #,Start,End,Duration (min),Reason\n";
+
+emps.forEach(e=>{
+
+if(filter!=="all" && e.name!==filter) return;
+
+const active = e.onBreak && e.breakStart ? [{
+s:e.breakStart,
+e:null,
+dur:Date.now()-(e.breakStart.toDate().getTime()),
+r:e.currentReason
+}] : [];
+
+const all=[...(e.breaks||[]),...active];
+
+all.forEach((b,i)=>{
+
+const start=b.s?.toDate ? b.s.toDate().getTime() : b.s;
+const end=b.e?.toDate ? b.e.toDate().getTime() : b.e;
+
+const mins=Math.floor((b.dur ?? ((end||Date.now())-start))/60000);
+
+csv += `"${e.name}","${e.role}","${today()}",${i+1},"${fmtT(b.s)}","${end?fmtT(b.e):"Ongoing"}",${mins},"${b.r||""}"\n`;
+
+});
+
+});
+
+const blob = new Blob([csv],{type:"text/csv;charset=utf-8;"});
+
+const url = window.URL.createObjectURL(blob);
+
+const link = document.createElement("a");
+
+link.href = url;
+
+link.download = `Break_Report_${today()}.csv`;
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+window.URL.revokeObjectURL(url);
+
+}catch(err){
+
+alert(err.message);
+
+console.error(err);
+
 }
 
-async function dlCSV(){
-
-    // ...your existing code...
+loading(false);
 
 }
+
 
 async function confirmReset(){
 
