@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Break Tracker</title>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#051923,#003554,#00A8E8);
+background-attachment:fixed;
+color:#1a1a1a;
+min-height:100vh;
+}
+.screen{display:none;} .screen.active{display:block;}
+
+/* LOGIN */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+.login-card{
+background:rgba(255,255,255,.96);
+backdrop-filter:blur(12px);
+border-radius:22px;
+padding:35px;
+width:100%;
+max-width:430px;
+box-shadow:0 20px 45px rgba(0,0,0,.25);
+border:none;
+animation:fadeUp .7s ease;
+}
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+.login-card h2{
+font-size:34px;
+font-weight:700;
+color:#003554;
+margin-top:10px;
+text-align:center;
+}
+.login-card .sub{
+font-size:15px;
+color:#555;
+text-align:center;
+margin-bottom:25px;
+}
+.fl{display:block;font-size:12px;color:#555;margin-bottom:5px;font-weight:500;}
+.login-card input,
+.login-card select{
+
+padding:14px;
+font-size:15px;
+border-radius:12px;
+background:#F8FAFC;
+border:3px solid #E5E7EB;
+
+}
+.login-card input:focus,.login-card select:focus{border-color:#534AB7;background:#fff;}
+.btn-full{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:16px;
+font-weight:700;
+background:linear-gradient(90deg,#00A8E8,#0077B6);
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+.btn-full:hover{
+transform:translateY(-2px);
+box-shadow:0 12px 30px rgba(0,168,232,.35);
+}
+.btn-full:disabled{opacity:0.5;cursor:not-allowed;}
+.err{font-size:12px;color:#c0392b;margin:-10px 0 12px;display:none;}
+.link-btn{background:none;border:none;color:#534AB7;font-size:13px;cursor:pointer;text-decoration:underline;margin-top:12px;display:block;text-align:center;}
+
+/* TOPBAR */
+.topbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:18px 30px;
+
+background:white;
+
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+
+border-bottom:none;
+
+position:sticky;
+
+top:0;
+
+z-index:100;
+
+}
+.app-title{font-size:15px;font-weight:600;color:#534AB7;}
+.tabs{display:flex;gap:4px;}
+.tab{padding:6px 14px;border:none;background:none;font-size:13px;font-weight:500;color:#666;cursor:pointer;border-radius:8px;}
+.tab.active{background:#EEEDFE;color:#534AB7;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.uname{font-size:13px;color:#666;} 
+.out-btn{font-size:12px;padding:5px 12px;border:1px solid #ddd;border-radius:8px;background:none;cursor:pointer;color:#666;}
+.out-btn:hover{background:#f5f5f7;}
+
+/* CONTENT */
+.pad{padding:20px;max-width:720px;margin:0 auto;}
+
+/* STATUS BANNER */
+.banner{
+
+background:white;
+
+border-radius:22px;
+
+padding:28px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+margin-bottom:25px;
+
+border:none;
+
+}
+.spill{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dg{background:#27ae60;box-shadow:0 0 0 3px rgba(39,174,96,0.15);}
+.da{background:#f39c12;box-shadow:0 0 0 3px rgba(243,156,18,0.15);}
+.btn-row{display:flex;gap:8px;}
+.bbtn{
+
+padding:14px 28px;
+
+border:none;
+
+border-radius:14px;
+
+font-size:15px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+.bbtn:disabled{opacity:0.35;cursor:not-allowed;}
+.bk{
+
+background:#00A8E8;
+
+color:white;
+
+} .bk:hover:not(:disabled){background:#FDEBD0;}
+.fl2{
+
+background:#16A34A;
+
+color:white;
+
+}
+.bbtn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 12px 30px rgba(0,0,0,.15);
+
+} .fl2:hover:not(:disabled){background:#D5F5E3;}
+
+/* METRIC CARDS */
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.mc{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:16px;}
+.ml{font-size:11px;color:#888;margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.mv{font-size:22px;font-weight:700;}
+
+/* RING */
+.ring-outer{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
+.rsvg{position:relative;width:120px;height:120px;}
+.rsvg svg{transform:rotate(-90deg);}
+.rc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.rt{font-size:20px;font-weight:700;} .rl{font-size:11px;color:#888;}
+
+/* LOG */
+.sec{font-size:11px;font-weight:600;color:#888;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px;}
+.log-box{border:1px solid #e5e5e5;border-radius:12px;overflow:hidden;margin-bottom:20px;background:#fff;}
+.lh{display:grid;grid-template-columns:80px 80px 65px 1fr;gap:8px;padding:8px 14px;background:#fafafa;font-size:11px;color:#888;font-weight:600;}
+.lr{display:grid;grid-template-columns:80px 80px 65px 1fr;gap:8px;padding:10px 14px;font-size:13px;border-top:1px solid #f0f0f0;align-items:center;}
+.rb{background:#EEEDFE;color:#3C3489;font-size:11px;padding:2px 9px;border-radius:20px;display:inline-block;font-weight:500;}
+.empty{padding:20px;text-align:center;color:#aaa;font-size:13px;}
+
+/* PIE */
+.pie-wrap{position:relative;height:170px;margin-bottom:10px;}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#666;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:200;align-items:center;justify-content:center;}
+.modal-bg.on{display:flex;}
+.modal{background:#fff;border-radius:16px;padding:1.5rem;width:300px;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:1rem;}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.ropt{padding:10px;border-radius:8px;border:1px solid #e0e0e0;font-size:13px;cursor:pointer;text-align:center;background:#fafafa;color:#444;}
+.ropt:hover{border-color:#AFA9EC;background:#EEEDFE;}
+.ropt.sel{border-color:#534AB7;background:#EEEDFE;color:#3C3489;font-weight:600;}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;}
+.sbtn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid #ddd;background:#fafafa;color:#333;}
+.pbtn{background:#534AB7;color:#fff;border-color:#534AB7;} .pbtn:hover{background:#3C3489;}
+
+/* MANAGER CARDS */
+.ecards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.ecard{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid #e5e5e5;border-radius:12px;background:#fff;}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;background:#EEEDFE;color:#534AB7;}
+.en{font-size:14px;font-weight:600;} .em{font-size:12px;color:#888;}
+.stag{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600;margin-left:auto;white-space:nowrap;}
+.sf{background:#EAFAF1;color:#1E8449;} .sb{background:#FEF3E2;color:#784212;}
+
+/* REPORT */
+.frow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.frow select{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;}
+.dlbtn{padding:8px 14px;border-radius:8px;border:1px solid #ddd;font-size:13px;cursor:pointer;background:#fff;display:flex;align-items:center;gap:6px;font-weight:500;}
+.dlbtn:hover{background:#f5f5f7;}
+.rtbl{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e5e5;}
+.rtbl th{padding:9px 10px;text-align:left;font-weight:600;color:#888;font-size:11px;border-bottom:1px solid #e5e5e5;background:#fafafa;text-transform:uppercase;letter-spacing:0.04em;}
+.rtbl td{padding:10px;border-bottom:1px solid #f5f5f5;}
+
+/* LOADING OVERLAY */
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.8);z-index:300;align-items:center;justify-content:center;font-size:14px;color:#534AB7;font-weight:500;gap:10px;}
+.loading.on{display:flex;}
+.spinner{width:20px;height:20px;border:2px solid #EEEDFE;border-top-color:#534AB7;border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading" id="loading"><div class="spinner"></div> Please wait...</div>
+
+<!-- EMPLOYEE LOGIN -->
+<div class="screen active" id="s-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      
+      
+
+<div style="text-align:center;margin-bottom:18px;">
+
+<img
+style="width:90px;">
+
+</div>
+
+<h2>
+
+GeoPro
+
+</h2>
+
+<p style="text-align:center;
+font-size:17px;
+color:#009FE3;
+font-weight:600;
+margin-bottom:10px;">
+
+Employee Break Tracker
+
+</p>
+      <p class="sub">Enter your name — your breaks are saved automatically.</p>
+      <label class="fl">Select Your Name</label>
+
+<select id="inp-name">
+
+<option value="">-- Select Employee --</option>
+
+<option>Ram Gopal</option>
+
+<option>Yashwanth</option>
+
+<option>Eslavath Manisha</option>
+
+<option>Funish Bahadur</option>
+
+<option>Cheyvarthi Raju</option>
+
+<option>Sravanthi Yadav</option>
+
+<option>Bandaru Vani</option>
+
+<option>Ritesh Kumar</option>
+
+<option>Yamini Saraswathi V</option>
+
+<option>Pathakoti Siddeshwar</option>
+
+<option>Chippada Sunil</option>
+
+<option>Abhishek Adike</option>
+
+<option>Varun Teja Devarapalli</option>
+
+</select>
+      <label class="fl">Your role</label>
+      <select id="inp-role">
+        <option value="Specialist">Specialist</option>
+        <option value="Team Lead">Team Lead</option>
+        <option value="QA">QA</option>
+      </select>
+      <p class="err" id="err-login">Please select your name.</p>
+      <button class="btn-full" id="login-btn" onclick="doLogin()">Continue →</button>
+      <button class="link-btn" onclick="show('s-mgr-login')">Manager login →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGER LOGIN -->
+<div class="screen" id="s-mgr-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>🔒 Manager Login</h2>
+      <p class="sub">Enter your manager PIN to access the dashboard.</p>
+      <label class="fl">PIN</label>
+      <input type="password" id="inp-pin" placeholder="Enter PIN" maxlength="10" />
+      <p class="err" id="err-pin">Incorrect PIN. Please try again.</p>
+      <button class="btn-full" onclick="doMgrLogin()">Login as Manager →</button>
+      <button class="link-btn" onclick="show('s-login')">← Back to employee login</button>
+    </div>
+  </div>
+</div>
+
+<<!-- EMPLOYEE DASHBOARD -->
+<div class="screen" id="s-employee">
+
+<div class="topbar">
+
+<div style="display:flex;align-items:center;gap:15px;">
+
+<div style="
+width:52px;
+height:52px;
+border-radius:14px;
+background:linear-gradient(135deg,#00A8E8,#005A8D);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+color:white;
+box-shadow:0 8px 18px rgba(0,168,232,.30);
+">
+
+☕
+
+</div>
+
+<div>
+
+<div style="
+font-size:22px;
+font-weight:700;
+color:#003554;">
+
+GeoPro
+
+</div>
+
+<div style="
+font-size:13px;
+color:#009FE3;">
+
+Employee Break Tracker
+
+</div>
+
+</div>
+
+</div>
+
+<div class="topbar-right">
+
+<div style="text-align:right;">
+
+<div style="
+font-size:12px;
+color:#888;">
+
+Welcome
+
+</div>
+
+<div
+class="uname"
+id="nav-name"
+style="
+font-size:16px;
+font-weight:700;
+color:#003554;">
+</div>
+
+</div>
+
+<button class="out-btn" onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+</div>
+  <div class="pad">
+    <div class="banner">
+
+<div style="display:flex;align-items:center;gap:18px;">
+
+<div id="statusIcon" style="
+width:70px;
+height:70px;
+border-radius:20px;
+background:#E8F8F5;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:34px;
+">
+
+🟢
+
+</div>
+
+<div>
+
+<div style="
+font-size:13px;
+color:#777;
+margin-bottom:4px;">
+Current Status
+</div>
+
+<div
+id="estatus"
+style="
+font-size:28px;
+font-weight:700;
+color:#1E8449;">
+On Floor
+</div>
+
+<div style="
+font-size:14px;
+color:#888;">
+Ready to take your next break
+</div>
+
+</div>
+
+</div>
+
+<div class="btn-row">
+
+<button
+class="bbtn bk"
+id="btn-brk"
+onclick="openModal()">
+
+☕ Start Break
+
+</button>
+
+<button
+class="bbtn fl2"
+id="btn-fl"
+onclick="endBreak()"
+disabled>
+
+🏢 Back to Floor
+
+</button>
+
+</div>
+
+</div>
+    <div class="row3">
+      <div class="mc"><div class="ml">Breaks today</div><div class="mv" id="m-cnt">0</div></div>
+      <div class="mc"><div class="ml">Time on break</div><div class="mv" id="m-used">0 min</div></div>
+      <div class="mc"><div class="ml">Remaining</div><div class="mv" id="m-rem">60 min</div></div>
+      <div class="row3">
+
+<div class="mc">
+<div class="ml">Last Break</div>
+<div class="mv" id="lastBreak">--</div>
+</div>
+
+<div class="mc">
+<div class="ml">Longest Break</div>
+<div class="mv" id="longBreak">--</div>
+</div>
+
+<div class="mc">
+<div class="ml">Average Break</div>
+<div class="mv" id="avgBreak">--</div>
+</div>
+
+</div>
+    </div>
+    <div class="mc" id="liveBreakCard" style="display:none;margin-bottom:20px;">
+
+<div class="ml">
+LIVE BREAK TIMER
+</div>
+
+<div id="liveBreakTime"
+style="
+font-size:42px;
+font-weight:700;
+color:#EF4444;
+margin-top:10px;
+font-family:monospace;">
+
+00:00:00
+
+</div>
+
+<div
+id="liveBreakStarted"
+style="
+margin-top:10px;
+font-size:14px;
+color:#666;">
+
+Started at --
+
+</div>
+
+</div>
+    <div class="ring-outer">
+      <div class="rsvg">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="8"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#534AB7" stroke-width="8"
+            stroke-dasharray="314" id="rfill" stroke-dashoffset="314" stroke-linecap="round"/>
+        </svg>
+        <div class="rc"><div class="rt" id="rtime">60:00</div><div class="rl">remaining</div></div>
+      </div>
+      <div style="font-size:12px;color:#888;margin-top:8px;">Daily break limit · 60 minutes</div>
+    </div>
+    <div class="sec">Today's break log</div>
+    <div class="log-box">
+      <div class="lh"><span>Start</span><span>End</span><span>Duration</span><span>Reason</span></div>
+      <div id="log-body"><div class="empty">No breaks recorded yet today.</div></div>
+    </div>
+    <div class="sec">Break breakdown</div>
+    <div class="pie-wrap"><canvas id="pie-c"></canvas></div>
+    <div class="leg" id="pie-leg"></div>
+  </div>
+</div>
+</div>
+
+<!-- MANAGER DASHBOARD -->
+<div class="screen" id="s-manager">
+  <div class="topbar">
+    <span class="app-title">📊 Manager Dashboard</span>
+    <div class="tabs">
+      <button class="tab active" id="t-live" onclick="mgrTab('live')">Live Status</button>
+      <button class="tab" id="t-rep" onclick="mgrTab('report')">Reports</button>
+    </div>
+    <div class="topbar-right">
+      <span class="uname">Manager</span>
+      <button class="out-btn" onclick="logout()">Log out</button>
+    </div>
+  </div>
+  <div class="pad">
+    <div id="tab-live">
+      <div class="row3">
+        <div class="mc"><div class="ml">Total today</div><div class="mv" id="mgr-tot">0</div></div>
+        <div class="mc"><div class="ml" style="color:#1E8449">On floor</div><div class="mv" style="color:#1E8449" id="mgr-fl">0</div></div>
+        <div class="mc"><div class="ml" style="color:#784212">On break</div><div class="mv" style="color:#784212" id="mgr-bk">0</div></div>
+      </div>
+      <div class="sec">Employee status</div>
+      <div class="ecards" id="ecards"><div class="empty">No employees logged in today.</div></div>
+    </div>
+    <div id="tab-rep" style="display:none;">
+      <div class="frow">
+        <select id="f-emp"><option value="all">All employees</option></select>
+        <select id="f-per">
+          <option value="today">Today</option>
+          <option value="week">This week</option>
+          <option value="month">This month</option>
+        </select>
+        <button class="dlbtn" onclick="dlCSV()">⬇ Download CSV</button>
+      </div>
+      <table class="rtbl">
+        <thead><tr><th>Employee</th><th>Role</th><th>#</th><th>Start</th><th>End</th><th>Duration</th><th>Reason</th></tr></thead>
+        <tbody id="rep-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- BREAK REASON MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3>What's this break for?</h3>
+    <div class="rgrid" id="rgrid"></div>
+    <div class="mbtns">
+      <button class="sbtn" onclick="closeModal()">Cancel</button>
+      <button class="sbtn pbtn" onclick="confirmBreak()">Start break</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  🔧 PASTE YOUR FIREBASE CONFIG HERE
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBYd81cs8ZLM9hUN72pb1XfucsANY2131Y",
+  authDomain: "geopro-break-tracker.firebaseapp.com",
+  projectId: "geopro-break-tracker",
+  storageBucket: "geopro-break-tracker.firebasestorage.app",
+  messagingSenderId: "977496337269",
+  appId: "1:977496337269:web:bf7fdbad577f46007a013c"
+};
+// ============================================================
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const PIN = '10401204';  // Change this to your manager PIN
+const LIMIT = 3600000; // 60 minutes in ms
+const REASONS = [
+'Lunch/Dinner',
+'Coffee Break',
+'Bio Break',
+'Personal',
+'Training',
+'Meeting',
+'Medical',
+'Emergency',
+'Other'
+];
+const RCLR   = ['#534AB7','#1D9E75','#D85A30','#D4537E','#378ADD','#888780'];
+
+let sess = null,
+    selReason = null,
+    pie = null,
+    liveUnsub = null,
+    ticker = null,
+    breakTicker = null;
+function today(){
+
+    return new Date().toLocaleDateString(
+        "en-CA",
+        {
+            timeZone:"America/New_York"
+        }
+    );
+
+}
+
+// ── helpers ──────────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function loading(on) { document.getElementById('loading').className = 'loading' + (on ? ' on' : ''); }
+function fmtT(ts){
+
+    if(!ts) return "--";
+
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+
+    return d.toLocaleTimeString(
+        "en-US",
+        {
+            timeZone:"America/New_York",
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit",
+            hour12:true
+        }
+    );
+
+}
+function fmtMs(ms) {
+  const m = Math.floor(ms/60000), s = Math.floor((ms%60000)/1000);
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function usedMs(rec) {
+  const done = (rec.breaks||[]).reduce((a,b)=>a+(b.dur||0),0);
+  return done + (rec.onBreak && rec.breakStart ? (Date.now() - (rec.breakStart.toDate ? rec.breakStart.toDate().getTime() : rec.breakStart)) : 0);
+}
+function initials(n) { return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
+
+// ── EMPLOYEE LOGIN ────────────────────────────────────────────
+async function doLogin() {
+  const name = document.getElementById('inp-name').value.trim();
+  const role = document.getElementById('inp-role').value;
+  const err  = document.getElementById('err-login');
+  const btn  = document.getElementById('login-btn');
+  if (!name) { err.style.display='block'; return; }
+  err.style.display='none';
+  btn.disabled=true; btn.textContent='Loading...';
+  loading(true);
+  try {
+    const docId = name.toLowerCase().replace(/\s+/g,'-') + '_' + today();
+    const ref = db.collection('employees').doc(docId);
+    const snap = await ref.get();
+    if (!snap.exists) {
+      await ref.set({ name, role, breaks:[], onBreak:false, breakStart:null, currentReason:null, date:today(), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+    sess = { type:'emp', ref, docId };
+    localStorage.setItem("empName", name);
+    localStorage.setItem("empRole", role);
+    document.getElementById('nav-name').textContent = name;
+    show('s-employee');
+    // Live listener — updates UI whenever Firestore changes
+    if (liveUnsub) liveUnsub();
+    liveUnsub = ref.onSnapshot(doc => {
+    if(doc.exists){
+
+        renderEmp(doc.data());
+
+    }
+
+});
+  } catch(e) {
+    err.textContent = 'Could not connect. Check Firebase config. Error: ' + e.message;
+    err.style.display='block';
+  }
+  loading(false);
+  btn.disabled=false; btn.textContent='Continue →';
+}
+
+// ── MANAGER LOGIN ─────────────────────────────────────────────
+function doMgrLogin() {
+  const pin = document.getElementById('inp-pin').value;
+  const err = document.getElementById('err-pin');
+  if (pin !== PIN) { err.style.display='block'; return; }
+  err.style.display='none';
+  sess = { type:'mgr' };
+  show('s-manager');
+  mgrTab('live');
+}
+
+// ── LOGOUT ────────────────────────────────────────────────────
+function logout() {
+  if (liveUnsub) { liveUnsub(); liveUnsub=null; }
+  clearInterval(ticker);
+  sess=null;
+  localStorage.removeItem("empName");
+  localStorage.removeItem("empRole");
+  selReason=null;
+  if(pie){pie.destroy();pie=null;}
+  document.getElementById('inp-name').value='';
+  document.getElementById('inp-pin').value='';
+  show('s-login');
+}
+
+// ── EMPLOYEE RENDER ───────────────────────────────────────────
+function renderEmp(rec) {
+  const used   = usedMs(rec);
+  const rem    = Math.max(0, LIMIT - used);
+  const bsTime = rec.onBreak && rec.breakStart ? (rec.breakStart.toDate ? rec.breakStart.toDate().getTime() : rec.breakStart) : null;
+  const card = document.getElementById("liveBreakCard");
+
+const icon = document.getElementById("statusIcon");
+
+document.getElementById("estatus").textContent =
+    rec.onBreak ? "On Break" : "On Floor";
+
+icon.innerHTML = rec.onBreak ? "🟠" : "🟢";
+
+icon.style.background =
+    rec.onBreak ? "#FFF4E5" : "#E8F8F5";
+  document.getElementById('btn-brk').disabled  = rec.onBreak;
+  document.getElementById('btn-fl').disabled   = !rec.onBreak;
+  document.getElementById('m-cnt').textContent  = (rec.breaks||[]).length + (rec.onBreak?1:0);
+  document.getElementById('m-used').textContent = Math.floor(used/60000) + ' min';
+  document.getElementById('m-rem').textContent  = Math.floor(rem/60000) + ' min';
+  const done = rec.breaks || [];
+
+if(done.length){
+
+const last = done[done.length-1];
+
+document.getElementById("lastBreak").innerHTML =
+Math.floor(last.dur/60000)+" min";
+
+const longest =
+Math.max(...done.map(x=>x.dur));
+
+document.getElementById("longBreak").innerHTML =
+Math.floor(longest/60000)+" min";
+
+const avg =
+done.reduce((a,b)=>a+b.dur,0)/done.length;
+
+document.getElementById("avgBreak").innerHTML =
+Math.floor(avg/60000)+" min";
+
+}else{
+
+document.getElementById("lastBreak").innerHTML="--";
+
+document.getElementById("longBreak").innerHTML="--";
+
+document.getElementById("avgBreak").innerHTML="--";
+
+}
+
+  const pct  = Math.min(1, used/LIMIT);
+  const circ = 314;
+  document.getElementById('rfill').style.strokeDashoffset = circ*(1-pct);
+  document.getElementById('rfill').style.stroke = pct>0.85?'#e74c3c':pct>0.6?'#f39c12':'#534AB7';
+  document.getElementById('rtime').textContent  = fmtMs(rem);
+
+  const active = rec.onBreak && bsTime ? [{s:bsTime, e:null, r:rec.currentReason, dur:Date.now()-bsTime}] : [];
+  const all = [...(rec.breaks||[]).map(b=>({...b, s:b.s?.toDate?b.s.toDate().getTime():b.s, e:b.e?.toDate?b.e.toDate().getTime():b.e})), ...active];
+
+  const lb = document.getElementById('log-body');
+  lb.innerHTML = all.length ? all.map(b=>`
+    <div class="lr">
+      <span>${fmtT(b.s)}</span>
+      <span>${b.e?fmtT(b.e):'<em style="color:#aaa">ongoing</em>'}</span>
+      <span>${Math.floor((b.dur||(Date.now()-b.s))/60000)} min</span>
+      <span><span class="rb">${b.r||'—'}</span></span>
+    </div>`).join('') : '<div class="empty">No breaks yet today.</div>';
+
+  // Pie chart
+  const rm={};
+  all.forEach(b=>{rm[b.r]=(rm[b.r]||0)+Math.floor((b.dur||(Date.now()-b.s))/60000);});
+  const labs=Object.keys(rm), vals=Object.values(rm);
+  const clrs=labs.map(l=>RCLR[REASONS.indexOf(l)]??'#888');
+  if(pie){pie.destroy();pie=null;}
+  if(labs.length){
+    pie=new Chart(document.getElementById('pie-c'),{
+      type:'doughnut',
+      data:{labels:labs,datasets:[{data:vals,backgroundColor:clrs,borderWidth:2,borderColor:'#fff'}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'62%'}
+    });
+    document.getElementById('pie-leg').innerHTML=labs.map((l,i)=>`<span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:${clrs[i]};flex-shrink:0;"></span>${l} — ${vals[i]} min</span>`).join('');
+  } else {
+    document.getElementById('pie-leg').innerHTML='';
+  }
+
+  // Re-render every 30s if on break (to keep duration accurate)
+  clearInterval(breakTicker);
+
+if(rec.onBreak){
+
+card.style.display="block";
+
+function updateBreakClock(){
+
+const start = rec.breakStart.toDate().getTime();
+
+const diff = Date.now()-start;
+
+const h = String(Math.floor(diff/3600000)).padStart(2,"0");
+
+const m = String(Math.floor(diff%3600000/60000)).padStart(2,"0");
+
+const s = String(Math.floor(diff%60000/1000)).padStart(2,"0");
+
+document.getElementById("liveBreakTime").innerHTML=`${h}:${m}:${s}`;
+
+document.getElementById("liveBreakStarted").innerHTML=
+"Started at " + new Date(start).toLocaleTimeString(
+    "en-US",
+    {
+        timeZone:"America/New_York",
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit",
+        hour12:true
+    }
+);
+
+}
+
+updateBreakClock();
+
+breakTicker=setInterval(updateBreakClock,1000);
+
+}else{
+
+card.style.display="none";
+
+}
+  clearInterval(ticker);
+  if(rec.onBreak) ticker=setInterval(()=>{ if(sess?.type==='emp') sess.ref.get().then(d=>{if(d.exists)renderEmp(d.data());}); },30000);
+}
+
+// ── BREAK MODAL ───────────────────────────────────────────────
+function openModal() {
+  selReason=null;
+  document.getElementById('rgrid').innerHTML=REASONS.map(r=>`<button class="ropt" onclick="pickR('${r}',this)">${r}</button>`).join('');
+  document.getElementById('modal').className='modal-bg on';
+}
+function closeModal(){ document.getElementById('modal').className='modal-bg'; }
+function pickR(r,el){ selReason=r; document.querySelectorAll('.ropt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
+
+async function confirmBreak() {
+
+if(!selReason){
+alert('Please select a reason first.');
+return;
+}
+
+try{
+
+closeModal();
+
+loading(true);
+
+await sess.ref.update({
+
+  onBreak:true,
+
+  breakStart:firebase.firestore.Timestamp.now(),
+
+  currentReason:selReason
+
+});
+
+
+loading(false);
+
+
+}catch(err){
+
+alert(err.message);
+
+console.error(err);
+
+}
+
+loading(false);
+
+}
+
+async function endBreak() {
+  loading(true);
+  const snap = await sess.ref.get();
+  const rec  = snap.data();
+  const bsTs = rec.breakStart;
+  const bsMs = bsTs.toDate ? bsTs.toDate().getTime() : bsTs;
+  const dur  = Date.now() - bsMs;
+  await sess.ref.update({
+    onBreak: false,
+    breakStart: null,
+    currentReason: null,
+    breaks: firebase.firestore.FieldValue.arrayUnion({ s: bsTs, e: firebase.firestore.Timestamp.now(), dur, r: rec.currentReason })
+  });
+  loading(false);
+}
+
+// ── MANAGER ───────────────────────────────────────────────────
+function mgrTab(t){
+  document.getElementById('tab-live').style.display  = t==='live'?'':'none';
+  document.getElementById('tab-rep').style.display   = t==='report'?'':'none';
+  document.getElementById('t-live').className = 'tab'+(t==='live'?' active':'');
+  document.getElementById('t-rep').className  = 'tab'+(t==='report'?' active':'');
+  if(t==='live')   renderMgr();
+  if(t==='report') renderRep();
+}
+
+async function renderMgr(){
+  loading(true);
+  const snap = await db.collection('employees').where('date','==',today()).get();
+  const emps = snap.docs.map(d=>d.data());
+  const onB  = emps.filter(e=>e.onBreak).length;
+  document.getElementById('mgr-tot').textContent = emps.length;
+  document.getElementById('mgr-fl').textContent  = emps.length-onB;
+  document.getElementById('mgr-bk').textContent  = onB;
+  const ec = document.getElementById('ecards');
+  if(!emps.length){ec.innerHTML='<div class="empty">No employees logged in today.</div>';loading(false);return;}
+  emps.sort((a,b)=>a.onBreak===b.onBreak?0:a.onBreak?-1:1);
+  ec.innerHTML=emps.map(e=>{
+    const bCnt=(e.breaks||[]).length+(e.onBreak?1:0);
+    const bMin=Math.floor(usedMs(e)/60000);
+    return `<div class="ecard"><div class="av">${initials(e.name)}</div><div style="flex:1"><div class="en">${e.name}</div><div class="em">${e.role} · ${bCnt} break${bCnt!==1?'s':''} · ${bMin} min used</div></div><span class="stag ${e.onBreak?'sb':'sf'}">${e.onBreak?'On break':'On floor'}</span></div>`;
+  }).join('');
+  loading(false);
+}
+
+async function renderRep(){
+  loading(true);
+  const snap = await db.collection('employees').where('date','==',today()).get();
+  const emps = snap.docs.map(d=>d.data());
+  const sel  = document.getElementById('f-emp');
+  const cur  = sel.value;
+  sel.innerHTML='<option value="all">All employees</option>'+emps.map(e=>`<option value="${e.name}">${e.name}</option>`).join('');
+  sel.value=(emps.find(e=>e.name===cur)?cur:'all');
+  buildRows(emps, sel.value);
+  loading(false);
+}
+
+function buildRows(emps, filter){
+  const body=document.getElementById('rep-body');
+  let rows=[];
+  emps.forEach(e=>{
+    if(filter!=='all'&&e.name!==filter)return;
+    const active=e.onBreak&&e.breakStart?[{s:e.breakStart,e:null,dur:Date.now()-(e.breakStart.toDate?e.breakStart.toDate().getTime():e.breakStart),r:e.currentReason}]:[];
+    const all=[...(e.breaks||[]),...active];
+    all.forEach((b,i)=>{
+      const sMs=b.s?.toDate?b.s.toDate().getTime():b.s;
+      const eMs=b.e?.toDate?b.e.toDate().getTime():b.e;
+      rows.push(`<tr><td>${e.name}</td><td>${e.role}</td><td>${i+1}</td><td>${fmtT(b.s)}</td><td>${eMs?fmtT(b.e):'ongoing'}</td><td>${Math.floor((b.dur||(Date.now()-sMs))/60000)} min</td><td>${b.r||'—'}</td></tr>`);
+    });
+  });
+  body.innerHTML=rows.length?rows.join(''):'<tr><td colspan="7" class="empty">No breaks recorded yet.</td></tr>';
+}
+
+async function dlCSV(){
+  loading(true);
+  const snap=await db.collection('employees').where('date','==',today()).get();
+  const emps=snap.docs.map(d=>d.data());
+  const filter=document.getElementById('f-emp').value;
+  const period=document.getElementById('f-per').value;
+  let csv='Employee,Role,Date,Break #,Start,End,Duration (min),Reason\n';
+  emps.forEach(e=>{
+    if(filter!=='all'&&e.name!==filter)return;
+    const active=e.onBreak&&e.breakStart?[{s:e.breakStart,e:null,dur:Date.now()-(e.breakStart.toDate?e.breakStart.toDate().getTime():e.breakStart),r:e.currentReason}]:[];
+    const all=[...(e.breaks||[]),...active];
+    all.forEach((b,i)=>csv+=`"${e.name}","${e.role}",${today()},${i+1},${fmtT(b.s)},${b.e?fmtT(b.e):'ongoing'},${Math.floor((b.dur||(Date.now()-b.s?.toDate?b.s.toDate().getTime():b.s))/60000)},"${b.r||''}"\n`);
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`breaks-${period}-${today()}.csv`;
+  a.click();
+  loading(false);
+}
+
+document.getElementById('f-emp')?.addEventListener('change',async()=>{const snap=await db.collection('employees').where('date','==',today()).get();buildRows(snap.docs.map(d=>d.data()),document.getElementById('f-emp').value);});
+document.getElementById('inp-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('inp-pin')?.addEventListener('keydown',e=>{if(e.key==='Enter')doMgrLogin();});
+// ---------- AUTO LOGIN ----------
+
+window.addEventListener("load",()=>{
+
+const emp=localStorage.getItem("empName");
+const role=localStorage.getItem("empRole");
+
+if(emp){
+
+document.getElementById("inp-name").value=emp;
+
+if(role)
+document.getElementById("inp-role").value=role;
+
+doLogin();
+
+}
+
+});
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</body>
+</html>
