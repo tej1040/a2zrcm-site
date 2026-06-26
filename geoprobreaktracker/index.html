@@ -601,15 +601,32 @@ Started at --
       <div class="ecards" id="ecards"><div class="empty">No employees logged in today.</div></div>
     </div>
     <div id="tab-rep" style="display:none;">
-      <div class="frow">
-        <select id="f-emp"><option value="all">All employees</option></select>
-        <select id="f-per">
-          <option value="today">Today</option>
-          <option value="week">This week</option>
-          <option value="month">This month</option>
-        </select>
-        <button class="dlbtn" onclick="dlCSV()">⬇ Download CSV</button>
-      </div>
+<div class="frow">
+
+    <select id="f-emp">
+        <option value="all">All employees</option>
+    </select>
+
+    <select id="f-per">
+        <option value="today">Today</option>
+        <option value="week">This week</option>
+        <option value="month">This month</option>
+    </select>
+
+    <button class="dlbtn" onclick="dlCSV()">
+        ⬇ Download CSV
+    </button>
+
+    <button
+        class="dlbtn"
+        style="background:#DC2626;color:white;border-color:#DC2626;"
+        onclick="resetToday()">
+
+        🗑 Reset Today's Data
+
+    </button>
+
+</div>
       <table class="rtbl">
         <thead><tr><th>Employee</th><th>Role</th><th>#</th><th>Start</th><th>End</th><th>Duration</th><th>Reason</th></tr></thead>
         <tbody id="rep-body"></tbody>
@@ -1054,8 +1071,75 @@ async function dlCSV(){
   loading(false);
 }
 
-document.getElementById('f-emp')?.addEventListener('change',async()=>{const snap=await db.collection('employees').where('date','==',today()).get();buildRows(snap.docs.map(d=>d.data()),document.getElementById('f-emp').value);});
-document.getElementById('inp-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+async function dlCSV(){
+
+    // ...your existing code...
+
+}
+
+async function resetToday(){
+
+const confirm1 = confirm(
+"⚠️ This will clear today's break data for ALL employees.\n\nPrevious days will NOT be affected.\n\nDo you want to continue?"
+);
+
+if(!confirm1) return;
+
+const confirm2 = confirm(
+"🚨 FINAL WARNING\n\nThis action cannot be undone.\n\nAll employees will start with:\n\n• 0 Breaks\n• 60 Minutes Remaining\n• On Floor\n\nPress OK to RESET TODAY."
+);
+
+if(!confirm2) return;
+
+loading(true);
+
+try{
+
+const snap = await db.collection("employees")
+.where("date","==",today())
+.get();
+
+const batch = db.batch();
+
+snap.forEach(doc=>{
+
+batch.update(doc.ref,{
+
+breaks:[],
+onBreak:false,
+breakStart:null,
+currentReason:null
+
+});
+
+});
+
+await batch.commit();
+
+loading(false);
+
+alert("✅ Today's break data has been reset.");
+
+renderMgr();
+
+renderRep();
+
+}catch(err){
+
+loading(false);
+
+alert(err.message);
+
+console.error(err);
+
+}
+
+}
+
+document.getElementById('f-emp')?.addEventListener('change',async()=>{
+const snap=await db.collection('employees').where('date','==',today()).get();
+buildRows(snap.docs.map(d=>d.data()),document.getElementById('f-emp').value);
+});document.getElementById('inp-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('inp-pin')?.addEventListener('keydown',e=>{if(e.key==='Enter')doMgrLogin();});
 // ---------- AUTO LOGIN ----------
 
