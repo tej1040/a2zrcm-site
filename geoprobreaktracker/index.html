@@ -620,7 +620,7 @@ Started at --
     <button
         class="dlbtn"
         style="background:#DC2626;color:white;border-color:#DC2626;"
-        onclick="resetToday()">
+        onclick="openResetModal()">
 
         🗑 Reset Today's Data
 
@@ -636,6 +636,116 @@ Started at --
 </div>
 
 <!-- BREAK REASON MODAL -->
+<!-- RESET MODAL -->
+<div class="modal-bg" id="resetModal">
+
+<div class="modal" style="width:420px;">
+
+<h3 style="color:#DC2626;">
+⚠ Reset Today's Data
+</h3>
+
+<p style="font-size:14px;line-height:22px;margin-bottom:20px;">
+
+This will clear today's break data for
+<b>ALL employees</b>.
+
+<br><br>
+
+Yesterday's data will NOT be affected.
+
+</p>
+
+<div class="mbtns">
+
+<button class="sbtn"
+onclick="closeResetModal()">
+
+Cancel
+
+</button>
+
+<button
+class="sbtn pbtn"
+style="background:#DC2626;border-color:#DC2626;"
+onclick="openFinalReset()">
+
+Continue
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FINAL RESET -->
+
+<div class="modal-bg" id="finalReset">
+
+<div class="modal" style="width:430px;">
+
+<h3 style="color:#DC2626;">
+
+🚨 Final Confirmation
+
+</h3>
+
+<p style="margin-bottom:15px;">
+
+Type
+
+<b>RESET</b>
+
+to continue.
+
+</p>
+
+<input
+
+id="resetWord"
+
+placeholder="Type RESET"
+
+style="
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+margin-bottom:20px;">
+
+<div class="mbtns">
+
+<button
+class="sbtn"
+onclick="closeFinalReset()">
+
+Cancel
+
+</button>
+
+<button
+
+id="btnResetNow"
+
+class="sbtn pbtn"
+
+style="background:#DC2626;border-color:#DC2626;"
+
+disabled
+
+onclick="confirmReset()">
+
+Reset Today
+
+</button>
+
+</div>
+
+</div>
+
+</div>
 <div class="modal-bg" id="modal">
   <div class="modal">
     <h3>What's this break for?</h3>
@@ -685,6 +795,8 @@ let sess = null,
     liveUnsub = null,
     ticker = null,
     breakTicker = null;
+
+let resetReady = false;
 function today(){
 
     return new Date().toLocaleDateString(
@@ -755,9 +867,16 @@ async function doLogin() {
     // Live listener — updates UI whenever Firestore changes
     if (liveUnsub) liveUnsub();
     liveUnsub = ref.onSnapshot(doc => {
+
     if(doc.exists){
 
         renderEmp(doc.data());
+
+    }else{
+
+        alert("Today's session has been reset by the manager.");
+
+        logout();
 
     }
 
@@ -937,6 +1056,46 @@ function openModal() {
   document.getElementById('modal').className='modal-bg on';
 }
 function closeModal(){ document.getElementById('modal').className='modal-bg'; }
+function openResetModal(){
+
+document.getElementById("resetModal").classList.add("on");
+
+}
+
+function closeResetModal(){
+
+document.getElementById("resetModal").classList.remove("on");
+
+}
+
+function openFinalReset(){
+
+closeResetModal();
+
+document.getElementById("finalReset").classList.add("on");
+
+document.getElementById("resetWord").value="";
+
+document.getElementById("btnResetNow").disabled=true;
+
+}
+
+function closeFinalReset(){
+
+document.getElementById("finalReset").classList.remove("on");
+
+}
+document.addEventListener("input",function(e){
+
+if(e.target.id==="resetWord"){
+
+document.getElementById("btnResetNow").disabled =
+e.target.value.trim().toUpperCase()!=="RESET";
+
+}
+
+});
+
 function pickR(r,el){ selReason=r; document.querySelectorAll('.ropt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
 
 async function confirmBreak() {
@@ -1077,19 +1236,9 @@ async function dlCSV(){
 
 }
 
-async function resetToday(){
+async function confirmReset(){
 
-const confirm1 = confirm(
-"⚠️ This will clear today's break data for ALL employees.\n\nPrevious days will NOT be affected.\n\nDo you want to continue?"
-);
-
-if(!confirm1) return;
-
-const confirm2 = confirm(
-"🚨 FINAL WARNING\n\nThis action cannot be undone.\n\nAll employees will start with:\n\n• 0 Breaks\n• 60 Minutes Remaining\n• On Floor\n\nPress OK to RESET TODAY."
-);
-
-if(!confirm2) return;
+closeFinalReset();
 
 loading(true);
 
@@ -1103,14 +1252,7 @@ const batch = db.batch();
 
 snap.forEach(doc=>{
 
-batch.update(doc.ref,{
-
-breaks:[],
-onBreak:false,
-breakStart:null,
-currentReason:null
-
-});
+batch.delete(doc.ref);
 
 });
 
