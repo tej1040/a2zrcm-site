@@ -7,6 +7,9 @@
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -123,29 +126,23 @@ z-index:100;
 .out-btn:hover{background:#f5f5f7;}
 
 /* CONTENT */
-.pad{padding:20px;max-width:720px;margin:0 auto;}
+.pad{
+    width:95%;
+    max-width:1600px;
+    margin:0 auto;
+    padding:25px;
+}
 
 /* STATUS BANNER */
 .banner{
-
-background:white;
-
-border-radius:22px;
-
-padding:28px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-box-shadow:0 12px 35px rgba(0,0,0,.08);
-
-margin-bottom:25px;
-
-border:none;
-
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:25px;
+    align-items:center;
+    background:white;
+    border-radius:22px;
+    padding:30px;
+    margin-bottom:25px;
 }
 .spill{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;}
 .dot{width:10px;height:10px;border-radius:50%;}
@@ -193,8 +190,25 @@ box-shadow:0 12px 30px rgba(0,0,0,.15);
 } .fl2:hover:not(:disabled){background:#D5F5E3;}
 
 /* METRIC CARDS */
-.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
-.mc{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:16px;}
+.row3{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:18px;
+    margin-bottom:20px;
+}
+.mc{
+    background:#fff;
+    border-radius:16px;
+    padding:18px;
+    min-height:110px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+.small-card{
+    min-height:105px !important;
+    padding:16px 18px;
+}
 .ml{font-size:11px;color:#888;margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
 .mv{font-size:22px;font-weight:700;}
 
@@ -231,7 +245,52 @@ box-shadow:0 12px 30px rgba(0,0,0,.15);
 .pbtn{background:#534AB7;color:#fff;border-color:#534AB7;} .pbtn:hover{background:#3C3489;}
 
 /* MANAGER CARDS */
-.ecards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.ecards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
+    gap:16px;
+}
+.mgr-layout{
+
+display:grid;
+
+grid-template-columns:2fr 380px;
+
+gap:20px;
+
+align-items:start;
+
+}
+
+.mgr-side{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+position:sticky;
+
+top:95px;
+
+}
+
+.side-box{
+
+background:#fff;
+
+border-radius:14px;
+
+padding:15px;
+
+border:1px solid #E5E7EB;
+
+max-height:300px;
+
+overflow-y:auto;
+
+}
 .ecard{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid #e5e5e5;border-radius:12px;background:#fff;}
 .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;background:#EEEDFE;color:#534AB7;}
 .en{font-size:14px;font-weight:600;} .em{font-size:12px;color:#888;}
@@ -261,78 +320,87 @@ box-shadow:0 12px 30px rgba(0,0,0,.15);
 
 <!-- EMPLOYEE LOGIN -->
 <div class="screen active" id="s-login">
-  <div class="login-wrap">
-    <div class="login-card">
-      
-      
 
-<div style="text-align:center;margin-bottom:18px;">
+    <div class="login-wrap">
 
-<img
-style="width:90px;">
+        <div class="login-card">
 
-</div>
+            <h2>GeoPro Break Tracker</h2>
 
-<h2>
+            <p class="sub">
+                Sign in with your Microsoft Account
+            </p>
 
-GeoPro
+            <button class="btn-full" onclick="msLogin()">
+                🔷 Sign in with Microsoft
+            </button>
+<!-- DLT -->            
+<hr style="margin:20px 0;border:none;border-top:1px solid #ddd;">
 
-</h2>
-
-<p style="text-align:center;
-font-size:17px;
-color:#009FE3;
-font-weight:600;
-margin-bottom:10px;">
-
-Employee Break Tracker
-
+<p class="sub">
+Or continue using employee selection
 </p>
-      <p class="sub">Enter your name — your breaks are saved automatically.</p>
-      <label class="fl">Select Your Name</label>
+
+<label class="fl">Select Your Name</label>
 
 <select id="inp-name">
 
 <option value="">-- Select Employee --</option>
 
 <option>Ram Gopal</option>
-
 <option>Yashwanth</option>
-
 <option>Eslavath Manisha</option>
-
 <option>Funish Bahadur</option>
-
 <option>Cheyvarthi Raju</option>
 
 <option>Sravanthi Yadav</option>
-
 <option>Bandaru Vani</option>
-
 <option>Ritesh Kumar</option>
-
 <option>Yamini Saraswathi V</option>
-
 <option>Pathakoti Siddeshwar</option>
 
 <option>Chippada Sunil</option>
-
 <option>Abhishek Adike</option>
-
 <option>Varun Teja Devarapalli</option>
 
 </select>
-      <label class="fl">Your role</label>
-      <select id="inp-role">
-        <option value="Specialist">Specialist</option>
-        <option value="Team Lead">Team Lead</option>
-        <option value="QA">QA</option>
-      </select>
-      <p class="err" id="err-login">Please select your name.</p>
-      <button class="btn-full" id="login-btn" onclick="doLogin()">Continue →</button>
-      <button class="link-btn" onclick="show('s-mgr-login')">Manager login →</button>
+
+<label class="fl">Role</label>
+
+<select id="inp-role">
+
+<option value="Specialist">Specialist</option>
+<option value="Team Lead">Team Lead</option>
+<option value="QA">QA</option>
+
+</select>
+
+<p class="err" id="err-login">
+Please select your name.
+</p>
+
+<button
+class="btn-full"
+style="background:#16A34A;"
+onclick="manualLogin()">
+
+Continue →
+
+</button>
+<!-- DLT -->
+
+            <button
+                class="link-btn"
+                onclick="show('s-mgr-login')">
+
+                Manager Login
+
+            </button>
+
+        </div>
+
     </div>
-  </div>
+
 </div>
 
 <!-- MANAGER LOGIN -->
@@ -345,7 +413,12 @@ Employee Break Tracker
       <input type="password" id="inp-pin" placeholder="Enter PIN" maxlength="10" />
       <p class="err" id="err-pin">Incorrect PIN. Please try again.</p>
       <button class="btn-full" onclick="doMgrLogin()">Login as Manager →</button>
-      <button class="link-btn" onclick="show('s-login')">← Back to employee login</button>
+      <button class="link-btn"
+onclick="show('s-login')">
+
+← Back to employee login
+
+</button>
     </div>
   </div>
 </div>
@@ -501,25 +574,85 @@ disabled>
 </div>
 
 </div>
-    <div class="row3">
-      <div class="mc"><div class="ml">Breaks today</div><div class="mv" id="m-cnt">0</div></div>
-      <div class="mc"><div class="ml">Time on break</div><div class="mv" id="m-used">0 min</div></div>
-      <div class="mc"><div class="ml">Remaining</div><div class="mv" id="m-rem">60 min</div></div>
-      <div class="row3">
+<div class="row3">
 
-<div class="mc">
-<div class="ml">Last Break</div>
-<div class="mv" id="lastBreak">--</div>
+    <div class="mc small-card">
+        <div class="ml">BREAKS TODAY</div>
+        <div class="mv" id="m-cnt">0</div>
+    </div>
+
+    <div class="mc small-card">
+        <div class="ml">WORKING SINCE LAST BREAK</div>
+
+        <div class="mv" id="workingSince">
+            --:--:--
+        </div>
+
+        <div id="lastBreakTime" class="sub-info">
+            Since: --
+        </div>
+    </div>
+
+    <div class="mc small-card">
+        <div class="ml">TIME ON BREAK</div>
+        <div class="mv" id="m-used">0 min</div>
+    </div>
+
+    <div class="mc small-card">
+        <div class="ml">REMAINING</div>
+        <div class="mv" id="m-rem">60 min</div>
+    </div>
+
 </div>
 
-<div class="mc">
-<div class="ml">Longest Break</div>
-<div class="mv" id="longBreak">--</div>
+<div class="row3">
+
+<div class="mc"
+style="
+background:#F8FBFF;
+border-left:6px solid #2196F3;">
+
+<div class="ml">LAST BREAK</div>
+
+<div
+class="mv"
+id="lastBreak"
+style="color:#2196F3;">
+0 min
 </div>
 
-<div class="mc">
-<div class="ml">Average Break</div>
-<div class="mv" id="avgBreak">--</div>
+</div>
+
+<div class="mc"
+style="
+background:#FFF8EB;
+border-left:6px solid #F59E0B;">
+
+<div class="ml">LONGEST BREAK</div>
+
+<div
+class="mv"
+id="longBreak"
+style="color:#F59E0B;">
+0 min
+</div>
+
+</div>
+
+<div class="mc"
+style="
+background:#F1FCF6;
+border-left:6px solid #22C55E;">
+
+<div class="ml">AVERAGE BREAK</div>
+
+<div
+class="mv"
+id="avgBreak"
+style="color:#22C55E;">
+0 min
+</div>
+
 </div>
 
 </div>
@@ -623,8 +756,53 @@ Started at --
 
 </div>
 
-<div class="sec">Employee Status</div>
-      <div class="ecards" id="ecards"><div class="empty">No employees logged in today.</div></div>
+<div class="mgr-layout">
+
+    <!-- LEFT -->
+
+    <div>
+
+        <div class="sec">
+            Employee Status
+        </div>
+
+        <div class="ecards" id="ecards">
+
+            <div class="empty">
+                No employees logged in today.
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="mgr-side">
+
+        <div class="sec">
+            👥 Team Summary
+        </div>
+
+        <div class="side-box">
+
+            <div id="teamSummary"></div>
+
+        </div>
+
+        <div class="sec" style="margin-top:18px;">
+            📋 Live Activity
+        </div>
+
+        <div class="side-box">
+
+            <div id="activityFeed"></div>
+
+        </div>
+
+    </div>
+
+</div>
     </div>
     <div id="tab-rep" style="display:none;">
 <div class="frow">
@@ -654,7 +832,15 @@ Started at --
 
 </div>
       <table class="rtbl">
-        <thead><tr><th>Employee</th><th>Role</th><th>#</th><th>Start</th><th>End</th><th>Duration</th><th>Reason</th></tr></thead>
+        <thead><tr><th>Employee</th>
+        <th>Team Lead</th>
+        <th>Role</th>
+        <th>#</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Duration</th>
+        <th>Reason</th>
+        </tr></thead>
         <tbody id="rep-body"></tbody>
       </table>
     </div>
@@ -784,9 +970,7 @@ Reset Today
 </div>
 
 <script>
-// ============================================================
-//  🔧 PASTE YOUR FIREBASE CONFIG HERE
-// ============================================================
+
 const firebaseConfig = {
   apiKey: "AIzaSyBYd81cs8ZLM9hUN72pb1XfucsANY2131Y",
   authDomain: "geopro-break-tracker.firebaseapp.com",
@@ -798,7 +982,101 @@ const firebaseConfig = {
 // ============================================================
 
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.firestore();
+const auth = firebase.auth();
+
+const provider = new firebase.auth.OAuthProvider("microsoft.com");
+auth.onAuthStateChanged(async(user)=>{
+
+    if(user){
+
+        await doLogin(user);
+
+        return;
+
+    }
+
+    const saved = JSON.parse(
+        localStorage.getItem("manualUser") || "null"
+    );
+
+    if(saved){
+
+        await doLogin({
+
+            displayName:saved.name,
+
+            email:saved.name
+                .replace(/\s+/g,".")
+                .toLowerCase()+"@manual.local"
+
+        });
+
+    }
+
+});
+
+// Auto-login if already signed in
+async function msLogin(){
+
+    loading(true);
+
+    try{
+
+        await auth.signInWithPopup(provider);
+
+        // doLogin() will be called automatically by onAuthStateChanged()
+
+    }catch(err){
+
+        loading(false);
+
+        alert(err.message);
+
+        console.error(err);
+
+    }
+    
+
+}
+
+// ===== Manual Login (Dropdown) =====
+
+async function manualLogin(){
+
+    const name = document.getElementById("inp-name").value.trim();
+
+    const role = document.getElementById("inp-role").value;
+
+    const err = document.getElementById("err-login");
+
+    if(!name){
+
+        err.style.display="block";
+
+        return;
+
+    }
+
+    err.style.display="none";
+
+    const fakeUser={
+
+        displayName:name,
+
+        email:name.toLowerCase().replace(/\s+/g,".")+"@manual.local"
+
+    };
+
+    localStorage.setItem("manualUser", JSON.stringify({
+    name,
+    role
+}));
+
+await doLogin(fakeUser);
+
+}
 
 const PIN = '10401204';  // Change this to your manager PIN
 const LIMIT = 3600000; // 60 minutes in ms
@@ -855,6 +1133,22 @@ const TEAMS = {
 ]
 
 };
+
+function getTeamLead(emp){
+
+    for(const tl in TEAMS){
+
+        if(TEAMS[tl].includes(emp)){
+
+            return tl;
+
+        }
+
+    }
+
+    return "Not Assigned";
+
+}
 function today(){
 
     return new Date().toLocaleDateString(
@@ -894,6 +1188,15 @@ function fmtMs(ms) {
   const m = Math.floor(ms/60000), s = Math.floor((ms%60000)/1000);
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
+function fmtHMS(ms){
+
+    const h = Math.floor(ms/3600000);
+    const m = Math.floor((ms%3600000)/60000);
+    const s = Math.floor((ms%60000)/1000);
+
+    return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+
+}
 function usedMs(rec) {
   const done = (rec.breaks||[]).reduce((a,b)=>a+(b.dur||0),0);
   return done + (rec.onBreak && rec.breakStart ? (Date.now() - (rec.breakStart.toDate ? rec.breakStart.toDate().getTime() : rec.breakStart)) : 0);
@@ -901,50 +1204,110 @@ function usedMs(rec) {
 function initials(n) { return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
 
 // ── EMPLOYEE LOGIN ────────────────────────────────────────────
-async function doLogin() {
-  const name = document.getElementById('inp-name').value.trim();
-  const role = document.getElementById('inp-role').value;
-  const err  = document.getElementById('err-login');
-  const btn  = document.getElementById('login-btn');
-  if (!name) { err.style.display='block'; return; }
-  err.style.display='none';
-  btn.disabled=true; btn.textContent='Loading...';
+async function doLogin(user=null) {
+if(!user){
+
+    user = auth.currentUser;
+
+}
+
+if(!user){
+
+    alert("Microsoft login failed.");
+
+    return;
+
+}
+
+const name = user.displayName || user.email;
+
+const email = user.email;
+let role = "Specialist";
+
+const saved = JSON.parse(
+    localStorage.getItem("manualUser") || "null"
+);
+
+if(saved){
+
+    role = saved.role;
+
+}else if(document.getElementById("inp-role")){
+
+    role = document.getElementById("inp-role").value;
+
+}
+
   loading(true);
-  try {
-    const docId = name.toLowerCase().replace(/\s+/g,'-') + '_' + today();
-    const ref = db.collection('employees').doc(docId);
+try {
+
+    const docId = name.toLowerCase().replace(/\s+/g,'-') + "_" + today();
+
+    const ref = db.collection("employees").doc(docId);
+
     const snap = await ref.get();
-    if (!snap.exists) {
-      await ref.set({ name, role, breaks:[], onBreak:false, breakStart:null, currentReason:null, date:today(), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+    if(!snap.exists){
+
+        await ref.set({
+
+            name,
+            email,
+            role,
+
+            breaks:[],
+
+            onBreak:false,
+
+            breakStart:null,
+
+            currentReason:null,
+
+            date:today(),
+
+            createdAt:firebase.firestore.FieldValue.serverTimestamp()
+
+        });
+
     }
-    sess = { type:'emp', ref, docId };
-    localStorage.setItem("empName", name);
-    localStorage.setItem("empRole", role);
-    document.getElementById('nav-name').textContent = name;
-    show('s-employee');
-    // Live listener — updates UI whenever Firestore changes
-    if (liveUnsub) liveUnsub();
-    liveUnsub = ref.onSnapshot(doc => {
 
-    if(doc.exists){
+    sess={type:"emp",ref,docId};
 
-        renderEmp(doc.data());
+    document.getElementById("nav-name").textContent=name;
 
-    }else{
+    show("s-employee");
 
-        alert("Today's session has been reset by the manager.");
+    if(liveUnsub) liveUnsub();
 
-        logout();
+    liveUnsub=ref.onSnapshot(doc=>{
 
-    }
+        if(doc.exists){
 
-});
-  } catch(e) {
-    err.textContent = 'Could not connect. Check Firebase config. Error: ' + e.message;
-    err.style.display='block';
-  }
-  loading(false);
-  btn.disabled=false; btn.textContent='Continue →';
+            renderEmp(doc.data());
+
+        }else{
+
+            alert("Today's session has been reset by the manager.");
+
+            logout();
+
+        }
+
+    });
+
+}
+catch(e){
+
+    alert(e.message);
+
+    console.error(e);
+
+}
+finally{
+
+    loading(false);
+
+}
 }
 
 // ── MANAGER LOGIN ─────────────────────────────────────────────
@@ -959,17 +1322,27 @@ function doMgrLogin() {
 }
 
 // ── LOGOUT ────────────────────────────────────────────────────
-function logout() {
-  if (liveUnsub) { liveUnsub(); liveUnsub=null; }
-  clearInterval(ticker);
-  sess=null;
-  localStorage.removeItem("empName");
-  localStorage.removeItem("empRole");
-  selReason=null;
-  if(pie){pie.destroy();pie=null;}
-  document.getElementById('inp-name').value='';
-  document.getElementById('inp-pin').value='';
-  show('s-login');
+async function logout(){
+
+    await auth.signOut();
+    localStorage.removeItem("manualUser");
+
+    if(liveUnsub){
+
+        liveUnsub();
+
+        liveUnsub=null;
+
+    }
+
+    clearInterval(ticker);
+
+    clearInterval(breakTicker);
+
+    sess=null;
+
+    show("s-login");
+
 }
 
 // ── EMPLOYEE RENDER ───────────────────────────────────────────
@@ -994,7 +1367,56 @@ icon.style.background =
   document.getElementById('m-used').textContent = Math.floor(used/60000) + ' min';
   document.getElementById('m-rem').textContent  = Math.floor(rem/60000) + ' min';
   const done = rec.breaks || [];
+// -------- Working Since --------
 
+const ws = document.getElementById("workingSince");
+const lastBreakLabel = document.getElementById("lastBreakTime");
+
+clearInterval(window.workTimer);
+
+if(done.length && !rec.onBreak){
+
+    const last = done[done.length-1];
+
+    const lastEnd = last.e.toDate();
+
+    function updateWorking(){
+
+        const diff = Date.now() - lastEnd.getTime();
+
+        ws.innerHTML = fmtHMS(diff);
+
+    }
+
+    updateWorking();
+
+    window.workTimer = setInterval(updateWorking,1000);
+
+    lastBreakLabel.innerHTML =
+        "Last Break Ended : " +
+        lastEnd.toLocaleTimeString("en-US",{
+            timeZone:"America/New_York",
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit",
+            hour12:true
+        });
+
+}
+else if(rec.onBreak){
+
+    ws.innerHTML = "On Break";
+
+    lastBreakLabel.innerHTML = "Break in Progress";
+
+}
+else{
+
+    ws.innerHTML = "--:--:--";
+
+    lastBreakLabel.innerHTML = "No breaks taken today.";
+
+}
 if(done.length){
 
 const last = done[done.length-1];
@@ -1063,6 +1485,9 @@ document.getElementById("avgBreak").innerHTML="--";
   clearInterval(breakTicker);
 
 if(rec.onBreak){
+clearInterval(window.workTimer);
+
+document.getElementById("workingSince").innerHTML="On Break";
 
 card.style.display="block";
 
@@ -1156,59 +1581,78 @@ e.target.value.trim().toUpperCase()!=="RESET";
 
 function pickR(r,el){ selReason=r; document.querySelectorAll('.ropt').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); }
 
-async function confirmBreak() {
+async function confirmBreak(){
 
-if(!selReason){
-alert('Please select a reason first.');
-return;
-}
+    if(!selReason){
+        alert("Please select a reason first.");
+        return;
+    }
 
-try{
+    try{
 
-closeModal();
+        closeModal();
+        loading(true);
 
-loading(true);
+        await sess.ref.update({
+            onBreak:true,
+            breakStart:firebase.firestore.Timestamp.now(),
+            currentReason:selReason
+        });
 
-await sess.ref.update({
+    }catch(err){
 
-  onBreak:true,
+        alert(err.message);
+        console.error(err);
 
-  breakStart:firebase.firestore.Timestamp.now(),
+    }finally{
 
-  currentReason:selReason
+        loading(false);
 
-});
-
-
-loading(false);
-
-
-}catch(err){
-
-alert(err.message);
-
-console.error(err);
+    }
 
 }
+async function endBreak(){
 
-loading(false);
+    try{
 
-}
+        loading(true);
 
-async function endBreak() {
-  loading(true);
-  const snap = await sess.ref.get();
-  const rec  = snap.data();
-  const bsTs = rec.breakStart;
-  const bsMs = bsTs.toDate ? bsTs.toDate().getTime() : bsTs;
-  const dur  = Date.now() - bsMs;
-  await sess.ref.update({
-    onBreak: false,
-    breakStart: null,
-    currentReason: null,
-    breaks: firebase.firestore.FieldValue.arrayUnion({ s: bsTs, e: firebase.firestore.Timestamp.now(), dur, r: rec.currentReason })
-  });
-  loading(false);
+        const snap = await sess.ref.get();
+        const rec = snap.data();
+
+        const bsTs = rec.breakStart;
+        const bsMs = bsTs.toDate().getTime();
+
+        const dur = Date.now()-bsMs;
+
+        await sess.ref.update({
+
+            onBreak:false,
+            breakStart:null,
+            currentReason:null,
+
+            breaks:firebase.firestore.FieldValue.arrayUnion({
+
+                s:bsTs,
+                e:firebase.firestore.Timestamp.now(),
+                dur,
+                r:rec.currentReason
+
+            })
+
+        });
+
+    }catch(err){
+
+        alert(err.message);
+        console.error(err);
+
+    }finally{
+
+        loading(false);
+
+    }
+
 }
 
 // ── MANAGER ───────────────────────────────────────────────────
@@ -1230,68 +1674,203 @@ function mgrTab(t){
 }
 
 async function renderMgr(){
-  loading(true);
-  const snap = await db.collection('employees').where('date','==',today()).get();
-  const emps = snap.docs.map(d=>d.data());
-  let display=[...emps];
-  const status = document.getElementById("statusFilter").value;
 
-const team = document.getElementById("teamFilter").value;
-if(status==="floor"){
+    loading(true);
 
-display = display.filter(e=>!e.onBreak);
+    try{
+
+        const snap = await db.collection("employees")
+            .where("date","==",today())
+            .get();
+
+        const emps = snap.docs.map(d => d.data());
+
+        let display = [...emps];
+
+        const status = document.getElementById("statusFilter").value;
+        const team = document.getElementById("teamFilter").value;
+
+        if(status === "floor"){
+            display = display.filter(e => !e.onBreak);
+        }
+
+        if(status === "break"){
+            display = display.filter(e => e.onBreak);
+        }
+
+        if(team !== "all"){
+            display = display.filter(e => TEAMS[team]?.includes(e.name));
+        }
+
+        const onB = emps.filter(e => e.onBreak).length;
+
+        document.getElementById("mgr-tot").textContent = emps.length;
+        document.getElementById("mgr-fl").textContent = emps.length - onB;
+        document.getElementById("mgr-bk").textContent = onB;
+
+        // ---------------- TEAM SUMMARY ----------------
+
+const teamBox = document.getElementById("teamSummary");
+
+let html = "";
+
+Object.keys(TEAMS).forEach(tl=>{
+
+    const teamEmp = display.filter(e=>TEAMS[tl].includes(e.name));
+
+    if(!teamEmp.length) return;
+
+    const floor = teamEmp.filter(e=>!e.onBreak).length;
+
+    const brk = teamEmp.filter(e=>e.onBreak).length;
+
+    html += `
+    <div style="
+        padding:12px;
+        border-bottom:1px solid #eee;">
+
+        <div style="
+            font-weight:700;
+            color:#003554;
+            margin-bottom:8px;">
+
+            ${tl}
+
+        </div>
+
+        🟢 ${floor}
+
+        &nbsp;&nbsp;
+
+        🟠 ${brk}
+
+        &nbsp;&nbsp;
+
+        👥 ${teamEmp.length}
+
+    </div>`;
+});
+
+teamBox.innerHTML = html || "<div class='empty'>No data</div>";
+        const ec = document.getElementById("ecards");
+        // ---------------- LIVE ACTIVITY ----------------
+
+const feed = document.getElementById("activityFeed");
+
+let events = [];
+
+display.forEach(e=>{
+
+    (e.breaks||[]).forEach(b=>{
+
+        events.push({
+
+            time:b.s.toDate(),
+
+            txt:`🟠 ${e.name} started break`
+
+        });
+
+        events.push({
+
+            time:b.e.toDate(),
+
+            txt:`🟢 ${e.name} returned to floor`
+
+        });
+
+    });
+
+});
+
+events.sort((a,b)=>b.time-a.time);
+
+feed.innerHTML = events.slice(0,25).map(ev=>`
+
+<div style="
+padding:10px;
+border-bottom:1px solid #f2f2f2;">
+
+<div style="
+font-size:12px;
+color:#888;">
+
+${ev.time.toLocaleTimeString("en-US",{
+
+hour:"2-digit",
+
+minute:"2-digit",
+
+second:"2-digit",
+
+hour12:true
+
+})}
+
+</div>
+
+<div style="
+font-size:14px;
+margin-top:4px;">
+
+${ev.txt}
+
+</div>
+
+</div>
+
+`).join("");
+
+if(!events.length){
+
+feed.innerHTML="<div class='empty'>No activity today.</div>";
 
 }
 
-if(status==="break"){
+        if(!display.length){
+            ec.innerHTML = '<div class="empty">No employees found.</div>';
+            return;
+        }
 
-display = display.filter(e=>e.onBreak);
+        display.sort((a,b)=>a.onBreak===b.onBreak ? 0 : a.onBreak ? -1 : 1);
+
+        ec.innerHTML = display.map(e=>`
+            <div class="ecard">
+                <div class="av">${initials(e.name)}</div>
+                <div style="flex:1">
+                    <div class="en">${e.name}</div>
+                    <div class="em">
+
+👤 ${getTeamLead(e.name)}
+
+<br>
+
+${e.role}
+•
+${(e.breaks||[]).length+(e.onBreak?1:0)} Breaks
+•
+${Math.floor(usedMs(e)/60000)} min used
+
+</div>
+                </div>
+                <span class="stag ${e.onBreak?"sb":"sf"}">
+                    ${e.onBreak?"On Break":"On Floor"}
+                </span>
+            </div>
+        `).join("");
+
+    }catch(err){
+
+        alert(err.message);
+        console.error(err);
+
+    }finally{
+
+        loading(false);
+
+    }
 
 }
-
-if(team!=="all"){
-
-display = display.filter(e=>TEAMS[team].includes(e.name));
-
-}
-  if(status==="floor"){
-
-display=display.filter(e=>!e.onBreak);
-
-}
-
-if(status==="break"){
-
-display=display.filter(e=>e.onBreak);
-
-}
-
-if(team!=="all"){
-
-display=display.filter(e=>
-
-TEAMS[team].includes(e.name)
-
-);
-
-}
-
-
-  const onB  = emps.filter(e=>e.onBreak).length;
-  document.getElementById('mgr-tot').textContent = emps.length;
-  document.getElementById('mgr-fl').textContent  = emps.length-onB;
-  document.getElementById('mgr-bk').textContent  = onB;
-  const ec = document.getElementById('ecards');
-  if(!emps.length){ec.innerHTML='<div class="empty">No employees logged in today.</div>';loading(false);return;}
-  display.sort((a,b)=>a.onBreak===b.onBreak?0:a.onBreak?-1:1);
-  ec.innerHTML=display.map(e=>{
-    const bCnt=(e.breaks||[]).length+(e.onBreak?1:0);
-    const bMin=Math.floor(usedMs(e)/60000);
-    return `<div class="ecard"><div class="av">${initials(e.name)}</div><div style="flex:1"><div class="en">${e.name}</div><div class="em">${e.role} · ${bCnt} break${bCnt!==1?'s':''} · ${bMin} min used</div></div><span class="stag ${e.onBreak?'sb':'sf'}">${e.onBreak?'On break':'On floor'}</span></div>`;
-  }).join('');
-  loading(false);
-}
-
 async function renderRep(){
   loading(true);
   const snap = await db.collection('employees').where('date','==',today()).get();
@@ -1314,14 +1893,13 @@ function buildRows(emps, filter){
     all.forEach((b,i)=>{
       const sMs=b.s?.toDate?b.s.toDate().getTime():b.s;
       const eMs=b.e?.toDate?b.e.toDate().getTime():b.e;
-      rows.push(`<tr><td>${e.name}</td><td>${e.role}</td><td>${i+1}</td><td>${fmtT(b.s)}</td><td>${eMs?fmtT(b.e):'ongoing'}</td><td>${Math.floor((b.dur||(Date.now()-sMs))/60000)} min</td><td>${b.r||'—'}</td></tr>`);
+      rows.push(`<tr><td>${e.name}</td><td>${getTeamLead(e.name)}</td><td>${e.role}</td><td>${i+1}</td><td>${fmtT(b.s)}</td><td>${eMs?fmtT(b.e):'ongoing'}</td><td>${Math.floor((b.dur||(Date.now()-sMs))/60000)} min</td><td>${b.r||'—'}</td></tr>`);
     });
   });
-  body.innerHTML=rows.length?rows.join(''):'<tr><td colspan="7" class="empty">No breaks recorded yet.</td></tr>';
+  body.innerHTML=rows.length?rows.join(''):'<tr><td colspan="8" class="empty">No breaks recorded yet.</td></tr>';
 }
 
 async function dlCSV(){
-alert("CSV function started");
 loading(true);
 try{
 
@@ -1333,7 +1911,7 @@ const emps = snap.docs.map(d=>d.data());
 
 const filter = document.getElementById("f-emp").value;
 
-let csv = "Employee,Role,Date,Break #,Start,End,Duration (min),Reason\n";
+let csv = "Employee,Team Lead,Role,Date,Break #,Start,End,Duration (min),Reason\n";
 
 emps.forEach(e=>{
 
@@ -1355,7 +1933,7 @@ const end=b.e?.toDate ? b.e.toDate().getTime() : b.e;
 
 const mins=Math.floor((b.dur ?? ((end||Date.now())-start))/60000);
 
-csv += `"${e.name}","${e.role}","${today()}",${i+1},"${fmtT(b.s)}","${end?fmtT(b.e):"Ongoing"}",${mins},"${b.r||""}"\n`;
+csv += `"${e.name}","${getTeamLead(e.name)}","${e.role}","${today()}",${i+1},"${fmtT(b.s)}","${end?fmtT(b.e):"Ongoing"}",${mins},"${b.r||""}"\n`;
 
 });
 
@@ -1414,13 +1992,12 @@ batch.delete(doc.ref);
 
 await batch.commit();
 
+await renderMgr();
+await renderRep();
+
+alert("Today's break data has been reset.");
+
 loading(false);
-
-alert("✅ Today's break data has been reset.");
-
-renderMgr();
-
-renderRep();
 
 }catch(err){
 
@@ -1437,30 +2014,8 @@ console.error(err);
 document.getElementById('f-emp')?.addEventListener('change',async()=>{
 const snap=await db.collection('employees').where('date','==',today()).get();
 buildRows(snap.docs.map(d=>d.data()),document.getElementById('f-emp').value);
-});document.getElementById('inp-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('inp-pin')?.addEventListener('keydown',e=>{if(e.key==='Enter')doMgrLogin();});
-// ---------- AUTO LOGIN ----------
-
-window.addEventListener("load",()=>{
-
-const emp=localStorage.getItem("empName");
-const role=localStorage.getItem("empRole");
-
-if(emp){
-
-document.getElementById("inp-name").value=emp;
-
-if(role)
-document.getElementById("inp-role").value=role;
-
-doLogin();
-
-}
-
 });
-</script>
 
-<!-- Chart.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</script>
 </body>
 </html>
