@@ -229,7 +229,16 @@ box-shadow:0 12px 30px rgba(0,0,0,.15);
 
 /* PIE */
 .pie-wrap{position:relative;height:170px;margin-bottom:10px;}
-.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#666;}
+.leg{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:12px;
+    color:#FFFFFF;
+    font-size:13px;
+    font-weight:500;
+}
 
 /* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:200;align-items:center;justify-content:center;}
@@ -362,6 +371,11 @@ Or continue using employee selection
 <option>Chippada Sunil</option>
 <option>Abhishek Adike</option>
 <option>Varun Teja Devarapalli</option>
+
+<option>Nikhil Dambre</option>
+<option>Fazal Mohammed</option>
+<option>Satish Kumar Sajjala</option>
+<option>Goutham Lingam</option>
 
 </select>
 
@@ -696,7 +710,30 @@ Started at --
         </svg>
         <div class="rc"><div class="rt" id="rtime">60:00</div><div class="rl">remaining</div></div>
       </div>
-      <div style="font-size:12px;color:#888;margin-top:8px;">Daily break limit · 60 minutes</div>
+<div
+id="limit-leg"
+style="
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+margin-top:12px;
+color:#FFFFFF;
+font-size:13px;
+font-weight:500;
+">
+
+<span style="
+width:12px;
+height:12px;
+border-radius:3px;
+background:#534AB7;
+display:inline-block;
+"></span>
+
+Daily Break Limit — 60 min
+
+</div>
     </div>
     <div class="sec">Today's break log</div>
     <div class="log-box">
@@ -734,11 +771,18 @@ Started at --
 
 <select id="statusFilter" onchange="applyFilters()">
 
-<option value="all">All Status</option>
+    <option value="all">All Status</option>
+    <option value="floor">🟢 On Floor</option>
+    <option value="break">🟠 On Break</option>
 
-<option value="floor">🟢 On Floor</option>
+</select>
 
-<option value="break">🟠 On Break</option>
+<select id="roleFilter" onchange="applyFilters()">
+
+    <option value="all">All Roles</option>
+    <option value="Specialist" selected>👨‍💻 Specialist</option>
+    <option value="QA">📝 QA</option>
+    <option value="Team Lead">👨‍💼 Team Lead</option>
 
 </select>
 
@@ -751,6 +795,9 @@ Started at --
 <option value="Bathula Sai Parimala">Bathula Sai Parimala</option>
 
 <option value="Sathyanna Sai Kumar">Sathyanna Sai Kumar</option>
+
+<option value="Bammidi Tejeswara Rao">Bammidi Tejeswara Rao</option>
+
 
 </select>
 
@@ -1076,6 +1123,9 @@ async function manualLogin(){
 
 await doLogin(fakeUser);
 
+document.getElementById("inp-name").selectedIndex = 0;
+document.getElementById("inp-role").value = "Specialist";
+
 }
 
 const PIN = '10401204';  // Change this to your manager PIN
@@ -1129,6 +1179,14 @@ const TEAMS = {
 "Chippada Sunil",
 "Abhishek Adike",
 "Varun Teja Devarapalli"
+
+],
+"Bammidi Tejeswara Rao":[
+
+"Nikhil Dambre",
+"Fazal Mohammed",
+"Satish Kumar Sajjala",
+"Goutham Lingam"
 
 ]
 
@@ -1270,6 +1328,15 @@ try {
         });
 
     }
+    else{
+
+    await ref.update({
+
+        role: role
+
+    });
+
+}
 
     sess={type:"emp",ref,docId};
 
@@ -1476,8 +1543,29 @@ document.getElementById("avgBreak").innerHTML="--";
       data:{labels:labs,datasets:[{data:vals,backgroundColor:clrs,borderWidth:2,borderColor:'#fff'}]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'62%'}
     });
-    document.getElementById('pie-leg').innerHTML=labs.map((l,i)=>`<span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:${clrs[i]};flex-shrink:0;"></span>${l} — ${vals[i]} min</span>`).join('');
-  } else {
+document.getElementById('pie-leg').innerHTML =
+    labs.map((l,i)=>`
+        <span style="
+            display:flex;
+            align-items:center;
+            gap:6px;
+            color:#FFFFFF;
+            font-size:15px;
+            font-weight:500;
+            margin-right:15px;
+        ">
+            <span style="
+                width:12px;
+                height:12px;
+                border-radius:3px;
+                background:${clrs[i]};
+                flex-shrink:0;
+            "></span>
+
+            ${l} — ${vals[i]} min
+
+        </span>
+    `).join('');  } else {
     document.getElementById('pie-leg').innerHTML='';
   }
 
@@ -1688,6 +1776,9 @@ async function renderMgr(){
         let display = [...emps];
 
         const status = document.getElementById("statusFilter").value;
+
+        const role = document.getElementById("roleFilter").value;
+
         const team = document.getElementById("teamFilter").value;
 
         if(status === "floor"){
@@ -1697,16 +1788,25 @@ async function renderMgr(){
         if(status === "break"){
             display = display.filter(e => e.onBreak);
         }
+        if(role !== "all"){
+
+          display = display.filter(e => e.role === role);
+
+        }
 
         if(team !== "all"){
             display = display.filter(e => TEAMS[team]?.includes(e.name));
         }
 
-        const onB = emps.filter(e => e.onBreak).length;
+        const onB = display.filter(e => e.onBreak).length;
 
-        document.getElementById("mgr-tot").textContent = emps.length;
-        document.getElementById("mgr-fl").textContent = emps.length - onB;
-        document.getElementById("mgr-bk").textContent = onB;
+document.getElementById("mgr-tot").textContent = display.length;
+
+document.getElementById("mgr-fl").textContent =
+    display.filter(e => !e.onBreak).length;
+
+document.getElementById("mgr-bk").textContent =
+    onB;
 
         // ---------------- TEAM SUMMARY ----------------
 
