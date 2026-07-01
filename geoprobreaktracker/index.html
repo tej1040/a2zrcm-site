@@ -350,42 +350,53 @@ overflow-y:auto;
 Or continue using employee selection
 </p>
 
+
+
+
+<label class="fl">Team</label>
+
+<select id="inp-team" onchange="loadEmployees()">
+
+<option value="">-- Select Team --</option>
+
+<option value="vobsp">
+VOB Specialist
+</option>
+
+<option value="brcsp">
+BRC Specialist
+</option>
+
+<option value="arsp">
+AR Specialist
+</option>
+
+<option value="tpn">
+TPN
+</option>
+
+<option value="mr">
+MR
+</option>
+
+<option value="pp">
+PP
+</option>
+
+<option value="qa">
+QA
+</option>
+
+<option value="tl">
+Team Lead
+</option>
+
+</select>
 <label class="fl">Select Your Name</label>
 
 <select id="inp-name">
 
-<option value="">-- Select Employee --</option>
 
-<option>Ram Gopal</option>
-<option>Yashwanth</option>
-<option>Eslavath Manisha</option>
-<option>Funish Bahadur</option>
-<option>Cheyvarthi Raju</option>
-
-<option>Sravanthi Yadav</option>
-<option>Bandaru Vani</option>
-<option>Ritesh Kumar</option>
-<option>Yamini Saraswathi V</option>
-<option>Pathakoti Siddeshwar</option>
-
-<option>Chippada Sunil</option>
-<option>Abhishek Adike</option>
-<option>Varun Teja Devarapalli</option>
-
-<option>Nikhil Dambre</option>
-<option>Fazal Mohammed</option>
-<option>Satish Kumar Sajjala</option>
-<option>Goutham Lingam</option>
-
-</select>
-
-<label class="fl">Role</label>
-
-<select id="inp-role">
-
-<option value="Specialist">Specialist</option>
-<option value="Team Lead">Team Lead</option>
-<option value="QA">QA</option>
 
 </select>
 
@@ -423,10 +434,32 @@ Continue →
     <div class="login-card">
       <h2>🔒 Manager Login</h2>
       <p class="sub">Enter your manager PIN to access the dashboard.</p>
-      <label class="fl">PIN</label>
+      <label class="fl">Manager</label>
+
+<select id="mgr-name">
+
+    <option value="admin">Admin</option>
+
+    <option value="Ashwin Kumar Gudala">Ashwin Kumar Gudala</option>
+
+    <option value="Bathula Sai Parimala">Bathula Sai Parimala</option>
+
+    <option value="Sathyanna Sai Kumar">Sathyanna Sai Kumar</option>
+
+    <option value="Bammidi Tejeswara Rao">Bammidi Tejeswara Rao</option>
+
+    <option value="DVN CHary">DVN CHary</option>
+
+    <option value="Komali Kaparapu">Komali Kaparapu</option>
+
+</select>
+
+<label class="fl" style="margin-top:15px;">PIN</label>
+
+
       <input type="password" id="inp-pin" placeholder="Enter PIN" maxlength="10" />
       <p class="err" id="err-pin">Incorrect PIN. Please try again.</p>
-      <button class="btn-full" onclick="doMgrLogin()">Login as Manager →</button>
+      <button class="btn-full" onclick="doMgrLogin()">Login →</button>
       <button class="link-btn"
 onclick="show('s-login')">
 
@@ -756,7 +789,7 @@ Daily Break Limit — 60 min
       <button class="tab" id="t-rep" onclick="mgrTab('report')">Reports</button>
     </div>
     <div class="topbar-right">
-      <span class="uname">Manager</span>
+      <span class="uname" id="mgrUser">Manager</span>
       <button class="out-btn" onclick="logout()">Log out</button>
     </div>
   </div>
@@ -779,12 +812,26 @@ Daily Break Limit — 60 min
 
 <select id="roleFilter" onchange="applyFilters()">
 
-    <option value="all">All Roles</option>
-    <option value="Specialist" selected>👨‍💻 Specialist</option>
-    <option value="QA">📝 QA</option>
-    <option value="Team Lead">👨‍💼 Team Lead</option>
+    <option value="all">All Teams</option>
+
+    <option value="vobsp" selected>👨‍💻 VOB Specialist</option>
+
+    <option value="brcsp">🏥 BRC Specialist</option>
+
+    <option value="arsp">📋 AR Specialist</option>
+
+    <option value="tpn">📞 TPN</option>
+
+    <option value="mr">📑 MR</option>
+
+    <option value="pp">💰 Payment Posting</option>
+
+    <option value="qa">📝 QA</option>
+
+    <option value="tl">👨‍💼 Team Lead</option>
 
 </select>
+<div id="teamFilterWrap">
 
 <select id="teamFilter" onchange="applyFilters()">
 
@@ -798,8 +845,13 @@ Daily Break Limit — 60 min
 
 <option value="Bammidi Tejeswara Rao">Bammidi Tejeswara Rao</option>
 
+<option value="DVN CHary">DVN CHary</option>
+
+<option value="Komali Kaparapu">Komali Kaparapu</option>
+
 
 </select>
+</div>
 
 </div>
 
@@ -1034,6 +1086,27 @@ const auth = firebase.auth();
 const provider = new firebase.auth.OAuthProvider("microsoft.com");
 auth.onAuthStateChanged(async(user)=>{
 
+    // 1. Restore Manager first
+    const mgr = localStorage.getItem("managerLoggedIn");
+
+    if(mgr){
+
+    sess = JSON.parse(mgr);
+
+    document.getElementById("mgrUser").textContent =
+        sess.manager === "admin"
+            ? "Admin"
+            : sess.manager;
+
+    show("s-manager");
+
+    mgrTab("live");
+
+    return;
+
+}
+
+    // 2. Microsoft login
     if(user){
 
         await doLogin(user);
@@ -1042,6 +1115,7 @@ auth.onAuthStateChanged(async(user)=>{
 
     }
 
+    // 3. Manual employee login
     const saved = JSON.parse(
         localStorage.getItem("manualUser") || "null"
     );
@@ -1059,20 +1133,6 @@ auth.onAuthStateChanged(async(user)=>{
         });
 
     }
-    const mgr =
-localStorage.getItem("managerLoggedIn");
-
-if(mgr==="true"){
-
-    sess={type:"mgr"};
-
-    show("s-manager");
-
-    mgrTab("live");
-
-    return;
-
-}
 
 });
 
@@ -1102,45 +1162,78 @@ async function msLogin(){
 
 // ===== Manual Login (Dropdown) =====
 
-async function manualLogin(){
+    async function manualLogin(){
 
-    const name = document.getElementById("inp-name").value.trim();
-
-    const role = document.getElementById("inp-role").value;
+    const team = document.getElementById("inp-team").value;
+    const name = document.getElementById("inp-name").value;
 
     const err = document.getElementById("err-login");
 
-    if(!name){
-
-        err.style.display="block";
-
+    if(!team){
+        err.innerHTML = "Please select a team.";
+        err.style.display = "block";
         return;
-
     }
 
-    err.style.display="none";
+    if(!name){
+        err.innerHTML = "Please select your name.";
+        err.style.display = "block";
+        return;
+    }
 
-    const fakeUser={
+    err.style.display = "none";
+
+    let role = "Specialist";
+
+    if(team === "qa")
+        role = "QA";
+
+    if(team === "tl")
+        role = "Team Lead";
+
+    const fakeUser = {
 
         displayName:name,
 
-        email:name.toLowerCase().replace(/\s+/g,".")+"@manual.local"
+        email:name
+            .replace(/\s+/g,".")
+            .toLowerCase()+"@manual.local"
 
     };
 
-    localStorage.setItem("manualUser", JSON.stringify({
-    name,
-    role
-}));
+    localStorage.setItem("manualUser",JSON.stringify({
 
-await doLogin(fakeUser);
+        name,
+        role,
+        team
 
-document.getElementById("inp-name").selectedIndex = 0;
-document.getElementById("inp-role").value = "Specialist";
+    }));
+
+    await doLogin(fakeUser);
+
+    document.getElementById("inp-team").selectedIndex = 0;
+    document.getElementById("inp-name").innerHTML =
+        '<option value="">-- Select Employee --</option>';
 
 }
 
-const PIN = '10401204';  // Change this to your manager PIN
+const TEAM_PASSWORDS = {
+
+    admin: "10401204",
+
+    "Ashwin Kumar Gudala": "Ashwin@123",
+
+    "Bathula Sai Parimala": "Sai@123",
+
+    "Sathyanna Sai Kumar": "SaiTL@123",
+
+    "Bammidi Tejeswara Rao": "Bammidi@123",
+
+    "DVN CHary": "DVN@123",
+
+    "Komali Kaparapu": "Komali@123"
+
+}; // Change this to your manager PIN
 const LIMIT = 3600000; // 60 minutes in ms
 const REASONS = [
 'Lunch/Dinner',
@@ -1172,7 +1265,11 @@ const TEAMS = {
 "Yashwanth",
 "Eslavath Manisha",
 "Funish Bahadur",
-"Cheyvarthi Raju"
+"Cheyvarthi Raju",
+"Mounika M",
+"Jaya Ramakrishna Somisetty",
+"Vishnu Vardhan Addanki",
+"Manisha A",
 
 ],
 
@@ -1182,7 +1279,11 @@ const TEAMS = {
 "Bandaru Vani",
 "Ritesh Kumar",
 "Yamini Saraswathi V",
-"Pathakoti Siddeshwar"
+"Pathakoti Siddeshwar",
+"Lolakapuri Praneeth Kumar",
+"D Vinay Kumar",
+"Kranthik Reddy",
+"Guna Sai Srilekha Ande",
 
 ],
 
@@ -1200,9 +1301,175 @@ const TEAMS = {
 "Satish Kumar Sajjala",
 "Goutham Lingam"
 
+],
+"DVN CHary":[
+
+"Gunupudi Rajesh",
+"Munnangi Anusha",
+"Dokka Srinivas",
+"Rachakonda Jahnavi"
+
+],
+
+"Komali Kaparapu":[
+
+"A. Benedict Savio",
+"Dora Babu Kandikattu",
+"Panni Bharath Kumar",
+"Jinka Ruchitha",
+"Uday Kumar Aliga",
+"Ashok Sai Kiran",
+"VS Karthik",
+"Hari Krishna",
+"Vellala Rohith Kumar",
+"M Sashidhar",
+"Manideep",
+"Abhilash",
+"Rithika Neella",
+"Sunil Kumar",
+"Botika Sindhu",
+"Mahendra Amerineni",
+"MADHURI Pasupuleti"
+
+],
+
+
+};
+const TL_TEAM_FILTERS = {
+
+    "Ashwin Kumar Gudala": ["vobsp","mr"],
+
+    "Bathula Sai Parimala": ["vobsp","tpn","pp"],
+
+    "Sathyanna Sai Kumar": ["vobsp"],
+
+    "Bammidi Tejeswara Rao": ["qa"],
+
+    "DVN CHary": ["brcsp"],
+
+    "Komali Kaparapu": ["arsp"]
+
+};
+const EMP_GROUPS = {
+
+vobsp: [
+
+"Ram Gopal",
+"Yashwanth",
+"Eslavath Manisha",
+"Funish Bahadur",
+"Cheyvarthi Raju",
+
+"Sravanthi Yadav",
+"Bandaru Vani",
+"Ritesh Kumar",
+"Yamini Saraswathi V",
+"Pathakoti Siddeshwar",
+
+"Chippada Sunil",
+"Abhishek Adike",
+"Varun Teja Devarapalli"
+
+],
+
+brcsp: [
+
+"Gunupudi Rajesh",
+"Munnangi Anusha",
+"Dokka Srinivas",
+"Rachakonda Jahnavi"
+
+],
+
+arsp:[
+
+"A. Benedict Savio",
+"Dora Babu Kandikattu",
+"Panni Bharath Kumar",
+"Jinka Ruchitha",
+"Uday Kumar Aliga",
+"Ashok Sai Kiran",
+"VS Karthik",
+"Hari Krishna",
+"Vellala Rohith Kumar",
+"M Sashidhar",
+"Manideep",
+"Abhilash",
+"Rithika Neella",
+"Sunil Kumar",
+"Botika Sindhu",
+"Mahendra Amerineni",
+"MADHURI Pasupuleti"
+
+],
+
+tpn: [
+
+"Lolakapuri Praneeth Kumar",
+"D Vinay Kumar",
+"Kranthik Reddy"
+
+],
+
+mr: [
+
+"Mounika M",
+"Jaya Ramakrishna Somisetty",
+"Vishnu Vardhan Addanki",
+"Manisha A"
+
+],
+
+pp: [
+
+"Guna Sai Srilekha Ande"
+
+],
+
+qa: [
+
+"Nikhil Dambre",
+"Fazal Mohammed",
+"Satish Kumar Sajjala",
+"Goutham Lingam"
+
+],
+
+tl: [
+
+"Ashwin Kumar Gudala",
+"Bathula Sai Parimala",
+"Sathyanna Sai Kumar",
+"Bammidi Tejeswara Rao",
+"DVN CHary",
+"Komali Kaparapu"
+
 ]
 
 };
+function loadEmployees(){
+
+    const team =
+        document.getElementById("inp-team").value;
+
+    const emp =
+        document.getElementById("inp-name");
+
+    emp.innerHTML =
+        '<option value="">-- Select Employee --</option>';
+
+    if(!team) return;
+
+    EMP_GROUPS[team]
+        .sort()
+        .forEach(name=>{
+
+            emp.innerHTML +=
+                `<option>${name}</option>`;
+
+        });
+
+}
 
 function getTeamLead(emp){
 
@@ -1217,6 +1484,52 @@ function getTeamLead(emp){
     }
 
     return "Not Assigned";
+
+}
+function getTeamOptionLabel(team){
+
+    return {
+
+        vobsp: "👨‍💻 VOB Specialist",
+
+        brcsp: "🏥 BRC Specialist",
+
+        arsp: "📋 AR Specialist",
+
+        tpn: "📞 TPN",
+
+        mr: "📑 MR",
+
+        pp: "💰 Payment Posting",
+
+        qa: "📝 QA",
+
+        tl: "👨‍💼 Team Lead"
+
+    }[team] || team;
+
+}
+function getTeamDisplay(team){
+
+    return {
+
+        vobsp: "VOB",
+
+        brcsp: "BRC",
+
+        arsp: "AR",
+
+        tpn: "TPN",
+
+        mr: "MR",
+
+        pp: "Payment Posting",
+
+        qa: "QA",
+
+        tl: "Team Lead"
+
+    }[team] || team;
 
 }
 function today(){
@@ -1347,9 +1660,19 @@ if(saved){
 
     role = saved.role;
 
-}else if(document.getElementById("inp-role")){
+}else{
 
-    role = document.getElementById("inp-role").value;
+    const team =
+        document.getElementById("inp-team")?.value;
+
+    if(team==="qa")
+        role="QA";
+
+    else if(team==="tl")
+        role="Team Lead";
+
+    else
+        role="Specialist";
 
 }
 
@@ -1365,33 +1688,26 @@ try {
     if(!snap.exists){
 
         await ref.set({
+    name,
+    email,
+    role,
+    team: saved ? saved.team : "vobsp",
 
-            name,
-            email,
-            role,
-
-            breaks:[],
-
-            onBreak:false,
-
-            breakStart:null,
-
-            currentReason:null,
-
-            date:today(),
-
-            createdAt:firebase.firestore.FieldValue.serverTimestamp()
-
-        });
+    breaks: [],
+    onBreak:false,
+    breakStart:null,
+    currentReason:null,
+    date:today(),
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 
     }
     else{
 
     await ref.update({
-
-        role: role
-
-    });
+    role: role,
+    team: saved ? saved.team : "vobsp"
+});
 
 }
 
@@ -1436,17 +1752,38 @@ finally{
 
 // ── MANAGER LOGIN ─────────────────────────────────────────────
 function doMgrLogin() {
-  const pin = document.getElementById('inp-pin').value;
-  const err = document.getElementById('err-pin');
-  if (pin !== PIN) { err.style.display='block'; return; }
-  err.style.display='none';
-  sess = { type:'mgr' };
+  
+const team = document.getElementById("mgr-name").value;
+const pin = document.getElementById("inp-pin").value;
 
-localStorage.setItem("managerLoggedIn","true");
+const err = document.getElementById("err-pin");
+
+if (TEAM_PASSWORDS[team] !== pin) {
+
+    err.style.display = "block";
+
+    return;
+
+}
+
+err.style.display = "none";
+
+sess = {
+    type: "mgr",
+    manager: team
+};
+
+localStorage.setItem(
+    "managerLoggedIn",
+    JSON.stringify(sess)
+);
+document.getElementById("mgrUser").textContent =
+    team === "admin"
+        ? "Admin"
+        : team;
 
 show("s-manager");
-
-mgrTab("live");
+mgrTab("live");;
 }
 
 // ── LOGOUT ────────────────────────────────────────────────────
@@ -1834,14 +2171,78 @@ async function renderMgr(){
     .get();
 
         const emps = snap.docs.map(d => d.data());
+        
 
         let display = [...emps];
 
         const status = document.getElementById("statusFilter").value;
 
+        const roleFilter = document.getElementById("roleFilter");
+
+        if (sess?.manager && sess.manager !== "admin") {
+
+    const allowed = TL_TEAM_FILTERS[sess.manager] || [];
+
+    roleFilter.innerHTML = "";
+
+    allowed.forEach(team => {
+
+    roleFilter.innerHTML += `
+        <option value="${team}">
+            ${getTeamOptionLabel(team)}
+        </option>
+    `;
+
+});
+
+    if (allowed.length) {
+
+        roleFilter.value = allowed[0];
+
+    }
+
+} else {
+
+    roleFilter.innerHTML = `
+        <option value="all">All Teams</option>
+        <option value="vobsp" selected>👨‍💻 VOB Specialist</option>
+        <option value="brcsp">🏥 BRC Specialist</option>
+        <option value="arsp">📋 AR Specialist</option>
+        <option value="tpn">📞 TPN</option>
+        <option value="mr">📑 MR</option>
+        <option value="pp">💰 Payment Posting</option>
+        <option value="qa">📝 QA</option>
+        <option value="tl">👨‍💼 Team Lead</option>
+    `;
+
+}
+
         const role = document.getElementById("roleFilter").value;
 
         const team = document.getElementById("teamFilter").value;
+        const teamFilter = document.getElementById("teamFilter");
+        const teamFilterWrap =
+    document.getElementById("teamFilterWrap");
+
+if (sess?.manager && sess.manager !== "admin") {
+
+    teamFilterWrap.style.display = "none";
+
+} else {
+
+    teamFilterWrap.style.display = "";
+
+}
+
+if (sess?.manager && sess.manager !== "admin") {
+
+    teamFilter.style.display = "none";
+
+} else {
+
+    teamFilter.style.display = "";
+
+}
 
         if(status === "floor"){
             display = display.filter(e => !e.onBreak);
@@ -1852,13 +2253,19 @@ async function renderMgr(){
         }
         if(role !== "all"){
 
-          display = display.filter(e => e.role === role);
-
+display = display.filter(e => e.team === role);
         }
 
         if(team !== "all"){
             display = display.filter(e => TEAMS[team]?.includes(e.name));
         }
+        if(sess?.manager && sess.manager !== "admin"){
+
+    display = display.filter(e =>
+        TEAMS[sess.manager]?.includes(e.name)
+    );
+
+}
 
         const onB = display.filter(e => e.onBreak).length;
 
@@ -1912,6 +2319,7 @@ Object.keys(TEAMS).forEach(tl=>{
 
     </div>`;
 });
+
 
 teamBox.innerHTML = html || "<div class='empty'>No data</div>";
         const ec = document.getElementById("ecards");
@@ -2007,7 +2415,8 @@ feed.innerHTML="<div class='empty'>No activity today.</div>";
 
 <br>
 
-${e.role}
+${getTeamDisplay(e.team)}
+
 •
 ${(e.breaks||[]).length+(e.onBreak?1:0)} Breaks
 •
@@ -2053,10 +2462,18 @@ async function renderRep(){
 
             .get();
 
-        const emps =
-        snap.docs.map(d=>d.data());
+        let display = snap.docs.map(d => d.data());
 
-        buildRows(emps);
+if (sess?.manager && sess.manager !== "admin") {
+
+    display = display.filter(e =>
+        TEAMS[sess.manager]?.includes(e.name)
+    );
+
+}
+
+
+buildRows(display);
 
     }catch(err){
 
@@ -2085,7 +2502,7 @@ function buildRows(emps){
 <td>${e.date}</td>
 <td>${e.name}</td>
 <td>${getTeamLead(e.name)}</td>
-<td>${e.role}</td>
+<td>${getTeamDisplay(e.team)}</td>
 <td>${i+1}</td>
 <td>${fmtT(b.s)}</td>
 <td>${eMs ? fmtT(b.e) : "Ongoing"}</td>
@@ -2118,12 +2535,19 @@ const snap = await db.collection("employees")
 
 .get();
 
-const emps = snap.docs.map(d=>d.data());
+let display = snap.docs.map(d => d.data());
 
+if (sess?.manager && sess.manager !== "admin") {
+
+    display = display.filter(e =>
+        TEAMS[sess.manager]?.includes(e.name)
+    );
+
+}
 
 let csv = "Employee,Team Lead,Role,Date,Break #,Start,End,Duration (min),Reason\n";
 
-emps.forEach(e=>{
+display.forEach(e=>{
 
 
 
@@ -2143,7 +2567,7 @@ const end=b.e?.toDate ? b.e.toDate().getTime() : b.e;
 
 const mins=Math.floor((b.dur ?? ((end||Date.now())-start))/60000);
 
-csv += `"${e.name}","${getTeamLead(e.name)}","${e.role}","${e.date}",${i+1},"${fmtT(b.s)}","${end?fmtT(b.e):"Ongoing"}",${mins},"${b.r||""}"\n`;
+csv += `"${e.name}","${getTeamLead(e.name)}","${getTeamDisplay(e.team)}","${e.date}",${i+1},"${fmtT(b.s)}","${end?fmtT(b.e):"Ongoing"}",${mins},"${b.r||""}"\n`;
 
 });
 
