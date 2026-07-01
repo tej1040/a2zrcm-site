@@ -1089,7 +1089,7 @@ auth.onAuthStateChanged(async(user)=>{
     // 1. Restore Manager first
     const mgr = localStorage.getItem("managerLoggedIn");
 
-    if(mgr){
+   if(mgr){
 
     sess = JSON.parse(mgr);
 
@@ -1098,7 +1098,77 @@ auth.onAuthStateChanged(async(user)=>{
             ? "Admin"
             : sess.manager;
 
+    const roleFilter =
+        document.getElementById("roleFilter");
+
+    if(sess.manager === "admin"){
+
+        roleFilter.innerHTML = `
+            <option value="all">All Teams</option>
+            <option value="vobsp">👨‍💻 VOB Specialist</option>
+            <option value="brcsp">🏥 BRC Specialist</option>
+            <option value="arsp">📋 AR Specialist</option>
+            <option value="tpn">📞 TPN</option>
+            <option value="mr">📑 MR</option>
+            <option value="pp">💰 Payment Posting</option>
+            <option value="qa">📝 QA</option>
+            <option value="tl">👨‍💼 Team Lead</option>
+        `;
+
+        const savedRole =
+    localStorage.getItem("roleFilter");
+
+if(savedRole){
+
+    roleFilter.value = savedRole;
+
+}else{
+
+    roleFilter.value =
+        sess.manager==="admin"
+        ? "vobsp"
+        : "all";
+
+}
+
+    }else{
+
+        const allowed =
+            TL_TEAM_FILTERS[sess.manager] || [];
+
+        roleFilter.innerHTML =
+            `<option value="all">All Teams</option>`;
+
+        allowed.forEach(t=>{
+
+            roleFilter.innerHTML += `
+                <option value="${t}">
+                    ${getTeamOptionLabel(t)}
+                </option>
+            `;
+
+        });
+
+        const savedRole = localStorage.getItem("roleFilter");
+
+if(savedRole && [...roleFilter.options].some(o => o.value === savedRole)){
+
+    roleFilter.value = savedRole;
+
+}else{
+
+    roleFilter.value = "all";
+
+}
+
+    }
+
     show("s-manager");
+    document.getElementById("statusFilter").value =
+    localStorage.getItem("statusFilter") || "all";
+
+document.getElementById("teamFilter").value =
+    localStorage.getItem("teamFilter") || "all";
 
     mgrTab("live");
 
@@ -1782,8 +1852,77 @@ document.getElementById("mgrUser").textContent =
         ? "Admin"
         : team;
 
+const roleFilter =
+document.getElementById("roleFilter");
+
+if(team==="admin"){
+
+roleFilter.innerHTML=`
+
+<option value="all">All Teams</option>
+
+<option value="vobsp">👨‍💻 VOB Specialist</option>
+
+<option value="brcsp">🏥 BRC Specialist</option>
+
+<option value="arsp">📋 AR Specialist</option>
+
+<option value="tpn">📞 TPN</option>
+
+<option value="mr">📑 MR</option>
+
+<option value="pp">💰 Payment Posting</option>
+
+<option value="qa">📝 QA</option>
+
+<option value="tl">👨‍💼 Team Lead</option>
+
+`;
+
+roleFilter.value="vobsp";
+
+}
+else{
+
+const allowed=
+TL_TEAM_FILTERS[team]||[];
+
+roleFilter.innerHTML=
+`<option value="all">All Teams</option>`;
+
+allowed.forEach(t=>{
+
+roleFilter.innerHTML+=
+`
+<option value="${t}">
+${getTeamOptionLabel(t)}
+</option>
+`;
+
+});
+
+const savedRole = localStorage.getItem("roleFilter");
+
+if(savedRole && [...roleFilter.options].some(o => o.value === savedRole)){
+
+    roleFilter.value = savedRole;
+
+}else{
+
+    roleFilter.value = "all";
+
+}
+
+}
+
 show("s-manager");
+document.getElementById("statusFilter").value =
+    localStorage.getItem("statusFilter") || "all";
+
+document.getElementById("teamFilter").value =
+    localStorage.getItem("teamFilter") || "all";
 mgrTab("live");;
+
 }
 
 // ── LOGOUT ────────────────────────────────────────────────────
@@ -1792,6 +1931,9 @@ async function logout(){
     await auth.signOut();
     localStorage.removeItem("manualUser");
     localStorage.removeItem("managerLoggedIn");
+    localStorage.removeItem("roleFilter");
+localStorage.removeItem("statusFilter");
+localStorage.removeItem("teamFilter");
 
     if(liveUnsub){
 
@@ -2145,7 +2287,22 @@ async function endBreak(){
 // ── MANAGER ───────────────────────────────────────────────────
 function applyFilters(){
 
-renderMgr();
+    localStorage.setItem(
+        "roleFilter",
+        document.getElementById("roleFilter").value
+    );
+
+    localStorage.setItem(
+        "statusFilter",
+        document.getElementById("statusFilter").value
+    );
+
+    localStorage.setItem(
+        "teamFilter",
+        document.getElementById("teamFilter").value
+    );
+
+    renderMgr();
 
 }
 
@@ -2179,50 +2336,7 @@ async function renderMgr(){
 
         const roleFilter = document.getElementById("roleFilter");
 
-        if (sess?.manager && sess.manager !== "admin") {
-
-    const allowed = TL_TEAM_FILTERS[sess.manager] || [];
-
-    roleFilter.innerHTML = "";
-
-    allowed.forEach(team => {
-
-    roleFilter.innerHTML += `
-        <option value="${team}">
-            ${getTeamOptionLabel(team)}
-        </option>
-    `;
-
-});
-
-    if (allowed.length) {
-
-        roleFilter.value = allowed[0];
-
-    }
-
-}else {
-
-    if (roleFilter.options.length === 0) {
-
-        roleFilter.innerHTML = `
-            <option value="all">All Teams</option>
-            <option value="vobsp">👨‍💻 VOB Specialist</option>
-            <option value="brcsp">🏥 BRC Specialist</option>
-            <option value="arsp">📋 AR Specialist</option>
-            <option value="tpn">📞 TPN</option>
-            <option value="mr">📑 MR</option>
-            <option value="pp">💰 Payment Posting</option>
-            <option value="qa">📝 QA</option>
-            <option value="tl">👨‍💼 Team Lead</option>
-        `;
-
-        roleFilter.value = "vobsp";
-
-    }
-
-}
-
+        
         const role = document.getElementById("roleFilter").value;
 
         const team = document.getElementById("teamFilter").value;
