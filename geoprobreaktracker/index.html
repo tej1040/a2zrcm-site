@@ -2201,19 +2201,25 @@ async function renderMgr(){
 
     }
 
-} else {
+}else {
 
-    roleFilter.innerHTML = `
-        <option value="all">All Teams</option>
-        <option value="vobsp" selected>👨‍💻 VOB Specialist</option>
-        <option value="brcsp">🏥 BRC Specialist</option>
-        <option value="arsp">📋 AR Specialist</option>
-        <option value="tpn">📞 TPN</option>
-        <option value="mr">📑 MR</option>
-        <option value="pp">💰 Payment Posting</option>
-        <option value="qa">📝 QA</option>
-        <option value="tl">👨‍💼 Team Lead</option>
-    `;
+    if (roleFilter.options.length === 0) {
+
+        roleFilter.innerHTML = `
+            <option value="all">All Teams</option>
+            <option value="vobsp">👨‍💻 VOB Specialist</option>
+            <option value="brcsp">🏥 BRC Specialist</option>
+            <option value="arsp">📋 AR Specialist</option>
+            <option value="tpn">📞 TPN</option>
+            <option value="mr">📑 MR</option>
+            <option value="pp">💰 Payment Posting</option>
+            <option value="qa">📝 QA</option>
+            <option value="tl">👨‍💼 Team Lead</option>
+        `;
+
+        roleFilter.value = "vobsp";
+
+    }
 
 }
 
