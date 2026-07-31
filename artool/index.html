@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Claims Follow-Up Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9.144,400;9.144,500;9.144,600;9.144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap%22 rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--ink:#152420;--ink-soft:#425049;--paper:#EAEDE4;--paper-raised:#FBFCF8;--line:rgba(21,36,32,.13);--line-soft:rgba(21,36,32,.07);--teal:#1C6E5E;--teal-deep:#0E463C;--teal-tint:#DCEBE4;--amber:#A9741F;--amber-tint:#F1E3C6;--gold:#AD8A4E;--rose:#9B4535;--rose-tint:#F1DBD5;--muted:#5D6B63;--shadow-sm:0 1px 2px rgba(15,30,26,.05);--shadow-md:0 10px 28px rgba(15,30,26,.08);--shadow-lg:0 24px 60px rgba(15,30,26,.14);--radius:14px;--radius-sm:9px}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:radial-gradient(1100px 480px at 14% -8%,rgba(28,110,94,.07),transparent 60%),radial-gradient(900px 420px at 96% 4%,rgba(173,138,78,.08),transparent 55%),var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}.wrap{max-width:1400px;margin:0 auto;padding:0 28px 90px}
+header.top{padding:46px 0 28px;border-bottom:1px solid var(--line)}.eyebrow{font:11.5px 'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-deep);display:flex;align-items:center;gap:10px;margin-bottom:16px}.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--teal-tint)}
+h1.title{font:600 clamp(32px,4.2vw,48px) 'Fraunces',serif;letter-spacing:-.018em;margin:0 0 12px}.sub{max-width:760px;color:var(--ink-soft);font-size:15px;margin:0}
+.excel-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px;padding:13px 16px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm)}.xstatus{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft)}.xdot{width:8px;height:8px;border-radius:50%;background:var(--rose)}.xdot.on{background:var(--teal);box-shadow:0 0 0 3px var(--teal-tint)}.spacer{flex:1}.excel-bar button{font-size:12px;font-weight:600;cursor:pointer;border-radius:100px;padding:7px 14px;border:1px solid var(--line);background:#fff;color:var(--ink-soft)}.excel-bar button:hover{border-color:var(--teal);color:var(--teal-deep)}.excel-bar button:disabled{opacity:.5;cursor:not-allowed}.xnote{font-size:11px;color:var(--muted);width:100%}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin:30px 0 34px}.stat{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}.stat .n{font:600 31px 'Fraunces',serif}.stat .l{margin-top:8px;font-size:11.5px;color:var(--muted)}.stat.warn .n{color:var(--rose)}.stat.accent .n{color:var(--teal-deep)}
+.panel{max-width:900px;background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px 20px;box-shadow:var(--shadow-sm);margin-bottom:32px}.panel h3{font:600 11.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}.panel-sub{font-size:12.5px;color:var(--muted);margin:0 0 18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11.5px;color:var(--ink-soft);font-weight:600}.req{color:var(--rose)}.opt{color:var(--muted);font-weight:400;font-style:italic}.field input,.field select,.field textarea{padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff;color:var(--ink)}.field textarea{resize:vertical;min-height:80px}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-tint);outline:none}.form-actions{display:flex;gap:10px;margin-top:18px}.btn{font-size:13px;font-weight:600;cursor:pointer;border-radius:100px;padding:10px 20px;border:1px solid transparent}.btn-primary{background:linear-gradient(135deg,var(--teal-deep),var(--teal));color:#fff}.btn-ghost{background:#fff;color:var(--ink-soft);border-color:var(--line)}.btn-danger{background:#fff;color:var(--rose);border-color:var(--rose-tint)}.edit-banner{display:none;align-items:center;justify-content:space-between;gap:10px;background:var(--amber-tint);color:var(--amber);border-radius:var(--radius-sm);padding:9px 14px;font-size:12.5px;font-weight:600;margin-bottom:16px}.edit-banner.show{display:flex}.edit-banner button{background:none;border:0;color:inherit;font-weight:600;cursor:pointer;text-decoration:underline}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;background:rgba(251,252,248,.92);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;position:sticky;top:12px;z-index:10;box-shadow:var(--shadow-md)}.filters input{flex:1 1 220px;min-width:180px;padding:9px 13px;border:1px solid var(--line);border-radius:100px;background:#fff}.filters select,.filters button{padding:9px 12px;border:1px solid var(--line);border-radius:100px;background:#fff;color:var(--ink-soft);cursor:pointer;font-size:13px}.count{margin-left:auto;font:12px 'IBM Plex Mono',monospace;color:var(--muted)}
+.table-wrap{border:1px solid var(--line);border-radius:var(--radius);overflow:auto;background:var(--paper-raised);box-shadow:var(--shadow-md)}table{width:100%;border-collapse:collapse;min-width:1100px}thead th{text-align:left;font:600 10.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);padding:14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;background:var(--paper-raised);position:sticky;top:0;z-index:5}tbody tr{border-bottom:1px solid var(--line-soft);cursor:pointer}tbody tr:hover{background:var(--teal-tint)}tbody tr.overdue{box-shadow:inset 3px 0 0 var(--rose)}tbody td{padding:12px 14px;vertical-align:top;font-size:13px}.claimid{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal-deep);font-weight:600}.notes{color:var(--ink-soft);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pill,.tag{display:inline-flex;padding:3px 9px;border-radius:100px;font:11px 'IBM Plex Mono',monospace}.pill{color:#fff}.tag{background:#eef1ec;color:var(--ink-soft)}.fdate{font:12px 'IBM Plex Mono',monospace}.overdue-text{color:var(--rose);font-weight:600}
+.toast-stack{position:fixed;top:20px;right:20px;z-index:80;display:flex;flex-direction:column;gap:10px;max-width:390px}.toast{padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;box-shadow:var(--shadow-lg);display:flex;gap:9px;border:1px solid transparent}.toast.success{background:var(--teal-deep);color:#fff}.toast.error{background:var(--rose);color:#fff}.toast.info{background:var(--paper-raised);color:var(--ink);border-color:var(--line)}.toast .x{margin-left:auto;cursor:pointer;font-weight:700}
+.scrim{position:fixed;inset:0;background:rgba(21,36,32,.18);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}.scrim.open{opacity:1;pointer-events:auto}aside.detail{position:fixed;top:0;right:0;width:min(560px,94vw);height:100vh;background:var(--paper-raised);box-shadow:-20px 0 60px rgba(15,30,26,.18);z-index:50;transform:translateX(105%);transition:transform .25s;overflow:auto;padding:30px 28px 64px}.detail.open{transform:translateX(0)}.detail-close{position:absolute;top:24px;right:24px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer}.detail-eyebrow{font:11px 'IBM Plex Mono',monospace;color:var(--teal-deep);margin-bottom:10px}.detail h2{font:600 26px 'Fraunces',serif;margin:0 0 14px}.dsection{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}.dsection h4{font:10.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.11em;color:var(--teal-deep);margin:0 0 12px}.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.dfield.full{grid-column:1/-1}.dfield .k{font-size:10.5px;color:var(--muted);margin-bottom:3px}.dfield .v{font-size:13.5px;word-break:break-word}.noval{color:#9aa59e;font-style:italic}.detail-actions{display:flex;gap:10px;margin-top:26px}
+@media(max-width:1080px){.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:640px){.wrap{padding:0 14px 60px}.stats{grid-template-columns:repeat(2,1fr)}.form-grid,.dgrid{grid-template-columns:1fr}.field.full,.dfield.full{grid-column:auto}.filters{position:static}.count{width:100%;margin-left:0}.excel-bar .spacer{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+<div class="eyebrow"><span class="dot"></span>Revenue Cycle · Accounts Receivable Follow-Up</div>
+<h1 class="title">AR Claims Follow-Up Log</h1>
+<p class="sub">Log every claim touch and route Status → Action → Code from the SAC reference. Connect one Excel file and every new claim is appended to the same workbook with the next serial number.</p>
+<div class="excel-bar">
+<span class="xstatus"><span class="xdot" id="xdot"></span><span id="xstatusText">Excel file: not connected</span></span>
+<div class="spacer"></div>
+<button id="openExcelBtn">Open existing Excel file…</button>
+<button id="createExcelBtn">Create new Excel file…</button>
+<button id="disconnectExcelBtn" style="display:none">Disconnect</button>
+<div class="xnote" id="excelSupportNote"></div>
+</div>
+</header>
+ 
+<section class="stats" id="statRow"></section>
+ 
+<section class="panel" id="formPanel">
+<h3>Log a Claim</h3>
+<p class="panel-sub">All ten AR Tool elements. Status, Action and Code cascade directly from the SAC reference.</p>
+<div class="edit-banner" id="editBanner"><span>Editing an existing entry — changes will also update the connected Excel file.</span><button type="button" id="cancelEditBtn">Cancel edit</button></div>
+<form id="claimForm">
+<div class="form-grid">
+<div class="field full"><label>1. Claim ID<span class="req">*</span> <span class="opt">unique identifier</span></label><input type="text" id="f_claimId" placeholder="e.g. CLM-2026-00417" required></div>
+<div class="field"><label>2. Facility<span class="req">*</span></label><select id="f_facility" required><option value="">Select facility…</option></select></div>
+<div class="field"><label>3. Carrier<span class="req">*</span></label><select id="f_carrier" required><option value="">Select carrier…</option></select></div>
+<div class="field"><label>4. Subject / Status<span class="req">*</span></label><select id="f_status" required><option value="">Select status…</option></select></div>
+<div class="field"><label>5. Action<span class="req">*</span></label><select id="f_action" required><option value="">Select status first…</option></select></div>
+<div class="field"><label>6. Code<span class="req">*</span></label><select id="f_code" required><option value="">Select action first…</option></select></div>
+<div class="field"><label>7. Call / Portal<span class="req">*</span></label><select id="f_callportal" required><option value="">Select…</option></select></div>
+<div class="field"><label>Network Status<span class="req">*</span></label><select id="f_networkstatus" required><option value="">Select…</option><option value="INN">INN</option><option value="OON">OON</option></select></div>
+<div class="field"><label>9. Next Follow Up Date<span class="req">*</span></label><input type="date" id="f_fupdate" required></div>
+<div class="field"><label>10. Follow Up Type / Queue<span class="req">*</span></label><select id="f_fuptype" required><option value="">Select…</option><option value="NFU">NFU</option><option value="Temp Denials">Temp Denials</option></select></div>
+<div class="field full"><label>8. Notes<span class="req">*</span></label><textarea id="f_notes" placeholder="Why is this claim routing to the above Status / Action / Code?" required></textarea></div>
+</div>
+<div class="form-actions"><button type="submit" class="btn btn-primary" id="submitBtn">Log claim</button><button type="button" class="btn btn-ghost" id="clearFormBtn">Clear form</button></div>
+</form>
+</section>
+ 
+<section class="filters">
+<input type="text" id="searchBox" placeholder="Search claim ID, facility, carrier, notes…">
+<select id="statusFilter"><option value="">All statuses</option></select>
+<select id="facilityFilter"><option value="">All facilities</option></select>
+<select id="callportalFilter"><option value="">Call or Portal</option></select>
+<select id="networkFilter"><option value="">All network status</option><option value="INN">INN</option><option value="OON">OON</option></select>
+<select id="overdueFilter"><option value="">All follow-ups</option><option value="overdue">Overdue</option><option value="upcoming">Upcoming</option></select>
+<button id="resetBtn">Reset filters</button><span class="count" id="resultCount"></span>
+</section>
+ 
+<div class="table-wrap"><table>
+<thead><tr>
+<th data-key="serial">Serial # <span class="arrow"></span></th><th data-key="claimId">Claim ID <span class="arrow"></span></th><th data-key="facility">Facility <span class="arrow"></span></th><th data-key="carrier">Carrier <span class="arrow"></span></th><th data-key="status">Status <span class="arrow"></span></th><th data-key="action">Action <span class="arrow"></span></th><th data-key="code">Code <span class="arrow"></span></th><th data-key="callPortal">Call/Portal <span class="arrow"></span></th><th data-key="networkStatus">Network <span class="arrow"></span></th><th data-key="fupDate">Next Follow Up <span class="arrow"></span></th><th data-key="fupType">Queue <span class="arrow"></span></th><th>Notes</th>
+</tr></thead><tbody id="tbody"></tbody></table></div>
+<footer style="margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font:11.5px 'IBM Plex Mono',monospace;color:var(--muted)">AR Tool element reference: System_Generation — AR · SAC.xlsx routing taxonomy.</footer>
+</div>
+ 
+<div class="toast-stack" id="toastStack"></div><div class="scrim" id="scrim"></div>
+<aside class="detail" id="detail"><button class="detail-close" id="detailClose">×</button><div id="detailBody"></div></aside>
+ 
+<script>
+const AR_DATA = {"TAXONOMY":{"RCM LEAD REVIEW":{"Billing Issue":["NCOF","Invalid CPT","Invalid DX/Primary DX","Invalid Modifier","Corrected Claim","Interim Claim","Invalid Revenue Code","Invalid HCPCS","Duplicate"],"Facility Issue From RCM":["COB","Member Appeal","Proof of Residence","Member Updates"],"Credentialing Issue":["Rendering Provider is not registered","Facility is not registered","W9 Form","Provider contracts"],"Auth Issue":["Auth# Absent","Invalid/Incorrect Auth#","Auth Exceed","Retro Auth"],"Appeal Needed":["Attempt 1","Attempt 2"],"Appeal Submitted":["Attempt 1","Attempt 2","Attempt 3"],"MR Needed":["Attempt 1","Attempt 2","Attempt 3","Medical necessity","No auth","Medical Records Needed"],"Post Final Denial":["Non-Covered Service/Benefit","Not Medically Necessary","Policy Term","Timely Filing","COB Issue","Max Benefits Reached","Inclusive"],"VOB Needed":["Policy Term","Other insurance primary","Non-Covered Service/Benefit","Benefits Exhausted"],"To Post Payments":["Paid to Facility","Processed towards Deductible","OffSet"],"Payment Withoout EOB":["Paid to Member","EOB Sent to Facility"],"APPEAL NEEDED":["2nd Level of Appeal","To send AOR/ DOR Separately"]},"ESCALATED REVIEW":{"NEXT ACTION UNCLEAR":["SIU DEPT","DENIAL UNCLEAR"]},"PROCESSING":{"PROCESSING":[],"30+ Days":["ESCALATED"],"Denied":["Sent an Enquiry to Homeplan"],"Paid":["Pending EOB Fax"],"Set to pay":["Claim Set to pay"]},"REPROCESSING":{"Auth Denial":["Valid Auth on file"]},"RECORDS AT INSURANCE":{"MR SUBMITTED":["Records received to the Carrier"]},"APPEAL AT INSURANCE":{"APPEAL SUBMITTED":["Appeal received to the Carrier"]},"AUDIT AT INSURANCE":{"AUDIT SUBMITTED":["Audit received to the Carrier"]}},"CALL_PORTAL":["Call","Portal"]};
+ 
+const STATUS_COLORS=['#1C6E5E','#9B4535','#A9741F','#3A4F78','#6B5B4A','#5D6B63','#7A5230'];
+const statusColor={};Object.keys(AR_DATA.TAXONOMY).forEach((s,i)=>statusColor[s]=STATUS_COLORS[i%STATUS_COLORS.length]);
+const FACILITY_OPTIONS=["Care","Olive","Yashodha","Kamineni","Osmania","Appolo","Vcare","Vasan","Krishna","Mahaveer"];
+const CARRIER_OPTIONS=["Manipal Cigna","Bajaj","LIC","Max Life","HDFC Health","ICICI","GEOPRO"];
+const STORAGE_KEY='ar_claims_log_v2';
+let CLAIMS=[];try{CLAIMS=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){CLAIMS=[]}
+function saveClaims(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(CLAIMS))}catch(e){}}
+function esc(s){return s==null?'':String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function showToast(type,message,timeout=6000){const stack=document.getElementById('toastStack');const t=document.createElement('div');t.className='toast '+type;t.innerHTML='<span>'+esc(message)+'</span><span class="x">×</span>';t.querySelector('.x').onclick=()=>t.remove();stack.appendChild(t);setTimeout(()=>t.remove(),timeout)}
+const EXCEL_HEADER=['Serial Number','Claim ID','Facility','Carrier','Subject/Status','Action','Code','Call/Portal','Network Status','Notes','Next Follow Up Date','Follow Up Type/Queue','Logged At'];
+let excelHandle=null, excelSheetName='Claims', excelBusy=false;
+const supportsFS=typeof window.showOpenFilePicker==='function'&&typeof window.showSaveFilePicker==='function';
+function setExcelStatus(connected,name){document.getElementById('xdot').classList.toggle('on',!!connected);document.getElementById('xstatusText').textContent=connected?'Excel file: '+name:'Excel file: not connected';document.getElementById('disconnectExcelBtn').style.display=connected?'':'none';document.getElementById('openExcelBtn').style.display=connected?'none':'';document.getElementById('createExcelBtn').style.display=connected?'none':''}
+if(!supportsFS){document.getElementById('excelSupportNote').textContent='Direct Excel auto-save requires Chrome or Edge with File System Access support.';document.getElementById('openExcelBtn').disabled=true;document.getElementById('createExcelBtn').disabled=true}
+async function ensureWritePermission(handle){
+  let p='granted';
+  if(typeof handle.queryPermission==='function')p=await handle.queryPermission({mode:'readwrite'});
+  if(p!=='granted'&&typeof handle.requestPermission==='function')p=await handle.requestPermission({mode:'readwrite'});
+  if(p!=='granted')throw new Error('Write permission was not granted for the Excel file.');
+}
+async function readWorkbook(handle){
+  const file=await handle.getFile(); if(!file.size)return XLSX.utils.book_new();
+  const buf=await file.arrayBuffer(); return XLSX.read(buf,{type:'array',cellDates:false});
+}
+function chooseSheet(wb){return wb.SheetNames.includes('Claims')?'Claims':(wb.SheetNames[0]||'Claims')}
+function rowsFromSheet(wb,sheetName){const ws=wb.Sheets[sheetName];return ws?XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}):[]}
+function normalizeRows(rows){
+  if(!rows||!rows.length)return [EXCEL_HEADER.slice()];
+  const header=rows[0].map(x=>String(x??'').trim());
+  const same=EXCEL_HEADER.every((h,i)=>header[i]===h);
+  if(same)return rows.map(r=>{const a=r.slice();while(a.length<EXCEL_HEADER.length)a.push('');return a});
+  const index={};header.forEach((h,i)=>index[h]=i);
+  const hasAny=EXCEL_HEADER.some(h=>index[h]!==undefined);
+  if(!hasAny)return [EXCEL_HEADER.slice(),...rows];
+  return rows.map((r,ri)=>ri===0?EXCEL_HEADER.slice():EXCEL_HEADER.map(h=>r[index[h]]??''));
+}
+function lastSerial(rows){let max=0;for(let i=1;i<rows.length;i++){const n=Number.parseInt(rows[i]?.[0],10);if(Number.isFinite(n)&&n>max)max=n}return max}
+async function writeWorkbook(handle,wb){
+  await ensureWritePermission(handle);
+  const out=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  const writable=await handle.createWritable();try{await writable.write(out)}finally{await writable.close()}
+}
+async function connectHandle(handle,isNew=false){
+  await ensureWritePermission(handle);
+  excelHandle=handle;
+  if(isNew){
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([EXCEL_HEADER]),'Claims');excelSheetName='Claims';await writeWorkbook(handle,wb);
+  }else{
+    const wb=await readWorkbook(handle);excelSheetName=chooseSheet(wb);const rows=normalizeRows(rowsFromSheet(wb,excelSheetName));
+    if(!wb.SheetNames.length){XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Claims');excelSheetName='Claims';await writeWorkbook(handle,wb)}
+  }
+  setExcelStatus(true,handle.name);showToast('success',(isNew?'Created and connected to ':'Connected to ')+handle.name+'. New claims will append here.');
+}
+async function refreshClaimsFromExcel(){
+  if(!excelHandle)return;
+  const wb=await readWorkbook(excelHandle);excelSheetName=chooseSheet(wb);const rows=normalizeRows(rowsFromSheet(wb,excelSheetName));const excelClaims=[];
+  for(let i=1;i<rows.length;i++){const r=rows[i];if(!r.some(v=>String(v??'').trim()))continue;excelClaims.push({id:'excel-'+i,serial:Number.parseInt(r[0],10)||null,claimId:r[1]||'',facility:r[2]||'',carrier:r[3]||'',status:r[4]||'',action:r[5]||'',code:r[6]||'',callPortal:r[7]||'',networkStatus:r[8]||'',notes:r[9]||'',fupDate:r[10]||'',fupType:r[11]||'',loggedAt:r[12]||''})}
+  CLAIMS=excelClaims;saveClaims();renderTable();
+}
+async function appendClaimToExcel(claim){
+  if(!excelHandle)throw new Error('No Excel file is connected.');
+  const wb=await readWorkbook(excelHandle);excelSheetName=chooseSheet(wb);
+  let rows=normalizeRows(rowsFromSheet(wb,excelSheetName));const serial=lastSerial(rows)+1;
+  rows.push([serial,claim.claimId,claim.facility,claim.carrier,claim.status,claim.action,claim.code,claim.callPortal,claim.networkStatus,claim.notes,claim.fupDate,claim.fupType,claim.loggedAt]);
+  wb.Sheets[excelSheetName]=XLSX.utils.aoa_to_sheet(rows);await writeWorkbook(excelHandle,wb);return serial;
+}
+async function updateClaimInExcel(claim){
+  if(!excelHandle)throw new Error('No Excel file is connected.');
+  const wb=await readWorkbook(excelHandle);excelSheetName=chooseSheet(wb);let rows=normalizeRows(rowsFromSheet(wb,excelSheetName));
+  let idx=rows.findIndex((r,i)=>i>0&&((claim.serial!=null&&Number.parseInt(r[0],10)===Number(claim.serial))||String(r[1]??'')===String(claim.claimId)));
+  if(idx<1)throw new Error('Could not find this claim in the connected Excel file.');
+  rows[idx]=[claim.serial??r0(rows[idx]),claim.claimId,claim.facility,claim.carrier,claim.status,claim.action,claim.code,claim.callPortal,claim.networkStatus,claim.notes,claim.fupDate,claim.fupType,claim.loggedAt||rows[idx][12]||''];
+  wb.Sheets[excelSheetName]=XLSX.utils.aoa_to_sheet(rows);await writeWorkbook(excelHandle,wb);
+}
+function r0(r){return Number.parseInt(r?.[0],10)||''}
+async function deleteClaimFromExcel(claim){
+  if(!excelHandle)throw new Error('No Excel file is connected.');
+  const wb=await readWorkbook(excelHandle);excelSheetName=chooseSheet(wb);let rows=normalizeRows(rowsFromSheet(wb,excelSheetName));
+  const idx=rows.findIndex((r,i)=>i>0&&((claim.serial!=null&&Number.parseInt(r[0],10)===Number(claim.serial))||String(r[1]??'')===String(claim.claimId)));
+  if(idx<1)throw new Error('Could not find this claim in the connected Excel file.');
+  rows.splice(idx,1);
+  for(let i=1;i<rows.length;i++)rows[i][0]=i;
+  wb.Sheets[excelSheetName]=XLSX.utils.aoa_to_sheet(rows);await writeWorkbook(excelHandle,wb);
+}
+document.getElementById('openExcelBtn').onclick=async()=>{try{const [h]=await window.showOpenFilePicker({types:[{description:'Excel Workbook',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx']}}],multiple:false});await connectHandle(h,false);await refreshClaimsFromExcel()}catch(e){if(e.name!=='AbortError')showToast('error','Could not open Excel: '+(e.message||e))}}
+document.getElementById('createExcelBtn').onclick=async()=>{try{const h=await window.showSaveFilePicker({suggestedName:'AR_Claims_Log.xlsx',types:[{description:'Excel Workbook',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx']}}]});await connectHandle(h,true);CLAIMS=[];saveClaims();renderTable()}catch(e){if(e.name!=='AbortError')showToast('error','Could not create Excel: '+(e.message||e))}}
+document.getElementById('disconnectExcelBtn').onclick=()=>{excelHandle=null;setExcelStatus(false);showToast('info','Excel disconnected. New claims will remain in browser storage until a file is connected.')};
+ 
+const facilitySel=document.getElementById('f_facility');FACILITY_OPTIONS.forEach(x=>facilitySel.add(new Option(x,x)));
+const carrierSel=document.getElementById('f_carrier');CARRIER_OPTIONS.forEach(x=>carrierSel.add(new Option(x,x)));
+const statusSel=document.getElementById('f_status');Object.keys(AR_DATA.TAXONOMY).forEach(x=>statusSel.add(new Option(x,x)));
+const actionSel=document.getElementById('f_action'),codeSel=document.getElementById('f_code'),cpSel=document.getElementById('f_callportal');
+AR_DATA.CALL_PORTAL.forEach(x=>cpSel.add(new Option(x,x)));
+statusSel.onchange=()=>{actionSel.innerHTML='<option value="">Select action…</option>';codeSel.innerHTML='<option value="">Select action first…</option>';Object.keys(AR_DATA.TAXONOMY[statusSel.value]||{}).forEach(x=>actionSel.add(new Option(x,x)))}
+actionSel.onchange=()=>{codeSel.innerHTML='<option value="">Select code…</option>';((AR_DATA.TAXONOMY[statusSel.value]||{})[actionSel.value]||[]).forEach(x=>codeSel.add(new Option(x,x)))};
+document.getElementById('facilityFilter').innerHTML+=FACILITY_OPTIONS.map(x=>`<option>${esc(x)}</option>`).join('');
+document.getElementById('statusFilter').innerHTML+=Object.keys(AR_DATA.TAXONOMY).map(x=>`<option>${esc(x)}</option>`).join('');
+document.getElementById('callportalFilter').innerHTML+=AR_DATA.CALL_PORTAL.map(x=>`<option>${esc(x)}</option>`).join('');
+ 
+function renderStats(){const total=CLAIMS.length,today=todayStr(),overdue=CLAIMS.filter(c=>c.fupDate&&c.fupDate<today).length,upcoming=CLAIMS.filter(c=>c.fupDate&&c.fupDate>=today).length,fac=new Set(CLAIMS.map(c=>c.facility).filter(Boolean)).size,car=new Set(CLAIMS.map(c=>c.carrier).filter(Boolean)).size,calls=CLAIMS.filter(c=>c.callPortal==='Call').length;document.getElementById('statRow').innerHTML=[{n:total,l:'Claims logged'},{n:overdue,l:'Overdue follow-ups',warn:overdue},{n:upcoming,l:'Upcoming follow-ups',accent:1},{n:fac,l:'Facilities touched'},{n:car,l:'Carriers touched'},{n:total?Math.round(calls/total*100)+'%':'0%',l:'Worked by phone call'}].map(s=>`<div class="stat ${s.warn?'warn':''} ${s.accent?'accent':''}"><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`).join('')}
+ 
+let sortKey='fupDate',sortDir=1,editingId=null;const tbody=document.getElementById('tbody');
+function filters(){return{q:document.getElementById('searchBox').value.trim().toLowerCase(),status:document.getElementById('statusFilter').value,facility:document.getElementById('facilityFilter').value,callPortal:document.getElementById('callportalFilter').value,network:document.getElementById('networkFilter').value,overdue:document.getElementById('overdueFilter').value}}
+function matches(c,f){const t=todayStr();if(f.status&&c.status!==f.status)return false;if(f.facility&&c.facility!==f.facility)return false;if(f.callPortal&&c.callPortal!==f.callPortal)return false;if(f.network&&c.networkStatus!==f.network)return false;if(f.overdue==='overdue'&&!(c.fupDate&&c.fupDate<t))return false;if(f.overdue==='upcoming'&&!(c.fupDate&&c.fupDate>=t))return false;if(f.q&&!([c.claimId,c.facility,c.carrier,c.status,c.action,c.code,c.notes,c.fupType,c.networkStatus].join(' ').toLowerCase().includes(f.q)))return false;return true}
+function renderTable(){renderStats();let rows=CLAIMS.filter(c=>matches(c,filters()));rows.sort((a,b)=>{let va=a[sortKey]??'',vb=b[sortKey]??'';if(sortKey==='serial')return((Number(va)||-1)-(Number(vb)||-1))*sortDir;va=String(va).toLowerCase();vb=String(vb).toLowerCase();return va<vb?-1*sortDir:va>vb?1*sortDir:0});document.getElementById('resultCount').textContent=`${rows.length} of ${CLAIMS.length} claims`;if(!rows.length){tbody.innerHTML=`<tr><td colspan="12">${CLAIMS.length?'No claims match these filters.':'No claims logged yet — use the form above.'}</td></tr>`;return}const t=todayStr();tbody.innerHTML=rows.map(c=>{const od=c.fupDate&&c.fupDate<t;return`<tr data-id="${esc(c.id)}" class="${od?'overdue':''}"><td class="claimid">${c.serial??'—'}</td><td class="claimid">${esc(c.claimId)}</td><td>${esc(c.facility)}</td><td><span class="tag">${esc(c.carrier)}</span></td><td><span class="pill" style="background:${statusColor[c.status]||'#5D6B63'}">${esc(c.status)}</span></td><td>${esc(c.action)}</td><td>${esc(c.code)}</td><td>${esc(c.callPortal)}</td><td><span class="tag">${esc(c.networkStatus)}</span></td><td class="fdate ${od?'overdue-text':''}">${esc(c.fupDate)}</td><td>${esc(c.fupType)}</td><td class="notes" title="${esc(c.notes)}">${esc(c.notes)}</td></tr>`}).join('');tbody.querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>openDetail(CLAIMS.find(c=>c.id===tr.dataset.id)))}
+document.querySelectorAll('thead th[data-key]').forEach(th=>th.onclick=()=>{const k=th.dataset.key;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1}document.querySelectorAll('.arrow').forEach(a=>a.textContent='');th.querySelector('.arrow').textContent=sortDir===1?'↑':'↓';renderTable()});
+['searchBox','statusFilter','facilityFilter','callportalFilter','networkFilter','overdueFilter'].forEach(id=>{document.getElementById(id).addEventListener('input',renderTable);document.getElementById(id).addEventListener('change',renderTable)});
+document.getElementById('resetBtn').onclick=()=>{['searchBox','statusFilter','facilityFilter','callportalFilter','networkFilter','overdueFilter'].forEach(id=>document.getElementById(id).value='');renderTable()};
+ 
+const form=document.getElementById('claimForm'),editBanner=document.getElementById('editBanner');
+function readForm(){return{claimId:document.getElementById('f_claimId').value.trim(),facility:facilitySel.value,carrier:carrierSel.value,status:statusSel.value,action:actionSel.value,code:codeSel.value,callPortal:cpSel.value,networkStatus:document.getElementById('f_networkstatus').value,notes:document.getElementById('f_notes').value.trim(),fupDate:document.getElementById('f_fupdate').value,fupType:document.getElementById('f_fuptype').value}}
+function fillForm(c){document.getElementById('f_claimId').value=c.claimId;facilitySel.value=c.facility;carrierSel.value=c.carrier;statusSel.value=c.status;statusSel.onchange();actionSel.value=c.action;actionSel.onchange();codeSel.value=c.code;cpSel.value=c.callPortal;document.getElementById('f_networkstatus').value=c.networkStatus||'';document.getElementById('f_notes').value=c.notes||'';document.getElementById('f_fupdate').value=c.fupDate||todayStr();document.getElementById('f_fuptype').value=c.fupType||''}
+function resetForm(){form.reset();actionSel.innerHTML='<option value="">Select status first…</option>';codeSel.innerHTML='<option value="">Select action first…</option>';editingId=null;editBanner.classList.remove('show');document.getElementById('submitBtn').textContent='Log claim';document.getElementById('f_fupdate').value=todayStr()}
+form.onsubmit=async e=>{e.preventDefault();if(excelBusy)return;const btn=document.getElementById('submitBtn');btn.disabled=true;excelBusy=true;try{const data=readForm();
+if(editingId){const idx=CLAIMS.findIndex(c=>c.id===editingId);if(idx<0)throw new Error('Claim no longer exists in the browser log.');const updated={...CLAIMS[idx],...data};if(excelHandle)await updateClaimInExcel(updated);CLAIMS[idx]=updated;saveClaims();showToast('success','Claim updated successfully'+(excelHandle?' in Excel.':'.'));resetForm();renderTable();return}
+if(!excelHandle&&supportsFS){const choice=confirm('No Excel file is connected. Click OK to select an existing Excel file. Click Cancel to create a new Excel file.');if(choice){const [h]=await window.showOpenFilePicker({types:[{description:'Excel Workbook',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx']}}],multiple:false});await connectHandle(h,false)}else{const h=await window.showSaveFilePicker({suggestedName:'AR_Claims_Log.xlsx',types:[{description:'Excel Workbook',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx']}}]});await connectHandle(h,true)}}
+if(!excelHandle){const claim={id:'c'+Date.now()+Math.random().toString(36).slice(2,7),...data,loggedAt:new Date().toISOString()};CLAIMS.unshift(claim);saveClaims();showToast('info','Claim saved in this browser. Connect an Excel file to save future entries there.');resetForm();renderTable();return}
+const claim={id:'c'+Date.now()+Math.random().toString(36).slice(2,7),...data,loggedAt:new Date().toISOString()};const serial=await appendClaimToExcel(claim);claim.serial=serial;CLAIMS.unshift(claim);saveClaims();showToast('success',`Claim logged successfully — saved as Serial #${serial} in ${excelHandle.name}.`);resetForm();renderTable();
+}catch(err){showToast('error','Could not save claim: '+(err.message||err),9000)}finally{excelBusy=false;btn.disabled=false}};
+document.getElementById('clearFormBtn').onclick=resetForm;document.getElementById('cancelEditBtn').onclick=resetForm;
+ 
+const detail=document.getElementById('detail'),scrim=document.getElementById('scrim'),detailBody=document.getElementById('detailBody');
+function val(v){return v?`<span class="v">${esc(v)}</span>`:'<span class="noval">not set</span>'}
+function openDetail(c){if(!c)return;detailBody.innerHTML=`<div class="detail-eyebrow">${c.serial!=null?'Serial #'+esc(c.serial)+' · ':''}${esc(c.status)} · ${esc(c.action)}</div><h2>${esc(c.claimId)}</h2><div class="dsection"><h4>Routing</h4><div class="dgrid"><div class="dfield"><div class="k">Facility</div>${val(c.facility)}</div><div class="dfield"><div class="k">Carrier</div>${val(c.carrier)}</div><div class="dfield"><div class="k">Subject / Status</div>${val(c.status)}</div><div class="dfield"><div class="k">Action</div>${val(c.action)}</div><div class="dfield"><div class="k">Code</div>${val(c.code)}</div><div class="dfield"><div class="k">Call / Portal</div>${val(c.callPortal)}</div><div class="dfield"><div class="k">Network Status</div>${val(c.networkStatus)}</div></div></div><div class="dsection"><h4>Follow-Up</h4><div class="dgrid"><div class="dfield"><div class="k">Next follow up</div>${val(c.fupDate)}</div><div class="dfield"><div class="k">Queue</div>${val(c.fupType)}</div><div class="dfield full"><div class="k">Notes</div>${val(c.notes)}</div></div></div><div class="detail-actions"><button class="btn btn-ghost" id="editEntryBtn">Edit entry</button><button class="btn btn-danger" id="deleteEntryBtn">Delete entry</button></div>`;document.getElementById('editEntryBtn').onclick=()=>{editingId=c.id;fillForm(c);editBanner.classList.add('show');document.getElementById('submitBtn').textContent='Update claim';closeDetail();document.getElementById('formPanel').scrollIntoView({behavior:'smooth'})};document.getElementById('deleteEntryBtn').onclick=async()=>{if(!confirm('Delete this claim entry? This cannot be undone.'))return;try{if(excelHandle)await deleteClaimFromExcel(c);CLAIMS=CLAIMS.filter(x=>x.id!==c.id);saveClaims();renderTable();closeDetail();showToast('success','Claim deleted'+(excelHandle?' from Excel.':'.'))}catch(err){showToast('error','Could not delete claim: '+(err.message||err),9000)}};detail.classList.add('open');scrim.classList.add('open')}
+function closeDetail(){detail.classList.remove('open');scrim.classList.remove('open')}document.getElementById('detailClose').onclick=closeDetail;scrim.onclick=closeDetail;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail()});
+ 
+document.getElementById('f_fupdate').value=todayStr();renderTable();
+</script>
+</body>
+</html>
