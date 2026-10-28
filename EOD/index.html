@@ -144,13 +144,7 @@ input.invalid{border-color:var(--bad);background:#fff8f8}
 .mr{display:grid;grid-template-columns:5.6em 1fr 3.8em 4.8em;gap:.5em;align-items:center;margin:.35em 0}.mr .mn{font-weight:700;color:var(--navy)}.mr small{color:var(--mut);text-align:right}
 .mb{height:.85em;border-radius:9px;background:#eef1f6;overflow:hidden}.mb i{display:block;height:100%;border-radius:9px}.mb i.g{background:#2fb36b}.mb i.y{background:#f0a500}.mb i.r{background:#e5484d}
 .mr b.g{color:#1e7a3c}.mr b.y{color:#9c5700}.mr b.r{color:#b3261e}
-.tpch svg{width:100%;height:auto;display:block}.tpch svg text.process-label {
-  font-size: 8px;
-  font-weight: 700;
-  fill: #000;
-  letter-spacing: 0;
-}
-}.tpch svg text.vl{fill:var(--navy);font-weight:700;font-size:8px}
+.tpch svg{width:100%;height:auto;display:block}.tpch svg text{font-size:8px;fill:var(--mut)}.tpch svg text.vl{fill:var(--navy);font-weight:700;font-size:8px}
 .tpch .gl{stroke:#e6edf9;stroke-width:.8}.tpch .l90{stroke:#2fb36b;stroke-dasharray:4 3;stroke-width:1}.tpch .l80{stroke:#f0a500;stroke-dasharray:4 3;stroke-width:1}
 .tpch rect.g{fill:#2fb36b}.tpch rect.y{fill:#f0a500}.tpch rect.r{fill:#e5484d}
 .tplg{display:flex;gap:1em;font-size:.78em;color:var(--ink);align-items:center}.tplg i{display:inline-block;width:.9em;height:.9em;border-radius:2px;margin-right:.3em;vertical-align:-.1em}
@@ -381,11 +375,11 @@ function renderTat(m){
     return `<div class="tpc"><div class="tph"><h3>${n}</h3><span class="pc ${tcol(mp)}">${p2f(mp)}</span></div><div class="sb"><i class="m" style="width:${w1}%"></i><i class="x" style="width:${w2}%"></i></div><div class="tpn"><span><b class="gm">${f(o.m)}</b> met</span><span><b class="rm">${f(o.x)}</b> missed</span><span><b class="im">${f(o.i)}</b> internal</span><span>${f(o.el)} eligible</span></div></div>`};
   const mrow=(n,p,mm,el)=>`<div class="mr"><span class="mn">${n}</span><div class="mb"><i class="${tcol(p)}" style="width:${Math.min(100,p)}%"></i></div><b class="${tcol(p)}">${p2f(p)}</b><small>${f(mm)}/${f(el)}</small></div>`;
   const mtd=`<div class="tpc"><div class="tph"><h3>Month-to-date TAT met</h3><small>day 1 → ${+m.date.slice(8)} · from card counts</small></div>${mrow("BRC",M.brc,M.bm,M.bel)}${mrow("VOB",M.vob,M.vm,M.vel)}${mrow("Combined",M.comb,M.bm+M.vm,M.bel+M.vel)}</div>`;
-  const keep=m.ser.map((x,i)=>(m.sb[i]!=null||m.sv[i]!=null)?i:-1).filter(i=>i>=0),n=Math.max(keep.length,1),WW=1000,HH=112,L=34,R2=8,T=14,B=18,slot=(WW-L-R2)/n,bw=Math.min(slot*.36,30),Y=x=>T+(HH-T-B)*(1-x/100);
+  const keep=m.ser.map((x,i)=>(m.sb[i]!=null||m.sv[i]!=null)?i:-1).filter(i=>i>=0),n=Math.max(keep.length,1),WW=1000,HH=112,L=34,R2=8,T=14,B=18,slot=(WW-L-R2)/n,bw=Math.min(slot*.42,34),Y=x=>T+(HH-T-B)*(1-x/100);
   let grid="";[0,25,50,75,100].forEach(t=>{grid+=`<line class="gl" x1="${L}" x2="${WW-R2}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text x="${L-4}" y="${(Y(t)+2.5).toFixed(1)}" text-anchor="end">${t}%</text>`});
   const bars=keep.map((di,i)=>{const cx=L+slot*i+slot/2;let o="";
-    [[m.sb[di],cx-bw,"BRC"],[m.sv[di],cx,"VOB"]].forEach(([x,bx,nm])=>{if(x==null)return;const y=Y(x);
-      o+=`<rect class="${tcol(x)}" x="${bx.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,HH-B-y).toFixed(1)}" rx="2"><title>Day ${di+1} ${nm}: ${x.toFixed(2)}% met</title></rect><text class="vl" x="${(bx+bw/2).toFixed(1)}" y="${(y-2).toFixed(1)}" text-anchor="middle">${x.toFixed(1)}</text><text class="process-label" transform="rotate(-90 ${(bx+bw/2).toFixed(1)} ${(y+(HH-B-y)/2).toFixed(1)})" x="${(bx+bw/2).toFixed(1)}" y="${(y+(HH-B-y)/2).toFixed(1)}" text-anchor="middle" dominant-baseline="middle">${nm}</text>`});
+    [[m.sb[di],cx-bw,"BRC"],[m.sv[di],cx,"VOB"]].forEach(([x,bx,nm])=>{if(x==null)return;const y=Y(x),hb=Math.max(1,HH-B-y);
+      o+=`<rect class="${tcol(x)}" x="${bx.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${hb.toFixed(1)}" rx="2"><title>Day ${di+1} ${nm}: ${x.toFixed(2)}% met</title></rect><text class="vl" x="${(bx+bw/2).toFixed(1)}" y="${(y-2).toFixed(1)}" text-anchor="middle">${x.toFixed(1)}</text>${hb>=28?`<text transform="rotate(-90 ${(bx+bw/2+3.5).toFixed(1)} ${(y+hb/2).toFixed(1)})" x="${(bx+bw/2+3.5).toFixed(1)}" y="${(y+hb/2).toFixed(1)}" text-anchor="middle" style="font-size:10px;font-weight:800;fill:#fff;letter-spacing:.6px">${nm}</text>`:""}`});
     return o+`<text x="${cx.toFixed(1)}" y="${HH-2}" text-anchor="middle">${di+1}</text>`}).join("");
   const chart=`<div class="tpc tpch"><div class="tph"><h3>Daily TAT met % — BRC | VOB</h3><div class="tplg"><span><i style="background:#2fb36b"></i>90% and above</span><span><i style="background:#f0a500"></i>80–90%</span><span><i style="background:#e5484d"></i>below 80%</span><span>Working days only · x-axis = day of month</span></div></div><svg viewBox="0 0 ${WW} ${HH}">${grid}<line class="l90" x1="${L}" x2="${WW-R2}" y1="${Y(90).toFixed(1)}" y2="${Y(90).toFixed(1)}"/><line class="l80" x1="${L}" x2="${WW-R2}" y1="${Y(80).toFixed(1)}" y2="${Y(80).toFixed(1)}"/>${bars}</svg></div>`;
   $("view").innerHTML=`${m.has?"":`<div class="empty">No TAT numbers saved for ${m.date} yet. Click Edit data, then open "TAT performance".</div>`}<div class="tpv"><div class="tpk-row">${tiles}</div><div class="tpmid"><div class="tpc"><div class="tph"><h3>Process breakdown</h3><small>Internal cards excluded from TAT</small></div>${table}</div><div class="tpc ringbox">${ring}${lg}</div></div><div class="tpmid3">${proc("BRC",b)}${proc("VOB",v)}${mtd}</div>${chart}</div>`}
