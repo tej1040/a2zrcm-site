@@ -331,8 +331,8 @@ function render(d){
   const tot=d.att.reduce((t,x)=>t+x[0],0),abs=d.att.reduce((t,x)=>t+x[1],0);
   const att=`<aside class="att"><h3>Attendance</h3><div class="sum"><b>${abs}</b> <span>of ${tot} absent · ${tot?Math.round(abs/tot*100):0}%</span></div>
    ${d.att.map((x,i)=>{const sh=x[0]?x[1]/x[0]:0;
-    return `<div class="d ${x[1]?"":"z"}"><div><b>${D[i]}</b>${x[1]?`<span class="pill ${sh*100>=d.thr?"hi":""}">${x[1]} / ${x[0]} · ${Math.round(sh*100)}%</span>`:`<span>${x[0]||"–"}</span>`}</div>
-    ${x[1]&&x[5]?`<div class="n"><span>${x[5]}</span></div>`:""}</div>`}).join("")}
+    if(!x[1])return"";return `<div class="d"><div><b>${D[i]}</b>${x[1]?`<span class="pill ${sh*100>=d.thr?"hi":""}">${x[1]} / ${x[0]} · ${Math.round(sh*100)}%</span>`:`<span>${x[0]||"–"}</span>`}</div>
+    ${x[1]&&x[5]?`<div class="n"><span>${x[5]}</span></div>`:""}</div>`}).join("")||`<div class="d z"><span>Everyone present today</span></div>`}
    <div class="foot"><span>Total leaves to date</span><b>${f(d.leaves)}</b></div></aside>`;
   $("view").innerHTML=`${d.has?"":`<div class="empty">No data saved for ${d.date} yet. Click Edit data to enter it.</div>`}<div class="dash"><div class="left"><div class="grid">${cards}</div>${tatHtml(d)}<div class="chartrow">${chart("VOB – Regular only",d.ser.vob,d.ser.vobE,d.ser.vobC)}${chart("BRC",d.ser.brc,d.ser.brcE,d.ser.brcC)}</div></div><div class="side">${att}${actHtml(d)}</div></div>`;
 }
