@@ -118,6 +118,8 @@ textarea:focus{outline:2px solid #e0a100}
 .lcard h2{color:var(--navy)}.lcard p{color:var(--mut)}#lerr{color:var(--bad);font-weight:600;min-height:1.2em}
 @media (max-width:820px){.cols,.dash,.chartrow{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.top{flex-wrap:wrap;gap:.6em}}
 
+/* ---- snapshot button ---- */
+#snap{position:fixed;right:18px;bottom:18px;z-index:60;padding:.7em 1.2em;border-radius:2em;border:1px solid rgba(255,255,255,.6);background:rgba(15,42,92,.55);color:#fff;font-weight:700;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 8px 24px rgba(15,42,92,.25)}#snap:hover{background:rgba(15,42,92,.8);opacity:1}#snap.hide{display:none}.snapmode .top::after{display:none!important}
 /* ---- TAT performance ---- */
 .tpmode{display:flex;gap:1.2em;align-items:center;margin-top:.8em;flex-wrap:wrap}.tpmode label{display:flex;align-items:center;gap:.35em;font-weight:700;cursor:pointer}.tpmode input{width:auto}.tpmode span{color:var(--mut);font-size:.82em}
 .tpform{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5em .8em;margin-top:.8em}
@@ -176,11 +178,13 @@ input.invalid{border-color:var(--bad);background:#fff8f8}
   <div id="view" class="hide"></div>
 </div>
 <datalist id="xlist"></datalist>
+<button id="snap" class="hide" title="Download this page as a PNG image">📷 Take snapshot</button>
 <div id="toast"></div>
 <div id="login"><div class="lcard"><div class="logo">GEO<b>PRO</b><small>SERVICES</small></div><h2>EOD Update Tracker</h2><p>Sign in to continue</p>
 <input id="lem" type="email" placeholder="Email" autocomplete="username"><input id="lpw" type="password" placeholder="Password" autocomplete="current-password">
 <button id="lgo" class="pri">Sign in</button><div id="lerr"></div></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getFirestore,doc,setDoc,getDocs,collection,query,where,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -385,7 +389,7 @@ function renderTat(m){
     return o+`<text x="${cx.toFixed(1)}" y="${HH-2}" text-anchor="middle">${di+1}</text>`}).join("");
   const chart=`<div class="tpc tpch"><div class="tph"><h3>Daily TAT met % — ${md==="both"?"BRC | VOB":lab}</h3><div class="tplg"><span><i style="background:#2fb36b"></i>90% and above</span><span><i style="background:#f0a500"></i>80–90%</span><span><i style="background:#e5484d"></i>below 80%</span><span>Working days only · x-axis = day of month</span></div></div><svg viewBox="0 0 ${WW} ${HH}">${grid}<line class="l90" x1="${L}" x2="${WW-R2}" y1="${Y(90).toFixed(1)}" y2="${Y(90).toFixed(1)}"/><line class="l80" x1="${L}" x2="${WW-R2}" y1="${Y(80).toFixed(1)}" y2="${Y(80).toFixed(1)}"/>${bars}</svg></div>`;
   $("view").innerHTML=`${m.has?"":`<div class="empty">No TAT numbers saved for ${m.date} yet. Click Edit data, then open "TAT performance".</div>`}<div class="tpv"><div class="tpk-row">${tiles}</div><div class="tpmid"><div class="tpc"><div class="tph"><h3>Process breakdown${md==="both"?"":" — "+lab}</h3><small>Internal cards excluded from TAT</small></div>${table}</div><div class="tpc ringbox">${ring}${lg}</div></div><div class="tpmid3" style="grid-template-columns:repeat(${md==="both"?3:2},minmax(0,1fr))">${sB?proc("BRC",b):""}${sV?proc("VOB",v):""}${mtd}</div>${chart}</div>`}
-function show(v,pg){view=v?(pg==="tat"?"tat":"dash"):"form";$("form").classList.toggle("hide",v);$("view").classList.toggle("hide",!v);$("edit").classList.toggle("hide",!v);$("pg").classList.toggle("hide",!v);$("pg").textContent=view==="tat"?"Go to Dashboard":"TAT performance";document.body.classList.toggle("dm",v);document.body.style.overflow="auto"}
+function show(v,pg){view=v?(pg==="tat"?"tat":"dash"):"form";$("form").classList.toggle("hide",v);$("view").classList.toggle("hide",!v);$("edit").classList.toggle("hide",!v);$("pg").classList.toggle("hide",!v);$("snap").classList.toggle("hide",!v);$("pg").textContent=view==="tat"?"Go to Dashboard":"TAT performance";document.body.classList.toggle("dm",v);document.body.style.overflow="auto"}
 function paint(){const st=new Set();Object.values(days).forEach(x=>{try{(JSON.parse(x.json).x||[]).forEach(l=>(l||[]).forEach(a=>a[0]&&st.add(a[0])))}catch(e){}});
   $("xlist").innerHTML=[...st].map(n=>`<option value="${n.replace(/"/g,"&quot;")}">`).join("");
   if(!dirty)fillForm(cur);if(view==="dash")render(model(cur));if(view==="tat")renderTat(modelTat(cur))}
@@ -403,6 +407,19 @@ $("go").onclick=async()=>{const r=readForm(),dt=cur;if(validateTp(r.entry.tp).le
     setDoc(doc(db,"months",ym(dt)),{json:JSON.stringify(r.open)})]);
     await Promise.race([w,new Promise(x=>setTimeout(x,2500))]);dirty=false;toast("Saved ✓  MTD recalculated");show(true);paint();setSync("live")}
   catch(e){setSync("err");alert("Could not save: "+(e.code||e.message))}};
+$("snap").onclick=async()=>{const b=$("snap");if(typeof html2canvas==="undefined"){alert("Snapshot library did not load. Check your internet connection and try again.");return}
+  b.disabled=true;b.textContent="Capturing…";document.body.classList.add("snapmode");
+  try{await new Promise(r=>setTimeout(r,60));
+    const cv=await html2canvas(q(".wrap"),{scale:3,windowWidth:1600,windowHeight:900,backgroundColor:"#f8faff",useCORS:true,logging:false,
+      onclone:(doc)=>{doc.documentElement.style.overflow="visible";["snap","toast"].forEach(i=>{const e=doc.getElementById(i);if(e)e.style.display="none"});doc.querySelectorAll(".top .right button, .top .right .sync").forEach(e=>e.style.display="none");
+        const st=doc.createElement("style");st.textContent=".top::after{display:none!important}.ttl h1{background:none!important;-webkit-text-fill-color:#1e6fe0!important;color:#1e6fe0!important}";doc.head.appendChild(st);
+        const tp=doc.querySelector(".top");if(tp){tp.style.position="relative";const bar=doc.createElement("div");bar.style.cssText="position:absolute;left:1em;right:1em;bottom:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,#0f2a5c,#1e6fe0,#6aa9ff)";tp.appendChild(bar)}
+        doc.querySelectorAll("svg[viewBox]").forEach(sv=>{if(sv.classList.contains("ring"))return;const vb=sv.getAttribute("viewBox").split(/[ ,]+/).map(Number),w=sv.parentElement.clientWidth;if(w>0&&vb[2]>0){sv.setAttribute("width",w);sv.setAttribute("height",(w*vb[3]/vb[2]).toFixed(1));sv.style.width=w+"px";sv.style.height=(w*vb[3]/vb[2])+"px"}})}});
+    const nm="GeoPro_"+(view==="tat"?"TAT_Performance":"Dashboard")+"_"+cur+".png";
+    await new Promise(res=>cv.toBlob(bl=>{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=nm;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);res()},"image/png"));
+    toast("Snapshot saved ✓  "+nm)}
+  catch(e){console.error(e);alert("Could not create the snapshot: "+e.message)}
+  document.body.classList.remove("snapmode");b.disabled=false;b.textContent="📷 Take snapshot"};
 $("edit").onclick=()=>show(false);
 $("pg").onclick=()=>{show(true,view==="tat"?"dash":"tat");paint()};
 $("f_date").onchange=()=>setDate($("f_date").value);$("dprev").onclick=()=>shift(-1);$("dnext").onclick=()=>shift(1);
