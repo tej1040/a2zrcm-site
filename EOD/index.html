@@ -118,6 +118,54 @@ textarea:focus{outline:2px solid #e0a100}
 .lcard h2{color:var(--navy)}.lcard p{color:var(--mut)}#lerr{color:var(--bad);font-weight:600;min-height:1.2em}
 @media (max-width:820px){.cols,.dash,.chartrow{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.top{flex-wrap:wrap;gap:.6em}}
 
+/* ---- roster / tag entry ---- */
+.a{grid-template-columns:64px minmax(0,3.5fr) minmax(0,1.5fr)}
+.tg{
+  position:relative;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.3em;
+  align-items:flex-start;
+  align-content:flex-start;
+  border:1px solid var(--line);
+  border-radius:.5em;
+  background:#fff;
+  padding:.5em;
+  min-height:6em;
+}
+.tg:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,111,224,.12)}
+.tg .chips{
+  display:flex;
+  flex-wrap:wrap;
+  align-content:flex-start;
+  gap:.3em;
+  width:100%;
+  max-height:4.2em;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+.tg .ti{
+  flex:1;
+  min-width:7em;
+  border:0!important;
+  outline:0;
+  box-shadow:none!important;
+  padding:.25em;
+  background:transparent;
+  width:auto;
+}
+.tc{display:inline-flex;align-items:center;gap:.3em;background:#eaf2ff;border:1px solid #c9dcff;border-radius:2em;padding:.1em .3em .1em .7em}.tc.w{background:#e3f4e8;border-color:#b9e3c7}
+.tc b{font-weight:700;color:var(--navy)}.tc select{border:1px solid #c9dcff;background:#fff;border-radius:1em;padding:.15em .3em;font-size:.88em;width:auto}.tc select.no{border-color:#e5484d;color:#b3261e}
+.tc .cn{width:9em;padding:.15em .5em;border:1px solid #c9dcff;border-radius:.6em;font-size:.88em}
+.tx{border:0!important;background:none!important;box-shadow:none!important;color:#b3261e;font-weight:800;cursor:pointer;padding:0 .35em!important;width:auto;min-width:0}
+.sg{position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1px solid #c9dcff;border-radius:.5em;box-shadow:0 10px 26px rgba(15,42,92,.18);max-height:15em;overflow:auto;display:none;margin-top:2px}
+.sg.on{display:block}.sg div{padding:.5em .8em;cursor:pointer}.sg div.act,.sg div:hover{background:#eaf2ff}.sg div.no{color:var(--mut);cursor:default;background:#fff}
+.setrow{display:flex;justify-content:flex-end;margin-top:.8em}#setbtn{background:#d92d33;color:#fff;border:0;border-radius:.6em;padding:.55em 1.1em;font-weight:700;box-shadow:0 6px 16px rgba(217,45,51,.3)}#setbtn:hover{background:#b8232a}
+#setm{position:fixed;inset:0;background:rgba(15,42,92,.6);z-index:85;display:flex;align-items:center;justify-content:center;padding:2vh 2vw}#setm.hide{display:none}
+.setbox{background:#fff;border-radius:1em;width:min(980px,96vw);max-height:94vh;overflow:auto;padding:1em 1.3em}.seth{display:flex;align-items:center;margin-bottom:.4em}.seth h2{flex:1;color:var(--navy)}.seth button{width:auto;background:#eef3fb;border:0;border-radius:2em;padding:.35em .9em;font-weight:700}
+.setf{display:flex;align-items:center;gap:1em;justify-content:space-between;margin-top:1em;position:sticky;bottom:0;background:#fff;padding-top:.6em;border-top:1px solid var(--line)}.setf span{color:var(--mut);font-size:.88em}
+.more .rl{grid-column:span 2}.more .rl small{color:var(--blue);font-weight:700;margin-left:.5em}.more .rl textarea{min-height:4.4em}
 /* ---- attendance report ---- */
 #attbtn{margin-left:auto;font-size:.8em;padding:.35em 1em}
 .fr.a.ah{font-size:.8em;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:.1em}
@@ -182,21 +230,34 @@ input.invalid{border-color:var(--bad);background:#fff8f8}
 
   <div id="form">
     <div class="hint">Pick any date at the top; its saved data loads here and on the dashboard. <b>Completed</b> defaults to Received, absent counts come from the names, and MTD is always recalculated from all saved days of the month (completed by default; RCM VOB Requests uses received). Use <b>+ Add work order</b> under any process for extra items.</div>
-    <div class="sec act-sec"><h2>Action items <small style="font-weight:400;color:var(--mut)">(shown in the yellow box on the dashboard; one per line)</small></h2><textarea id="f_act" rows="3" placeholder="e.g. Follow up with payer on pending RCM requests"></textarea></div>
+    <div class="sec act-sec">
+      <h2>Action items <small style="font-weight:400;color:var(--mut)">(shown in the yellow box on the dashboard; one per line)</small></h2>
+      <textarea id="f_act" rows="3" placeholder="e.g. Follow up with payer on pending RCM requests"></textarea>
+    </div>
+
     <div class="cols">
-      <div class="sec"><h2>Who is absent today? <button id="attbtn" type="button">📊 Attendance report</button></h2><div class="hint" style="margin-bottom:.5em">Type names separated by commas, e.g. <b>Teja(Planned Leave), Sai(Unplanned Leave)</b>. WFH people count as present.</div><div id="f_att"></div></div>
-      <div class="sec"><h2>Today's work</h2><div id="f_ws"></div></div>
+      <div class="sec">
+        <h2>Who is absent today? <button id="attbtn" type="button">📊 Attendance report</button></h2>
+        <div class="hint" style="margin-bottom:.5em">Type a few letters, press <b>↓</b> then <b>Enter</b> to pick a name (names come from the team lists). Choose the leave type beside each name. WFH people count as present.</div>
+        <div id="f_att"></div>
+      </div>
+
+      <div class="sec">
+        <h2>Today's work</h2>
+        <div id="f_ws"></div>
+      </div>
     </div>
     <div class="sec"><h2>Minutes taken by stage <small style="font-weight:400;color:var(--mut)">(daily averages in minutes; leave a row empty if no cases)</small></h2><div id="f_tat"></div></div>
     <details class="sec" id="tpsec"><summary>TAT performance — BRC · VOB · Combined <span style="font-weight:400;color:var(--mut)">(optional, daily)</span></summary><div class="tpmode"><b>Show on TAT page:</b><label><input type="radio" name="tpm" value="vob" checked> VOB</label><label><input type="radio" name="tpm" value="brc"> BRC</label><label><input type="radio" name="tpm" value="both"> Both</label><span>(all numbers below are always saved &amp; exported)</span></div><div class="tpform" id="f_tp"></div><div id="tp_msg"></div></details>
-    <details class="sec"><summary>Headcount, opening month-to-date and alerts (rarely change)</summary><div class="more" id="f_more"></div></details>
     <div class="act"><button id="clear">Clear today</button><button id="go" class="pri">Save &amp; show dashboard →</button></div>
+    <div class="setrow"><button id="setbtn" type="button">⚙ Team lists · Opening MTD · Alerts</button></div>
   </div>
 
   <div id="view" class="hide"></div>
 </div>
 <datalist id="xlist"></datalist>
 <button id="snap" class="hide" title="Download this page as a PNG image">📷 Take snapshot</button>
+<div id="setm" class="hide"><div class="setbox"><div class="seth"><h2>Team lists, opening MTD &amp; alerts</h2><button id="setx" type="button">✕</button></div><div class="more" id="f_more"></div><div class="setf"><span>Opening MTD, alerts and team lists are all saved with this button.</span><button id="setsave" class="pri" type="button">Save</button></div></div></div>
 <div id="attm" class="hide"><div class="attbox"><div id="attcap"><div id="attbody"></div></div></div></div>
 <div id="toast"></div>
 <div id="login"><div class="lcard"><div class="logo">GEO<b>PRO</b><small>SERVICES</small></div><h2>EOD Update Tracker</h2><p>Sign in to continue</p>
@@ -230,7 +291,7 @@ let cur=today(),days={},opening={},cfg={head:HEAD,thr:25,qa:98},dirty=false,view
 const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2000)};
 const setSync=(s,t)=>{const e=$("sync");e.className="sync "+s;e.textContent=t||({live:"● Live",saving:"Saving…",err:"Offline / error",wait:"Connecting…"})[s]};
 
-$("f_att").innerHTML=`<div class="fr a ah"><span></span><span>Leaves</span><span>WFH</span></div>`+D.map((d,i)=>`<div class="fr a"><span class="l">${d}</span><input type="text" placeholder="Leaves: Name(Planned Leave)" data-a="${i}"><input type="text" placeholder="WFH: names" data-w="${i}"></div>`).join("");
+$("f_att").innerHTML=`<div class="fr a ah"><span></span><span>Leaves</span><span>WFH</span></div>`+D.map((d,i)=>`<div class="fr a"><span class="l">${d}</span><div class="tg" data-k="l" data-i="${i}"><span class="chips"></span><input type="text" class="ti" placeholder="Type a name…" autocomplete="off"><div class="sg"></div><input type="hidden" data-a="${i}"></div><div class="tg" data-k="w" data-i="${i}"><span class="chips"></span><input type="text" class="ti" placeholder="Type a name…" autocomplete="off"><div class="sg"></div><input type="hidden" data-w="${i}"></div></div>`).join("");
 $("f_ws").innerHTML=`<div class="fr w h"><span>Workstream</span><span>Received</span><span>Completed</span><span>Errors</span></div>`+
 W.map((g,gi)=>g.hide?"":`<div class="wgroup">
 ${g.s.length>1?`<div class="wgroup-title">${g.id}</div>`:""}
@@ -240,10 +301,11 @@ ${["data-r","data-c","data-e"].map(k=>`<input type="number" min="0" placeholder=
 </div>`).join("")}
 <div class="xbox" data-xg="${gi}"></div><button type="button" class="addx" data-xg="${gi}">+ Add work order</button>
 </div>`).join("");
-$("f_more").innerHTML=`<h4>Headcount (available staff)</h4>`+D.map((d,i)=>`<label>${d}<input type="number" min="0" data-h="${i}"></label>`).join("")+
- `<h4>Opening MTD for this month (only if you start mid-month; otherwise leave blank)</h4>`+
+$("f_more").innerHTML=`<h4>1 · Opening MTD for this month (only if you start mid-month; otherwise leave blank)</h4>`+
  W.map((g,gi)=>g.hide?"":g.s.map((s,si)=>`<label>${g.s.length>1?g.id+" · ":""}${s}<input type="number" min="0" data-m="${gi}.${si}"></label>`).join("")).join("")+
- `<label>Opening leaves<input type="number" min="0" id="f_lbase"></label><h4>Alerts</h4><label>Flag shrinkage ≥ %<input type="number" id="f_thr"></label><label>QA target %<input type="number" id="f_qa"></label>`;
+ `<label>Opening leaves<input type="number" min="0" id="f_lbase"></label><h4>2 · Alerts</h4><label>Flag shrinkage ≥ %<input type="number" id="f_thr"></label><label>QA target %<input type="number" id="f_qa"></label>
+ <h4>3 · Team lists — paste the names (comma or one per line). The headcount is counted from this list.</h4>`+
+ D.map((d,i)=>`<label class="rl">${d}<small id="rc_${i}">0 employees</small><textarea data-rs="${i}" placeholder="Paste names, e.g. Emp1, Emp2, Emp3"></textarea></label><input type="hidden" data-h="${i}">`).join("");
 
 const TR=["Urgent","Priority","Regular","Reverify","Bulk"],TC=["Assignment","Call Hold","Call Handled","After Call Work","Call End to Merge","Time in QA","Avg Total Time"];
 $("f_tat").innerHTML=`<div class="tf h"><span>Request type</span>${TC.map(c=>`<span>${c}</span>`).join("")}</div>`+TR.map((r,ri)=>`<div class="tf"><span class="l">${r}</span>${TC.map((c,ci)=>`<input type="number" min="0" step="any" placeholder="–" data-t="${ri}.${ci}">`).join("")}</div>`).join("");
@@ -309,7 +371,7 @@ function fillForm(dt){const e=days[dt]?JSON.parse(days[dt].json):null,o=opening.
   $("f_lbase").value=o.leaves||"";$("f_thr").value=cfg.thr;$("f_qa").value=cfg.qa;
   qa_(".xrow").forEach(r=>r.remove());(e?.x||[]).forEach((l,gi)=>(l||[]).forEach(a=>addX(gi,a)));
   qa_("#f_tp input").forEach(x=>{x.classList.remove("invalid");x.value=""});(e?.tp||[]).forEach((val,k)=>{const el=$("tp_"+TP[k]);if(el)el.value=val??""});$("tp_msg").textContent="";const _m=q(`input[name=tpm][value="${e?.tpm||"vob"}"]`);if(_m)_m.checked=true;
-  hints();dirty=false}
+  tagLoad();hints();dirty=false}
 function readForm(){const names=D.map((_,i)=>q(`[data-a="${i}"]`).value.trim()),head=D.map((_,i)=>num(q(`[data-h="${i}"]`).value));
   const old=days[cur]?JSON.parse(days[cur].json):null,oo=opening.json?JSON.parse(opening.json):{};
   const ws=W.map((g,gi)=>g.hide?(old?.ws?.[gi]||g.s.map(()=>["","",""])):g.s.map((_,si)=>["r","c","e"].map(k=>q(`[data-${k}="${gi}.${si}"]`).value)));
@@ -360,6 +422,40 @@ function render(d){
    <div class="foot"><span>Total leaves to date</span><b>${f(d.leaves)}</b></div></aside>`;
   $("view").innerHTML=`${d.has?"":`<div class="empty">No data saved for ${d.date} yet. Click Edit data to enter it.</div>`}<div class="dash"><div class="left"><div class="grid">${cards}</div>${tatHtml(d)}<div class="chartrow">${chart("VOB – Regular only",d.ser.vob,d.ser.vobE,d.ser.vobC)}${chart("BRC",d.ser.brc,d.ser.brcE,d.ser.brcC)}</div></div><div class="side">${att}${actHtml(d)}</div></div>`;
 }
+/* ---- team lists + name suggestions ---- */
+const LT=["Planned Leave","Unplanned Leave","Sick Leave","NCNS","Emergency","Half Day","Paternity","Maternity","Bereavement Leave","Custom"];
+const rn=t=>{const seen=new Set(),o=[];String(t||"").replace(/[()]/g,"").split(/[,;\n\t]+/).map(x=>x.trim()).filter(Boolean).forEach(x=>{const k=x.toLowerCase();if(!seen.has(k)){seen.add(k);o.push(x)}});return o};
+const AT={l:D.map(()=>[]),w:D.map(()=>[])};
+const tgEl=(k,i)=>q(`.tg[data-k="${k}"][data-i="${i}"]`);
+function ptag(raw,isL){return nl(raw).map(x=>{const m=x.match(/^(.*?)\s*\((.*)\)$/);if(!m||!isL)return{n:x,t:"",c:""};const t=m[2].trim(),k=LT.find(z=>z!=="Custom"&&z.toLowerCase()===t.toLowerCase());return k?{n:m[1].trim(),t:k,c:""}:{n:m[1].trim(),t:"Custom",c:t.replace(/^custom\s*:\s*/i,"")}})}
+function tagRender(k,i){const el=tgEl(k,i),L=k==="l";el.querySelector(".chips").innerHTML=AT[k][i].map((o,j)=>`<span class="tc ${L?"":"w"}" data-j="${j}"><b>${esc(o.n)}</b>${L?`<select class="ts ${o.t?"":"no"}"><option value="">Select type…</option>${LT.map(t=>`<option${t===o.t?" selected":""}>${t}</option>`).join("")}</select>${o.t==="Custom"?`<input class="cn" placeholder="Note" value="${esc(o.c)}">`:""}`:""}<button type="button" class="tx" title="Remove">×</button></span>`).join("")}
+function tagSync(k,i){const v=AT[k][i].map(o=>k==="l"?o.n+(o.t?"("+(o.t==="Custom"?(o.c||"Custom"):o.t)+")":""):o.n).join(", "),h=q(`[data-${k==="l"?"a":"w"}="${i}"]`);h.value=v;h.dispatchEvent(new Event("input",{bubbles:true}))}
+function tagLoad(){D.forEach((_,i)=>["l","w"].forEach(k=>{AT[k][i]=ptag(q(`[data-${k==="l"?"a":"w"}="${i}"]`).value,k==="l");tagRender(k,i)}))}
+function sgShow(k,i){const el=tgEl(k,i),sg=el.querySelector(".sg"),v=el.querySelector(".ti").value.trim().toLowerCase(),ros=(cfg.roster&&cfg.roster[D[i]])||[],used=new Set([...AT.l[i],...AT.w[i]].map(o=>o.n.toLowerCase()));
+  if(!ros.length){sg.innerHTML=`<div class="no">No names for ${D[i]} yet. Add them with the red button (bottom right).</div>`;sg.classList.add("on");return}
+  const m=ros.filter(n=>!used.has(n.toLowerCase())&&(!v||n.toLowerCase().includes(v))).slice(0,8);
+  sg.innerHTML=m.length?m.map((n,j)=>`<div data-n="${esc(n)}" class="${j===0&&v?"act":""}">${esc(n)}</div>`).join(""):`<div class="no">No matching name</div>`;sg.classList.add("on")}
+function sgPick(k,i,n){if(!n)return;AT[k][i].push({n,t:"",c:""});const el=tgEl(k,i);el.querySelector(".ti").value="";el.querySelector(".sg").classList.remove("on");tagRender(k,i);tagSync(k,i);el.querySelector(".ti").focus();if(k==="l"){const ss=el.querySelectorAll(".ts");ss[ss.length-1].dataset.new=1}}
+const tgOf=e=>{const t=e.target.closest(".tg");return t?[t.dataset.k,+t.dataset.i,t]:null};
+$("f_att").addEventListener("input",e=>{const g=tgOf(e);if(!g)return;if(e.target.classList.contains("ti"))sgShow(g[0],g[1]);else if(e.target.classList.contains("cn")){const j=+e.target.closest(".tc").dataset.j;AT.l[g[1]][j].c=e.target.value.replace(/[,;&()]/g," ");tagSync("l",g[1])}});
+$("f_att").addEventListener("focusin",e=>{if(e.target.classList.contains("ti")){const g=tgOf(e);sgShow(g[0],g[1])}});
+$("f_att").addEventListener("focusout",e=>{const t=e.target.closest(".tg");if(t)setTimeout(()=>{if(!t.contains(document.activeElement))t.querySelector(".sg").classList.remove("on")},150)});
+$("f_att").addEventListener("keydown",e=>{const g=tgOf(e);if(!g||!e.target.classList.contains("ti"))return;const sg=g[2].querySelector(".sg"),its=[...sg.querySelectorAll("div[data-n]")],ai=its.findIndex(x=>x.classList.contains("act"));
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(!sg.classList.contains("on"))sgShow(g[0],g[1]);const it=[...sg.querySelectorAll("div[data-n]")];if(!it.length)return;const n=e.key==="ArrowDown"?(ai+1)%it.length:(ai-1+it.length)%it.length;it.forEach(x=>x.classList.remove("act"));it[n].classList.add("act");it[n].scrollIntoView({block:"nearest"})}
+  else if(e.key==="Enter"){e.preventDefault();const it=its[ai>=0?ai:0];if(it)sgPick(g[0],g[1],it.dataset.n)}
+  else if(e.key==="Escape")sg.classList.remove("on");
+  else if(e.key==="Backspace"&&!e.target.value&&AT[g[0]][g[1]].length){AT[g[0]][g[1]].pop();tagRender(g[0],g[1]);tagSync(g[0],g[1])}});
+$("f_att").addEventListener("mousedown",e=>{const d=e.target.closest(".sg div[data-n]");if(d){e.preventDefault();const g=tgOf(e);sgPick(g[0],g[1],d.dataset.n)}});
+$("f_att").addEventListener("click",e=>{if(e.target.classList.contains("tx")){const g=tgOf(e),j=+e.target.closest(".tc").dataset.j;AT[g[0]][g[1]].splice(j,1);tagRender(g[0],g[1]);tagSync(g[0],g[1])}});
+$("f_att").addEventListener("change",e=>{if(e.target.classList.contains("ts")){const g=tgOf(e),j=+e.target.closest(".tc").dataset.j;AT.l[g[1]][j].t=e.target.value;if(e.target.value!=="Custom")AT.l[g[1]][j].c="";tagRender("l",g[1]);tagSync("l",g[1]);if(e.target.value==="Custom"){const c=tgEl("l",g[1]).querySelector(`.tc[data-j="${j}"] .cn`);if(c)c.focus()}}});
+function rosterSync(i){const n=rn(q(`[data-rs="${i}"]`).value).length;$("rc_"+i).textContent=n+" employee"+(n===1?"":"s");if(n>0)q(`[data-h="${i}"]`).value=n}
+function fillRoster(){D.forEach((d,i)=>{q(`[data-rs="${i}"]`).value=((cfg.roster&&cfg.roster[d])||[]).join(", ");const n=((cfg.roster&&cfg.roster[d])||[]).length;$("rc_"+i).textContent=n?n+" employee"+(n===1?"":"s"):"no names yet · headcount "+num(cfg.head[i])})}
+$("f_more").addEventListener("input",e=>{if(e.target.dataset.rs!=null)rosterSync(+e.target.dataset.rs)});
+$("setm").addEventListener("input",()=>{dirty=true});
+$("setbtn").onclick=()=>{fillRoster();$("setm").classList.remove("hide")};$("setx").onclick=()=>$("setm").classList.add("hide");
+$("setsave").onclick=async()=>{const roster={};D.forEach((d,i)=>{roster[d]=rn(q(`[data-rs="${i}"]`).value)});const head=D.map((_,i)=>roster[D[i]].length||num(q(`[data-h="${i}"]`).value));head.forEach((n,i)=>q(`[data-h="${i}"]`).value=n);cfg.roster=roster;cfg.head=head;const rr=readForm();setSync("saving");
+  try{await Promise.race([Promise.all([setDoc(doc(db,"settings","main"),{roster,head,thr:rr.thr,qa:rr.qa},{merge:true}),setDoc(doc(db,"months",ym(cur)),{json:JSON.stringify(rr.open)})]),new Promise(x=>setTimeout(x,2500))]);$("setm").classList.add("hide");toast("Saved ✓  team lists, opening MTD & alerts");setSync("live")}
+  catch(e){setSync("err");alert("Could not save: "+(e.code||e.message))}};
 /* ---- Attendance report ---- */
 const nl=n=>String(n||"").trim().replace(/\)\s+(?=[^\s,;&])/g,"),").split(/[,;&]+/).map(x=>x.trim()).filter(Boolean);
 const kind=n=>/unplanned/i.test(n)?"u":/planned/i.test(n)?"p":"o";
@@ -446,7 +542,7 @@ function paint(){const st=new Set();Object.values(days).forEach(x=>{try{(JSON.pa
 function sub(){unsub.forEach(u=>u());unsub=[];days={};opening={};const m=ym(cur);
   unsub.push(onSnapshot(query(collection(db,"eod"),where("date",">=",m+"-01"),where("date","<=",m+"-31")),s=>{days={};s.forEach(x=>days[x.id]=x.data());setSync("live");paint()},()=>setSync("err")));
   unsub.push(onSnapshot(doc(db,"months",m),s=>{opening=s.exists()?s.data():{};paint()},()=>setSync("err")));
-  unsub.push(onSnapshot(doc(db,"settings","main"),s=>{cfg=Object.assign({head:HEAD,thr:25,qa:98},s.data()||{});paint()},()=>setSync("err")))}
+  unsub.push(onSnapshot(doc(db,"settings","main"),s=>{cfg=Object.assign({head:HEAD,thr:25,qa:98},s.data()||{});if($("setm").classList.contains("hide"))fillRoster();paint()},()=>setSync("err")))}
 function setDate(dt){if(!dt||dt===cur){$("f_date").value=cur;return}
   if(dirty&&!confirm("You have unsaved changes for "+cur+". Discard them?")){$("f_date").value=cur;return}
   const nm=ym(dt)!==ym(cur);cur=dt;dirty=false;$("f_date").value=dt;if(nm)sub();else paint()}
@@ -475,7 +571,7 @@ $("pg").onclick=()=>{show(true,view==="tat"?"dash":"tat");paint()};
 $("f_date").onchange=()=>setDate($("f_date").value);$("dprev").onclick=()=>shift(-1);$("dnext").onclick=()=>shift(1);
 $("form").addEventListener("input",()=>{hints();dirty=true});
 $("form").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){e.preventDefault();const a=[...qa_("#form input")];const n=a[a.indexOf(e.target)+1];if(n)n.focus()}});
-$("clear").onclick=()=>{qa_("[data-w]").forEach(x=>x.value="");q("input[name=tpm][value=vob]").checked=true;$("f_act").value="";qa_("#f_tp input").forEach(x=>{x.value="";x.classList.remove("invalid")});$("tp_msg").textContent="";qa_("[data-a],[data-r],[data-c],[data-e],[data-t]").forEach(x=>x.value="");qa_(".xrow").forEach(r=>r.remove());hints();dirty=true};
+$("clear").onclick=()=>{setTimeout(tagLoad,0);qa_("[data-w]").forEach(x=>x.value="");q("input[name=tpm][value=vob]").checked=true;$("f_act").value="";qa_("#f_tp input").forEach(x=>{x.value="";x.classList.remove("invalid")});$("tp_msg").textContent="";qa_("[data-a],[data-r],[data-c],[data-e],[data-t]").forEach(x=>x.value="");qa_(".xrow").forEach(r=>r.remove());hints();dirty=true};
 window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
 /* ---- Excel export: one sheet per process (UR, TPN, Payment Posting etc. each on their own sheet) ---- */
 const sheet=(rows,pc,w)=>{const s=XLSX.utils.aoa_to_sheet(rows);rows.forEach((r,i)=>{if(i)pc.forEach(c=>{const a=XLSX.utils.encode_cell({r:i,c});if(s[a])s[a].z="0.0%"})});s["!cols"]=w.map(x=>({wch:x}));return s};
