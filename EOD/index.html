@@ -366,7 +366,24 @@ function fillForm(dt){const e=days[dt]?JSON.parse(days[dt].json):null,o=opening.
   qa_("[data-a]").forEach(x=>x.value=e?.names?.[x.dataset.a]||"");qa_("[data-w]").forEach(x=>x.value=e?.wfh?.[x.dataset.w]||"");
   ["r","c","e"].forEach((k,j)=>qa_(`[data-${k}]`).forEach(x=>{const[g,s]=x.dataset[k].split(".");x.value=e?.ws?.[g]?.[s]?.[j]??""}));
   qa_("[data-t]").forEach(x=>{const[r,c]=x.dataset.t.split(".");x.value=e?.tat?.[r]?.[c]??""});
-  qa_("[data-h]").forEach(x=>x.value=(e?.head||cfg.head)[x.dataset.h]);
+  qa_("[data-h]").forEach(x => {
+  const i = Number(x.dataset.h);
+  const team = D[i];
+
+  const hasRoster =
+    cfg.roster &&
+    Object.prototype.hasOwnProperty.call(cfg.roster,team);
+
+  const rosterNames = hasRoster && Array.isArray(cfg.roster[team])
+    ? cfg.roster[team]
+    : [];
+
+  const headcount = hasRoster
+    ? rosterNames.length
+    : (e?.head || cfg.head)[i];
+
+  x.value = headcount;
+});
   qa_("[data-m]").forEach(x=>{const[g,s]=x.dataset.m.split(".");x.value=o.mtd?.[g]?.[s]||""});
   $("f_lbase").value=o.leaves||"";$("f_thr").value=cfg.thr;$("f_qa").value=cfg.qa;
   qa_(".xrow").forEach(r=>r.remove());(e?.x||[]).forEach((l,gi)=>(l||[]).forEach(a=>addX(gi,a)));
@@ -448,12 +465,54 @@ $("f_att").addEventListener("keydown",e=>{const g=tgOf(e);if(!g||!e.target.class
 $("f_att").addEventListener("mousedown",e=>{const d=e.target.closest(".sg div[data-n]");if(d){e.preventDefault();const g=tgOf(e);sgPick(g[0],g[1],d.dataset.n)}});
 $("f_att").addEventListener("click",e=>{if(e.target.classList.contains("tx")){const g=tgOf(e),j=+e.target.closest(".tc").dataset.j;AT[g[0]][g[1]].splice(j,1);tagRender(g[0],g[1]);tagSync(g[0],g[1])}});
 $("f_att").addEventListener("change",e=>{if(e.target.classList.contains("ts")){const g=tgOf(e),j=+e.target.closest(".tc").dataset.j;AT.l[g[1]][j].t=e.target.value;if(e.target.value!=="Custom")AT.l[g[1]][j].c="";tagRender("l",g[1]);tagSync("l",g[1]);if(e.target.value==="Custom"){const c=tgEl("l",g[1]).querySelector(`.tc[data-j="${j}"] .cn`);if(c)c.focus()}}});
-function rosterSync(i){const n=rn(q(`[data-rs="${i}"]`).value).length;$("rc_"+i).textContent=n+" employee"+(n===1?"":"s");if(n>0)q(`[data-h="${i}"]`).value=n}
-function fillRoster(){D.forEach((d,i)=>{q(`[data-rs="${i}"]`).value=((cfg.roster&&cfg.roster[d])||[]).join(", ");const n=((cfg.roster&&cfg.roster[d])||[]).length;$("rc_"+i).textContent=n?n+" employee"+(n===1?"":"s"):"no names yet · headcount "+num(cfg.head[i])})}
+function rosterSync(i){
+  const names = rn(q(`[data-rs="${i}"]`).value);
+  const n = names.length;
+
+  // Update the team strength immediately from the roster
+  $("rc_"+i).textContent = n + " employee" + (n===1?"":"s");
+
+  // Always synchronize headcount, including when the roster is empty
+  q(`[data-h="${i}"]`).value = n;
+}
+function fillRoster(){
+  D.forEach((d,i)=>{
+
+    const hasRoster =
+      cfg.roster &&
+      Object.prototype.hasOwnProperty.call(cfg.roster,d);
+
+    const names = hasRoster && Array.isArray(cfg.roster[d])
+      ? cfg.roster[d]
+      : [];
+
+    const n = hasRoster ? names.length : num(cfg.head[i]);
+
+    // Populate the roster text area
+    q(`[data-rs="${i}"]`).value = names.join(", ");
+
+    // Display the correct team strength
+    $("rc_"+i).textContent =
+      n + " employee" + (n===1?"":"s");
+
+    // Synchronize the headcount used by the attendance report
+    q(`[data-h="${i}"]`).value = n;
+  });
+}
 $("f_more").addEventListener("input",e=>{if(e.target.dataset.rs!=null)rosterSync(+e.target.dataset.rs)});
 $("setm").addEventListener("input",()=>{dirty=true});
 $("setbtn").onclick=()=>{fillRoster();$("setm").classList.remove("hide")};$("setx").onclick=()=>$("setm").classList.add("hide");
-$("setsave").onclick=async()=>{const roster={};D.forEach((d,i)=>{roster[d]=rn(q(`[data-rs="${i}"]`).value)});const head=D.map((_,i)=>roster[D[i]].length||num(q(`[data-h="${i}"]`).value));head.forEach((n,i)=>q(`[data-h="${i}"]`).value=n);cfg.roster=roster;cfg.head=head;const rr=readForm();setSync("saving");
+$("setsave").onclick=async()=>{const roster={};D.forEach((d,i)=>{roster[d]=rn(q(`[data-rs="${i}"]`).value)});// Team roster is the single source of truth for headcount
+const head = D.map((_,i) => roster[D[i]].length);
+
+// Update all hidden headcount fields
+head.forEach((n,i) => {
+  q(`[data-h="${i}"]`).value = n;
+});
+
+// Update application settings
+cfg.roster = roster;
+cfg.head = head;const rr=readForm();setSync("saving");
   try{await Promise.race([Promise.all([setDoc(doc(db,"settings","main"),{roster,head,thr:rr.thr,qa:rr.qa},{merge:true}),setDoc(doc(db,"months",ym(cur)),{json:JSON.stringify(rr.open)})]),new Promise(x=>setTimeout(x,2500))]);$("setm").classList.add("hide");toast("Saved ✓  team lists, opening MTD & alerts");setSync("live")}
   catch(e){setSync("err");alert("Could not save: "+(e.code||e.message))}};
 /* ---- Attendance report ---- */
