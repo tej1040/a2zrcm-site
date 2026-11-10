@@ -120,30 +120,9 @@ textarea:focus{outline:2px solid #e0a100}
 
 /* ---- roster / tag entry ---- */
 .a{grid-template-columns:64px minmax(0,3.5fr) minmax(0,1.5fr)}
-.tg{
-  position:relative;
-  display:flex;
-  flex-wrap:wrap;
-  gap:.3em;
-  align-items:flex-start;
-  align-content:flex-start;
-  border:1px solid var(--line);
-  border-radius:.5em;
-  background:#fff;
-  padding:.5em;
-  min-height:6em;
-}
+.tg{position:relative;display:flex;flex-wrap:wrap;gap:.3em;align-items:center;border:1px solid var(--line);border-radius:.5em;background:#fff;padding:.3em .5em;min-height:2.6em}
 .tg:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,111,224,.12)}
-.tg .chips{
-  display:flex;
-  flex-wrap:wrap;
-  align-content:flex-start;
-  gap:.3em;
-  width:100%;
-  max-height:4.2em;
-  overflow-y:auto;
-  overflow-x:hidden;
-}
+.tg .chips{display:contents}
 
 .tg .ti{
   flex:1;
@@ -263,7 +242,7 @@ input.invalid{border-color:var(--bad);background:#fff8f8}
 <div id="login"><div class="lcard"><div class="logo">GEO<b>PRO</b><small>SERVICES</small></div><h2>EOD Update Tracker</h2><p>Sign in to continue</p>
 <input id="lem" type="email" placeholder="Email" autocomplete="username"><input id="lpw" type="password" placeholder="Password" autocomplete="current-password">
 <button id="lgo" class="pri">Sign in</button><div id="lerr"></div></div></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -366,24 +345,8 @@ function fillForm(dt){const e=days[dt]?JSON.parse(days[dt].json):null,o=opening.
   qa_("[data-a]").forEach(x=>x.value=e?.names?.[x.dataset.a]||"");qa_("[data-w]").forEach(x=>x.value=e?.wfh?.[x.dataset.w]||"");
   ["r","c","e"].forEach((k,j)=>qa_(`[data-${k}]`).forEach(x=>{const[g,s]=x.dataset[k].split(".");x.value=e?.ws?.[g]?.[s]?.[j]??""}));
   qa_("[data-t]").forEach(x=>{const[r,c]=x.dataset.t.split(".");x.value=e?.tat?.[r]?.[c]??""});
-  qa_("[data-h]").forEach(x => {
-  const i = Number(x.dataset.h);
-  const team = D[i];
-
-  const hasRoster =
-    cfg.roster &&
-    Object.prototype.hasOwnProperty.call(cfg.roster,team);
-
-  const rosterNames = hasRoster && Array.isArray(cfg.roster[team])
-    ? cfg.roster[team]
-    : [];
-
-  const headcount = hasRoster
-    ? rosterNames.length
-    : (e?.head || cfg.head)[i];
-
-  x.value = headcount;
-});
+  qa_("[data-h]").forEach(x=>{const i=+x.dataset.h,rn_=(cfg.roster&&Array.isArray(cfg.roster[D[i]]))?cfg.roster[D[i]].length:0;
+    x.value=(e&&e.head&&e.head[i]>0)?e.head[i]:(rn_>0?rn_:num((cfg.head||HEAD)[i]))});
   qa_("[data-m]").forEach(x=>{const[g,s]=x.dataset.m.split(".");x.value=o.mtd?.[g]?.[s]||""});
   $("f_lbase").value=o.leaves||"";$("f_thr").value=cfg.thr;$("f_qa").value=cfg.qa;
   qa_(".xrow").forEach(r=>r.remove());(e?.x||[]).forEach((l,gi)=>(l||[]).forEach(a=>addX(gi,a)));
@@ -472,8 +435,7 @@ function rosterSync(i){
   // Update the team strength immediately from the roster
   $("rc_"+i).textContent = n + " employee" + (n===1?"":"s");
 
-  // Always synchronize headcount, including when the roster is empty
-  q(`[data-h="${i}"]`).value = n;
+  if(n>0)q(`[data-h="${i}"]`).value=n;
 }
 function fillRoster(){
   D.forEach((d,i)=>{
@@ -495,15 +457,13 @@ function fillRoster(){
     $("rc_"+i).textContent =
       n + " employee" + (n===1?"":"s");
 
-    // Synchronize the headcount used by the attendance report
-    q(`[data-h="${i}"]`).value = n;
   });
 }
 $("f_more").addEventListener("input",e=>{if(e.target.dataset.rs!=null)rosterSync(+e.target.dataset.rs)});
 $("setm").addEventListener("input",()=>{dirty=true});
 $("setbtn").onclick=()=>{fillRoster();$("setm").classList.remove("hide")};$("setx").onclick=()=>$("setm").classList.add("hide");
 $("setsave").onclick=async()=>{const roster={};D.forEach((d,i)=>{roster[d]=rn(q(`[data-rs="${i}"]`).value)});// Team roster is the single source of truth for headcount
-const head = D.map((_,i) => roster[D[i]].length);
+const head = D.map((_,i) => roster[D[i]].length||num((cfg.head||HEAD)[i]));
 
 // Update all hidden headcount fields
 head.forEach((n,i) => {
@@ -633,44 +593,214 @@ $("form").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName===
 $("clear").onclick=()=>{setTimeout(tagLoad,0);qa_("[data-w]").forEach(x=>x.value="");q("input[name=tpm][value=vob]").checked=true;$("f_act").value="";qa_("#f_tp input").forEach(x=>{x.value="";x.classList.remove("invalid")});$("tp_msg").textContent="";qa_("[data-a],[data-r],[data-c],[data-e],[data-t]").forEach(x=>x.value="");qa_(".xrow").forEach(r=>r.remove());hints();dirty=true};
 window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.returnValue=""}});
 /* ---- Excel export: one sheet per process (UR, TPN, Payment Posting etc. each on their own sheet) ---- */
-const sheet=(rows,pc,w)=>{const s=XLSX.utils.aoa_to_sheet(rows);rows.forEach((r,i)=>{if(i)pc.forEach(c=>{const a=XLSX.utils.encode_cell({r:i,c});if(s[a])s[a].z="0.0%"})});s["!cols"]=w.map(x=>({wch:x}));return s};
+/* ================= Excel export (ExcelJS): Home · Year · one sheet per month ================= */
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],MONF=["January","February","March","April","May","June","July","August","September","October","November","December"],DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const XC=n=>{let s="";while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s};
+const LCODE={"Planned Leave":"PL","Unplanned Leave":"UL","Sick Leave":"SL","NCNS":"NCNS","Emergency":"EM","Half Day":"HD","Paternity":"PT","Maternity":"MT","Bereavement Leave":"BL"};
+const LNAME={PL:"Planned",UL:"Unplanned",SL:"Sick",NCNS:"NCNS",EM:"Emergency",HD:"Half day",PT:"Paternity",MT:"Maternity",BL:"Bereavement"};
+const sname=mk=>MON[+mk.slice(5)-1]+" "+mk.slice(0,4);
+const xf=h=>({type:"pattern",pattern:"solid",fgColor:{argb:"FF"+h}});
+const dx=(bg,fg)=>({fill:{type:"pattern",pattern:"solid",bgColor:{argb:"FF"+bg},fgColor:{argb:"FF"+bg}},font:{color:{argb:"FF"+fg},bold:true}});
+const XB={top:{style:"thin",color:{argb:"FFDDE6F5"}},bottom:{style:"thin",color:{argb:"FFDDE6F5"}},left:{style:"thin",color:{argb:"FFDDE6F5"}},right:{style:"thin",color:{argb:"FFDDE6F5"}}};
+const LK=(c,text,link)=>{c.value={text,hyperlink:link};c.font={name:"Calibri",size:10,bold:true,underline:true,color:{argb:"FF1E6FE0"}};c.alignment={horizontal:"center",vertical:"middle"};c.fill=xf("EAF2FF")};
+const pctRules=(ref,first,lo,hi)=>({ref,rules:[{type:"expression",priority:1,formulae:[`AND(ISNUMBER(${first}),${first}<${lo})`],style:dx("FCD5D3","B3261E")},{type:"expression",priority:2,formulae:[`AND(ISNUMBER(${first}),${first}>=${lo},${first}<${hi})`],style:dx("FFF1CF","9C5700")},{type:"expression",priority:3,formulae:[`AND(ISNUMBER(${first}),${first}>=${hi})`],style:dx("C8ECD4","1E7A3C")}]});
+
+function mdata(mk,all,ops,ds0){
+  const keys=ds0.filter(d=>ym(d)===mk),nd=new Date(+mk.slice(0,4),+mk.slice(5),0).getDate(),last=+keys[keys.length-1].slice(8),Hh={},E={},saved={};
+  keys.forEach(d=>{E[d]=JSON.parse(all[d].json);Hh[+d.slice(8)]=model(d,all,ops[mk]||{});saved[+d.slice(8)]=d});
+  const emp=new Map(),ens=(i,n)=>{const k=i+"|"+n.toLowerCase();if(!emp.has(k))emp.set(k,{i,n,c:{}});return emp.get(k)};
+  D.forEach((d,i)=>((cfg.roster&&cfg.roster[d])||[]).forEach(n=>ens(i,n)));
+  const rawL=(e,i)=>{const r=String(e.names?.[i]||"").trim();return r&&!/^\d+$/.test(r)?ptag(r,true):[]};
+  keys.forEach(d=>{const e=E[d];D.forEach((_,i)=>{rawL(e,i).forEach(o=>ens(i,o.n));nl(e.wfh?.[i]).forEach(n=>ens(i,n))})});
+  keys.forEach(d=>{const e=E[d],dn=+d.slice(8);D.forEach((_,i)=>{const lv=new Map();rawL(e,i).forEach(o=>lv.set(o.n.toLowerCase(),o.t?(o.t==="Custom"?(o.c||"Leave"):LCODE[o.t]):"L"));
+    const wf=new Set(nl(e.wfh?.[i]).map(x=>x.toLowerCase()));
+    emp.forEach(m=>{if(m.i!==i)return;const k=m.n.toLowerCase();m.c[dn]=lv.has(k)?lv.get(k):wf.has(k)?"WFH":"P"})})});
+  const emps=[...emp.values()].sort((a,b)=>a.i-b.i||a.n.localeCompare(b.n));
+  const first=ds0[0],cell=(m,dn)=>{if(m.c[dn]!=null)return m.c[dn];const ds_=mk+"-"+p2(dn);if(dn>last||ds_<first)return null;const w=new Date(ds_+"T12:00:00").getDay();return(w===0||w===6)?"WO":"H"};
+  // work groups
+  const WG=[];W.forEach((g,gi)=>{const lh=Hh[last],rows=lh.lab[gi].map((lb,si)=>{const vals={};Object.keys(Hh).forEach(dn=>{const h=Hh[dn],ix=h.lab[gi].findIndex(x=>nk(x)===nk(lb));vals[dn]=ix>=0?h.ws[gi][ix]:[0,0,0,0]});return{lb,vals,mtd:lh.ws[gi][si][3]}});
+    if(g.hide&&!rows.some(r=>Object.values(r.vals).some(v=>v[0]||v[1]||v[2])))return;WG.push({g,gi,rows})});
+  const TPd={};Object.keys(saved).forEach(dn=>{const t=parseTp(E[saved[dn]]);if(t.has)TPd[dn]=t});
+  // aggregates for Home / Year
+  const A={days:keys.length,team:D.map(()=>({h:0,lc:0,wc:0})),types:{},wfh:0,leave:0,grp:W.map(()=>({c:0,e:0,r:0})),tp:{bm:0,bel:0,vm:0,vel:0,cm:0,cel:0}};
+  keys.forEach(d=>{const ad=attDay(E[d],cfg.head);ad.forEach((a,i)=>{A.team[i].h+=a.h;A.team[i].lc+=a.lc;A.team[i].wc+=a.wc})});
+  emps.forEach(m=>Object.values(m.c).forEach(v=>{if(v==="P")return;if(v==="WFH"){A.wfh++;return}const k=LNAME[v]?v:"Other";A.types[k]=(A.types[k]||0)+1;A.leave++}));
+  WG.forEach(({g,gi,rows})=>{if(g.hide)return;rows.forEach(r=>Object.values(r.vals).forEach(v=>{A.grp[gi].r+=v[0];A.grp[gi].c+=v[1];A.grp[gi].e+=v[2]}))});
+  Object.values(TPd).forEach(t=>{A.tp.bm+=t.brc.m;A.tp.bel+=t.brc.el;A.tp.vm+=t.vob.m;A.tp.vel+=t.vob.el});
+  return{mk,nd,last,Hh,E,saved,emps,cell,WG,TPd,A}}
+
+function monthSheet(wb,md,months){
+  const mk=md.mk,nm=sname(mk),yr=+mk.slice(0,4),mo=+mk.slice(5)-1,nd=md.nd,DC=8,LC=7+nd,ws=wb.addWorksheet(nm,{properties:{tabColor:{argb:"FF1E6FE0"}},views:[{state:"frozen",xSplit:3,ySplit:4,showGridLines:false}],pageSetup:{orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  ws.getColumn(1).width=26;ws.getColumn(2).width=10;ws.getColumn(3).width=13;for(let c=4;c<=7;c++)ws.getColumn(c).width=9.5;for(let c=DC;c<=LC;c++)ws.getColumn(c).width=5.8;
+  const R=(c1,c2)=>`${XC(c1)}${c2}`,rng=r=>`${XC(DC)}${r}:${XC(LC)}${r}`,F=(r,c,formula,result)=>{ws.getCell(r,c).value={formula,result}},day=dn=>mk+"-"+p2(dn);
+  const font=(c,o)=>{c.font=Object.assign({name:"Calibri",size:10},o||{})};
+  ws.mergeCells(1,1,1,LC);let c=ws.getCell(1,1);c.value="GeoPro EOD Tracker — "+MONF[mo]+" "+yr;c.font={name:"Calibri",size:16,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={vertical:"middle",indent:1};ws.getRow(1).height=30;
+  ws.mergeCells(3,1,3,LC);c=ws.getCell(3,1);c.value="P present · WFH work from home · WO week off (Sat/Sun with no data) · H holiday (weekday with no data) · PL planned · UL unplanned · SL sick · NCNS · EM emergency · HD half day · PT paternity · MT maternity · BL bereavement · any other text = custom note";c.font={name:"Calibri",size:9,italic:true,color:{argb:"FF5B6B88"}};c.alignment={vertical:"middle",indent:1};
+  // header row 4
+  ["Employee / Process","Emp Id / Type","Dept / Metric","Present / Total","Leaves / Avg","WFH / MTD","Att %"].forEach((t,i)=>{c=ws.getCell(4,i+1);c.value=t;c.font={name:"Calibri",size:10,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={horizontal:i?"center":"left",vertical:"middle",wrapText:true,indent:i?0:1}});
+  for(let dn=1;dn<=nd;dn++){const w=new Date(day(dn)+"T12:00:00").getDay(),we=w===0||w===6;c=ws.getCell(4,DC+dn-1);c.value=dn+"\n"+DOW[w];c.font={name:"Calibri",size:9,bold:true,color:{argb:we?"FF0F2A5C":"FFFFFFFF"}};c.fill=xf(we?"B8C7E3":"1E4FA3");c.alignment={horizontal:"center",vertical:"middle",wrapText:true}}
+  ws.getRow(4).height=32;
+  const band=(r,t)=>{for(let k=1;k<=LC;k++)ws.getCell(r,k).fill=xf("1E6FE0");c=ws.getCell(r,1);c.value=t;c.font={name:"Calibri",size:12,bold:true,color:{argb:"FFFFFFFF"}};c.alignment={vertical:"middle",indent:1};ws.getRow(r).height=22};
+  const hdr=(r,l)=>l.forEach((t,i)=>{c=ws.getCell(r,i+1);c.value=t;c.font={name:"Calibri",size:10,bold:true,color:{argb:"FF0F2A5C"}};c.fill=xf("DCE8FA");c.alignment={horizontal:i?"center":"left",indent:i?0:1}});
+  const an={};let r=6;
+  // ---------- 1 ATTENDANCE
+  an.att=r;band(r,"①  ATTENDANCE  —  one row per employee, one column per day");r++;hdr(r,["Employee Name","Emp Id","Department","Present","Leaves","WFH","Att %"]);const hr=r;r++;
+  const e0=r;
+  md.emps.forEach(m=>{const vals=[];for(let dn=1;dn<=nd;dn++)vals.push(md.cell(m,dn));
+    c=ws.getCell(r,1);c.value=m.n;font(c,{bold:true});c.alignment={indent:1};ws.getCell(r,2).fill=xf("FFF8E1");ws.getCell(r,3).value=D[m.i];ws.getCell(r,3).alignment={horizontal:"center"};font(ws.getCell(r,3));
+    vals.forEach((v,k)=>{if(v!=null){const x=ws.getCell(r,DC+k);x.value=v;x.alignment={horizontal:"center",shrinkToFit:true};x.font={name:"Calibri",size:9}}});
+    const p=vals.filter(v=>v==="P"||v==="WFH").length,w=vals.filter(v=>v==="WFH").length,l=vals.filter(v=>v&&v!=="P"&&v!=="WFH"&&v!=="WO"&&v!=="H").length,g=rng(r),cn=t=>`COUNTIF(${g},"${t}")`;
+    F(r,4,`${cn("P")}+${cn("WFH")}`,p);F(r,5,`COUNTA(${g})-${cn("P")}-${cn("WFH")}-${cn("WO")}-${cn("H")}`,l);F(r,6,cn("WFH"),w);F(r,7,`IF(D${r}+E${r}=0,"",D${r}/(D${r}+E${r}))`,p+l?p/(p+l):"");
+    for(let k=4;k<=7;k++){ws.getCell(r,k).alignment={horizontal:"center"};font(ws.getCell(r,k))}ws.getCell(r,7).numFmt="0.0%";
+    for(let k=1;k<=LC;k++)ws.getCell(r,k).border=XB;r++});
+  const e1=r-1;
+  if(e1>=e0){ws.autoFilter={from:{row:hr,column:1},to:{row:e1,column:7}};
+    ws.addConditionalFormatting({ref:`${XC(DC)}${e0}:${XC(LC)}${e1}`,rules:[
+     {type:"expression",priority:1,formulae:[`${XC(DC)}${e0}="P"`],style:dx("C8ECD4","1E7A3C")},{type:"expression",priority:2,formulae:[`${XC(DC)}${e0}="WFH"`],style:dx("CFE3FF","1C4FB5")},
+     {type:"expression",priority:3,formulae:[`OR(${XC(DC)}${e0}="WO",${XC(DC)}${e0}="H")`],style:dx("E3E7EF","6B7585")},
+     {type:"expression",priority:4,formulae:[`AND(${XC(DC)}${e0}<>"",${XC(DC)}${e0}<>"P",${XC(DC)}${e0}<>"WFH",${XC(DC)}${e0}<>"WO",${XC(DC)}${e0}<>"H")`],style:dx("FFE0B8","A24D00")}]});
+    ws.addConditionalFormatting(pctRules(`G${e0}:G${e1}`,`G${e0}`,0.9,0.95))}
+  // day totals
+  const tl=["Present (incl. WFH)","On leave","Working from home","Shrinkage %"],t0=r;
+  tl.forEach((t,i)=>{for(let k=1;k<=LC;k++)ws.getCell(r+i,k).fill=xf(i===3?"DBE9FA":"EEF4FF");c=ws.getCell(r+i,1);c.value=t;font(c,{bold:true,color:{argb:"FF0F2A5C"}});c.alignment={indent:1}});
+  for(let dn=1;dn<=nd;dn++){if(!md.saved[dn]||e1<e0)continue;const col=XC(DC+dn-1),g=`${col}${e0}:${col}${e1}`,vals=md.emps.map(m=>md.cell(m,dn)),p=vals.filter(v=>v==="P"||v==="WFH").length,w=vals.filter(v=>v==="WFH").length,l=vals.filter(v=>v&&v!=="P"&&v!=="WFH"&&v!=="WO"&&v!=="H").length;
+    F(t0,DC+dn-1,`COUNTIF(${g},"P")+COUNTIF(${g},"WFH")`,p);F(t0+1,DC+dn-1,`COUNTA(${g})-COUNTIF(${g},"P")-COUNTIF(${g},"WFH")-COUNTIF(${g},"WO")-COUNTIF(${g},"H")`,l);F(t0+2,DC+dn-1,`COUNTIF(${g},"WFH")`,w);F(t0+3,DC+dn-1,`IF(${col}${t0}+${col}${t0+1}=0,"",${col}${t0+1}/(${col}${t0}+${col}${t0+1}))`,p+l?l/(p+l):"");
+    for(let i=0;i<4;i++){const x=ws.getCell(t0+i,DC+dn-1);x.alignment={horizontal:"center"};x.font={name:"Calibri",size:9,bold:true};if(i===3)x.numFmt="0%"}}
+  {const P=Object.keys(md.saved).reduce((t,dn)=>t+md.emps.filter(m=>{const v=md.cell(m,+dn);return v==="P"||v==="WFH"}).length,0),L=md.A.leave;
+   F(t0,4,`SUM(${rng(t0)})`,P);F(t0+1,5,`SUM(${rng(t0+1)})`,L);F(t0+2,6,`SUM(${rng(t0+2)})`,md.A.wfh);F(t0+3,7,`IF(D${t0}+E${t0+1}=0,"",E${t0+1}/(D${t0}+E${t0+1}))`,P+L?L/(P+L):"");ws.getCell(t0+3,7).numFmt="0.0%";
+   for(let i=0;i<4;i++)for(let k=4;k<=7;k++){const x=ws.getCell(t0+i,k);if(!x.value)continue;x.alignment={horizontal:"center"};x.font={name:"Calibri",size:10,bold:true}}
+   ws.getCell(t0,5).value=null;ws.getCell(t0,6).value=null;ws.getCell(t0+1,4).value=null;ws.getCell(t0+1,6).value=null;ws.getCell(t0+2,4).value=null;ws.getCell(t0+2,5).value=null}
+  r=t0+4+1;
+  // ---------- 2 WORK
+  an.work=r;band(r,"②  WORK VOLUMES  —  received · completed · errors per day");r++;hdr(r,["Process","Type","Metric","Month total","Daily avg","MTD (dash)",""]);r++;
+  const savedDays=Object.keys(md.saved).map(Number),numfmt='#,##0;-#,##0;"–"';
+  const wrow=(lab1,lab2,lab3,getv,opt={})=>{const rr=r;c=ws.getCell(rr,1);c.value=lab1;font(c,{bold:!!opt.bold});c.alignment={indent:1};ws.getCell(rr,2).value=lab2;ws.getCell(rr,3).value=lab3;[2,3].forEach(k=>{font(ws.getCell(rr,k),{size:9,color:{argb:"FF5B6B88"}});ws.getCell(rr,k).alignment={horizontal:"center"}});
+    let tot=0,cnt=0;savedDays.forEach(dn=>{const v=getv(dn);if(v==null)return;const x=ws.getCell(rr,DC+dn-1);x.value=v;x.numFmt=opt.pct?"0%":numfmt;x.alignment={horizontal:"center"};x.font={name:"Calibri",size:9,color:{argb:opt.red?"FFB3261E":"FF1B2438"},bold:!!opt.bold};if(typeof v==="number"){tot+=v;cnt++}});
+    if(!opt.noTot){F(rr,4,`SUM(${rng(rr)})`,tot);F(rr,5,`IFERROR(AVERAGE(${rng(rr)}),"")`,cnt?tot/cnt:"");ws.getCell(rr,4).numFmt=numfmt;ws.getCell(rr,5).numFmt="#,##0.0";[4,5].forEach(k=>{ws.getCell(rr,k).alignment={horizontal:"center"};font(ws.getCell(rr,k),{bold:true})})}
+    for(let k=1;k<=LC;k++)ws.getCell(rr,k).border=XB;r++;return rr};
+  const vis=md.WG.filter(x=>!x.g.hide),tv=(dn,ix)=>vis.reduce((t,{rows})=>t+rows.reduce((s,rw)=>s+rw.vals[dn][ix],0),0),pend=dn=>vis.reduce((t,{rows})=>t+rows.reduce((s,rw)=>s+Math.max(0,rw.vals[dn][0]-rw.vals[dn][1]),0),0);
+  for(let k=1;k<=LC;k++)ws.getCell(r,k).fill=xf("FFF3CC");c=ws.getCell(r,1);c.value="ALL PROCESSES  (UR excluded)";font(c,{bold:true,color:{argb:"FF7A5200"}});c.alignment={indent:1};r++;
+  const rR=wrow("All processes","","Received",dn=>tv(dn,0),{bold:1}),rC=wrow("All processes","","Completed",dn=>tv(dn,1),{bold:1}),rP=wrow("All processes","","Pending",pend,{bold:1}),rE=wrow("All processes","","Errors",dn=>tv(dn,2),{bold:1,red:1});
+  {const rr=r;wrow("All processes","","QA %",dn=>{const cc=tv(dn,1);return cc?Math.max(0,1-tv(dn,2)/cc):null},{bold:1,pct:1,noTot:1});
+   savedDays.forEach(dn=>{const col=XC(DC+dn-1),cc=tv(dn,1);F(rr,DC+dn-1,`IF(${col}${rC}=0,"",MAX(0,1-${col}${rE}/${col}${rC}))`,cc?Math.max(0,1-tv(dn,2)/cc):"");ws.getCell(rr,DC+dn-1).numFmt="0%"});
+   const T1=savedDays.reduce((t,dn)=>t+tv(dn,1),0),T2=savedDays.reduce((t,dn)=>t+tv(dn,2),0);F(rr,4,`IF(D${rC}=0,"",MAX(0,1-D${rE}/D${rC}))`,T1?Math.max(0,1-T2/T1):"");ws.getCell(rr,4).numFmt="0.0%";ws.getCell(rr,4).alignment={horizontal:"center"};font(ws.getCell(rr,4),{bold:true});
+   ws.addConditionalFormatting(pctRules(`${XC(DC)}${rr}:${XC(LC)}${rr}`,`${XC(DC)}${rr}`,(cfg.qa||98)/100,(cfg.qa||98)/100+0.0001))}
+  md.WG.forEach(({g,gi,rows})=>{for(let k=1;k<=LC;k++)ws.getCell(r,k).fill=xf("E4EEFC");c=ws.getCell(r,1);c.value=g.id+(g.hide?"  (hidden on dashboard)":"");font(c,{bold:true,color:{argb:"FF0F2A5C"}});c.alignment={indent:1};r++;
+    rows.forEach(rw=>{const basis=g.mtdOn==="received"?0:1;[["Received",0],["Completed",1],["Errors",2]].forEach(([mn,ix])=>{const rr=wrow(g.id,rw.lb,mn,dn=>rw.vals[dn][ix],{red:ix===2});if(ix===basis){const x=ws.getCell(rr,6);x.value=rw.mtd;x.numFmt="#,##0";x.alignment={horizontal:"center"};font(x,{bold:true,color:{argb:"FF1E6FE0"}})}})})});
+  r++;
+  // ---------- 3 TAT
+  an.tat=r;band(r,"③  TAT PERFORMANCE  —  BRC · VOB · Combined   (green ≥ 90% · yellow 80–90% · red < 80%)");r++;hdr(r,["Measure","","","Month","","",""]);r++;
+  const tpDays=Object.keys(md.TPd).map(Number);
+  if(!tpDays.length){c=ws.getCell(r,1);c.value="No TAT numbers saved this month.";font(c,{italic:true,color:{argb:"FF8A94A8"}});r+=2}
+  else{const trow=(lab,getv,fmt,bold)=>{const rr=r;c=ws.getCell(rr,1);c.value=lab;font(c,{bold:!!bold});c.alignment={indent:1};tpDays.forEach(dn=>{const v=getv(md.TPd[dn]);const x=ws.getCell(rr,DC+dn-1);x.value=v;x.numFmt=fmt;x.alignment={horizontal:"center"};x.font={name:"Calibri",size:9,bold:!!bold}});for(let k=1;k<=LC;k++)ws.getCell(rr,k).border=XB;r++;return rr};
+    const mc=(rr,fmt)=>{const x=ws.getCell(rr,4);x.numFmt=fmt;x.alignment={horizontal:"center"};font(x,{bold:true})};
+    const sumOf=(rr,fn)=>tpDays.reduce((t,dn)=>t+fn(md.TPd[dn]),0);
+    const blk=(N,k)=>{for(let q2=1;q2<=LC;q2++)ws.getCell(r,q2).fill=xf("E4EEFC");c=ws.getCell(r,1);c.value=N;font(c,{bold:true,color:{argb:"FF0F2A5C"}});c.alignment={indent:1};r++;
+      const a=trow(N+" — Total cards",t=>t[k].t,"#,##0"),b=trow(N+" — TAT met",t=>t[k].m,"#,##0"),m=trow(N+" — TAT missed",t=>t[k].x,"#,##0"),i=trow(N+" — Internal / excluded",t=>t[k].i,"#,##0");
+      const e=r;trow(N+" — Eligible",t=>t[k].el,"#,##0");const pp=r;trow(N+" — Met %",t=>t[k].el?t[k].m/t[k].el:"","0.0%",1);
+      tpDays.forEach(dn=>{const col=XC(DC+dn-1),t=md.TPd[dn];F(e,DC+dn-1,`${col}${a}-${col}${i}`,t[k].el);F(pp,DC+dn-1,`IF(${col}${e}=0,"",${col}${b}/${col}${e})`,t[k].el?t[k].m/t[k].el:"");ws.getCell(e,DC+dn-1).numFmt="#,##0";ws.getCell(pp,DC+dn-1).numFmt="0.0%"});
+      [a,b,m,i,e].forEach(rr=>{F(rr,4,`SUM(${rng(rr)})`,sumOf(rr,t=>({[a]:t[k].t,[b]:t[k].m,[m]:t[k].x,[i]:t[k].i,[e]:t[k].el})[rr]));mc(rr,"#,##0")});
+      const tm=tpDays.reduce((t2,dn)=>t2+md.TPd[dn][k].m,0),te=tpDays.reduce((t2,dn)=>t2+md.TPd[dn][k].el,0);F(pp,4,`IF(D${e}=0,"",D${b}/D${e})`,te?tm/te:"");mc(pp,"0.0%");
+      ws.addConditionalFormatting(pctRules(`D${pp}:${XC(LC)}${pp}`,`D${pp}`,0.8,0.9));return{e,b,pp}};
+    const B1=blk("BRC","brc"),V1=blk("VOB","vob");
+    for(let q2=1;q2<=LC;q2++)ws.getCell(r,q2).fill=xf("E4EEFC");c=ws.getCell(r,1);c.value="COMBINED (BRC + VOB)";font(c,{bold:true,color:{argb:"FF0F2A5C"}});c.alignment={indent:1};r++;
+    const ce=trow("Combined — Eligible",t=>sumTp(t).el,"#,##0"),cm=trow("Combined — Met %",t=>sumTp(t).mp/100,"0.0%",1),cx=trow("Combined — Missed %",t=>sumTp(t).xp/100,"0.0%");
+    F(ce,4,`SUM(${rng(ce)})`,sumOf(0,t=>sumTp(t).el));mc(ce,"#,##0");const T=md.A.tp,tel=T.bel+T.vel;F(cm,4,`IF(D${B1.e}+D${V1.e}=0,"",(D${B1.b}+D${V1.b})/(D${B1.e}+D${V1.e}))`,tel?(T.bm+T.vm)/tel:"");mc(cm,"0.0%");F(cx,4,`IF(D${cm}="","",1-D${cm})`,tel?1-(T.bm+T.vm)/tel:"");mc(cx,"0.0%");
+    ws.addConditionalFormatting(pctRules(`D${cm}:${XC(LC)}${cm}`,`D${cm}`,0.8,0.9));r++}
+  // ---------- 4 MINUTES
+  const stg=TR.map((_,i)=>i).filter(i=>savedDays.some(dn=>md.Hh[dn].tat[i].some(v=>v>0)));
+  if(stg.length){an.min=r;band(r,"④  MINUTES TAKEN BY STAGE  —  stages with data only");r++;hdr(r,["Metric (min)","Stage","","Month avg","","",""]);r++;
+    TC.forEach((tc,ci)=>{const r1=r;stg.forEach(si=>{const rr=r;c=ws.getCell(rr,1);c.value=tc;font(c);c.alignment={indent:1};ws.getCell(rr,2).value=TR[si];font(ws.getCell(rr,2),{size:9,color:{argb:"FF5B6B88"}});ws.getCell(rr,2).alignment={horizontal:"center"};
+        let t=0,n=0;savedDays.forEach(dn=>{const v=md.Hh[dn].tat[si][ci];if(v>0){const x=ws.getCell(rr,DC+dn-1);x.value=v;x.numFmt="0.0";x.alignment={horizontal:"center"};x.font={name:"Calibri",size:9};t+=v;n++}});
+        F(rr,4,`IFERROR(AVERAGE(${rng(rr)}),"")`,n?t/n:"");ws.getCell(rr,4).numFmt="0.0";ws.getCell(rr,4).alignment={horizontal:"center"};font(ws.getCell(rr,4),{bold:true});for(let k=1;k<=LC;k++)ws.getCell(rr,k).border=XB;r++});
+      for(let k=1;k<=LC;k++)ws.getCell(r,k).fill=xf("EEF4FF");c=ws.getCell(r,1);c.value=tc;font(c,{bold:true});c.alignment={indent:1};ws.getCell(r,2).value="Grand Total";font(ws.getCell(r,2),{bold:true,size:9});ws.getCell(r,2).alignment={horizontal:"center"};
+      let t2=0,n2=0;savedDays.forEach(dn=>{const s=stg.reduce((t,si)=>t+md.Hh[dn].tat[si][ci],0);if(s>0){const col=XC(DC+dn-1);F(r,DC+dn-1,`SUM(${col}${r1}:${col}${r-1})`,Math.round(s*100)/100);const x=ws.getCell(r,DC+dn-1);x.numFmt="0.0";x.alignment={horizontal:"center"};x.font={name:"Calibri",size:9,bold:true};t2+=s;n2++}});
+      F(r,4,`IFERROR(AVERAGE(${rng(r)}),"")`,n2?t2/n2:"");ws.getCell(r,4).numFmt="0.0";ws.getCell(r,4).alignment={horizontal:"center"};font(ws.getCell(r,4),{bold:true});r+=2})}
+  // ---------- nav row 2
+  ws.getRow(2).height=20;const idx=months.indexOf(mk);
+  LK(ws.getCell(2,1),"⌂  Home","#'Home'!A1");
+  const link=(c1,c2,t,l)=>{ws.mergeCells(2,c1,2,c2);LK(ws.getCell(2,c1),t,l)};
+  if(months[idx-1])link(2,3,"◀ "+sname(months[idx-1]),`#'${sname(months[idx-1])}'!A1`);if(months[idx+1])link(4,7,sname(months[idx+1])+" ▶",`#'${sname(months[idx+1])}'!A1`);
+  let cc=DC;[["Attendance","att"],["Work","work"],["TAT","tat"],["Minutes","min"]].forEach(([t,k])=>{if(an[k]){link(cc,cc+5,"▼ "+t,`#'${nm}'!A${an[k]}`);cc+=6}});
+  link(cc,cc+5,"Year "+yr,`#'Year ${yr}'!A1`);
+  md.an=an;md.name=nm;return ws}
+
+function yearSheet(wb,yr,mks,mds){
+  const ws=wb.addWorksheet("Year "+yr,{properties:{tabColor:{argb:"FF17924F"}},views:[{state:"frozen",xSplit:1,ySplit:4,showGridLines:false}],pageSetup:{orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  ws.getColumn(1).width=32;for(let k=2;k<=14;k++)ws.getColumn(k).width=10;
+  const mc=m=>+m.slice(5)+1,my=mks.filter(m=>m.startsWith(yr+""));let c=ws.getCell(1,1);ws.mergeCells(1,1,1,14);c.value="GeoPro EOD Tracker — Year "+yr;c.font={name:"Calibri",size:16,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={vertical:"middle",indent:1};ws.getRow(1).height=30;
+  LK(ws.getCell(2,1),"⌂  Home","#'Home'!A1");
+  MON.forEach((t,i)=>{c=ws.getCell(4,i+2);c.value=t;c.font={name:"Calibri",size:10,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("1E4FA3");c.alignment={horizontal:"center"}});c=ws.getCell(4,14);c.value="YTD";c.font={name:"Calibri",size:10,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={horizontal:"center"};c=ws.getCell(4,1);c.value="Measure";c.font={name:"Calibri",size:10,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={indent:1};
+  MON.forEach((_,i)=>{const mk=yr+"-"+p2(i+1);if(mds[mk]){const x=ws.getCell(3,i+2);LK(x,"open ▸","#'"+sname(mk)+"'!A1")}});
+  let r=6;const band=t=>{for(let k=1;k<=14;k++)ws.getCell(r,k).fill=xf("1E6FE0");c=ws.getCell(r,1);c.value=t;c.font={name:"Calibri",size:12,bold:true,color:{argb:"FFFFFFFF"}};c.alignment={indent:1,vertical:"middle"};ws.getRow(r).height=22;r++};
+  const row=(lab,vals,fmt,ytd,o={})=>{c=ws.getCell(r,1);c.value=lab;c.font={name:"Calibri",size:10,bold:!!o.bold};c.alignment={indent:1};vals.forEach((v,i)=>{if(v==null||v==="")return;const x=ws.getCell(r,i+2);x.value=v;x.numFmt=fmt;x.alignment={horizontal:"center"};x.font={name:"Calibri",size:10,bold:!!o.bold}});
+    if(ytd!=null&&ytd!==""){const x=ws.getCell(r,14);x.value=ytd;x.numFmt=fmt;x.alignment={horizontal:"center"};x.font={name:"Calibri",size:10,bold:true};x.fill=xf("EEF4FF")}for(let k=1;k<=14;k++)ws.getCell(r,k).border=XB;r++;return r-1};
+  const mv=f=>MON.map((_,i)=>{const m=mds[yr+"-"+p2(i+1)];return m?f(m.A,m):null}),sm=a=>a.reduce((t,x)=>t+(+x||0),0);
+  // 1 attendance
+  band("①  ATTENDANCE %  by team   (leave-days ÷ headcount-days)");const a0=r;
+  D.forEach((d,i)=>{const v=mv(A=>A.team[i].h?1-A.team[i].lc/A.team[i].h:null),H=sm(my.map(m=>mds[m].A.team[i].h)),L=sm(my.map(m=>mds[m].A.team[i].lc));row(d,v,"0.0%",H?1-L/H:null)});
+  {const v=mv(A=>{const h=sm(A.team.map(t=>t.h)),l=sm(A.team.map(t=>t.lc));return h?1-l/h:null}),H=sm(my.map(m=>sm(mds[m].A.team.map(t=>t.h)))),L=sm(my.map(m=>sm(mds[m].A.team.map(t=>t.lc))));row("All teams",v,"0.0%",H?1-L/H:null,{bold:1})}
+  ws.addConditionalFormatting(pctRules(`B${a0}:N${r-1}`,`B${a0}`,0.9,0.95));r++;
+  // 2 leaves
+  band("②  LEAVE DAYS by reason   (from the attendance grid)");
+  [...Object.keys(LNAME),"Other"].forEach(k=>{const v=mv(A=>A.types[k]||0);row(k==="Other"?"Other / custom":LNAME[k]+" ("+k+")",v.map(x=>x||null),"#,##0",sm(v)||null)});
+  {const v=mv(A=>A.leave);row("Total leave days",v.map(x=>x||null),"#,##0",sm(v)||null,{bold:1});const w=mv(A=>A.wfh);row("WFH days (counted as present)",w.map(x=>x||null),"#,##0",sm(w)||null)}r++;
+  // 3 employee matrix
+  band("③  LEAVE DAYS per employee");
+  const E2=new Map();my.forEach(m=>mds[m].emps.forEach(e=>{const k=e.i+"|"+e.n.toLowerCase();if(!E2.has(k))E2.set(k,{i:e.i,n:e.n,v:{}});E2.get(k).v[mc(m)]=Object.values(e.c).filter(x=>x!=="P"&&x!=="WFH").length}));
+  const e0=r;[...E2.values()].sort((a,b)=>a.i-b.i||a.n.localeCompare(b.n)).forEach(e=>{const vs=MON.map((_,i)=>e.v[i+1]||null);row(e.n+"  ("+D[e.i]+")",vs,"0",sm(vs)||null)});
+  if(r>e0)ws.addConditionalFormatting({ref:`B${e0}:M${r-1}`,rules:[{type:"colorScale",priority:1,cfvo:[{type:"num",value:0},{type:"num",value:5}],color:[{argb:"FFFFFFFF"},{argb:"FFF4A6A0"}]}]});r++;
+  // 4 work
+  band("④  WORK — completed per process  ·  errors  ·  QA %");
+  W.forEach((g,gi)=>{if(g.hide)return;const v=mv(A=>A.grp[gi].c||null);row(g.id+" — completed",v,"#,##0",sm(v)||null)});
+  {const c1=mv(A=>sm(A.grp.map(x=>x.c))),e1=mv(A=>sm(A.grp.map(x=>x.e)));row("Total completed",c1.map(x=>x||null),"#,##0",sm(c1)||null,{bold:1});row("Total errors",e1.map(x=>x||null),"#,##0",sm(e1)||null);
+    const q0=r,qv=MON.map((_,i)=>c1[i]?Math.max(0,1-e1[i]/c1[i]):null);row("QA %",qv,"0.0%",sm(c1)?Math.max(0,1-sm(e1)/sm(c1)):null,{bold:1});ws.addConditionalFormatting(pctRules(`B${q0}:N${q0}`,`B${q0}`,(cfg.qa||98)/100,(cfg.qa||98)/100+0.0001))}r++;
+  // 5 TAT
+  band("⑤  TAT MET %   (green ≥ 90% · yellow 80–90% · red < 80%)");const t0=r;
+  const tv=(a,b)=>MON.map((_,i)=>{const m=mds[yr+"-"+p2(i+1)];if(!m)return null;const t=m.A.tp,e=a(t);return e?b(t)/e:null}),ty=(a,b)=>{const T=my.reduce((s,m)=>{const t=mds[m].A.tp;return{n:s.n+b(t),d:s.d+a(t)}},{n:0,d:0});return T.d?T.n/T.d:null};
+  row("BRC — Met %",tv(t=>t.bel,t=>t.bm),"0.0%",ty(t=>t.bel,t=>t.bm));row("VOB — Met %",tv(t=>t.vel,t=>t.vm),"0.0%",ty(t=>t.vel,t=>t.vm));row("Combined — Met %",tv(t=>t.bel+t.vel,t=>t.bm+t.vm),"0.0%",ty(t=>t.bel+t.vel,t=>t.bm+t.vm),{bold:1});
+  ws.addConditionalFormatting(pctRules(`B${t0}:N${r-1}`,`B${t0}`,0.8,0.9));return ws}
+
+function homeSheet(ws,months,mds,years,lastDay){
+  const W_=[14,9,12,12,10,10,12,9,9,11,13,13,13,13];W_.forEach((w,i)=>ws.getColumn(i+1).width=w);
+  ws.mergeCells(1,1,1,14);let c=ws.getCell(1,1);c.value="GeoPro EOD Tracker — Data Workbook";c.font={name:"Calibri",size:20,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf("0F2A5C");c.alignment={vertical:"middle",indent:1};ws.getRow(1).height=40;
+  ws.mergeCells(2,1,2,14);c=ws.getCell(2,1);c.value=`Last saved day: ${lastDay}   ·   Built on ${today()}   ·   ${months.length} month${months.length>1?"s":""} of data`;c.font={name:"Calibri",size:10,italic:true,color:{argb:"FF5B6B88"}};c.alignment={indent:1};
+  const tips=["How this workbook is organised: one sheet per MONTH (days run across, every row is fixed — nothing grows downwards), plus one YEAR sheet per year for trends.","Each month sheet has 4 sections — ① Attendance  ② Work volumes  ③ TAT performance  ④ Minutes by stage — and a link bar in row 2 to jump between them and to the previous / next month.","Attendance: P = present, WFH = work from home, WO = week off (Sat/Sun with no data), H = holiday (weekday with no data), other codes = leave reasons. Emp Id cells (yellow) are for you to fill."];
+  tips.forEach((t,i)=>{ws.mergeCells(4+i,1,4+i,14);c=ws.getCell(4+i,1);c.value="•  "+t;c.font={name:"Calibri",size:10,color:{argb:"FF1B2438"}};c.alignment={wrapText:true,vertical:"middle",indent:1};ws.getRow(4+i).height=30});
+  ws.getCell(8,1).value="Yearly sheets:";ws.getCell(8,1).font={name:"Calibri",size:10,bold:true};years.forEach((y,i)=>LK(ws.getCell(8,2+i*2),"Year "+y,`#'Year ${y}'!A1`));
+  const H=["Month","Days saved","Attendance %","Shrinkage %","Leave days","WFH days","Completed","Errors","QA %","TAT met %","Attendance","Work","TAT","Minutes"];
+  H.forEach((t,i)=>{c=ws.getCell(10,i+1);c.value=t;c.font={name:"Calibri",size:10,bold:true,color:{argb:"FFFFFFFF"}};c.fill=xf(i>=10?"1E6FE0":"0F2A5C");c.alignment={horizontal:"center",vertical:"middle",wrapText:true}});ws.getRow(10).height=28;
+  let r=11;const r0=r;[...months].reverse().forEach(mk=>{const m=mds[mk],A=m.A,h=A.team.reduce((t,x)=>t+x.h,0),l=A.team.reduce((t,x)=>t+x.lc,0),cc=A.grp.reduce((t,x)=>t+x.c,0),ee=A.grp.reduce((t,x)=>t+x.e,0),te=A.tp.bel+A.tp.vel;
+    LK(ws.getCell(r,1),sname(mk),`#'${sname(mk)}'!A1`);
+    const vals=[A.days,h?1-l/h:null,h?l/h:null,A.leave||null,A.wfh||null,cc||null,ee||null,cc?Math.max(0,1-ee/cc):null,te?(A.tp.bm+A.tp.vm)/te:null],fm=["0","0.0%","0.0%","#,##0","#,##0","#,##0","#,##0","0.0%","0.0%"];
+    vals.forEach((v,i)=>{c=ws.getCell(r,i+2);if(v!=null){c.value=v;c.numFmt=fm[i]}c.alignment={horizontal:"center"};c.font={name:"Calibri",size:10}});
+    [["att","Attendance"],["work","Work"],["tat","TAT"],["min","Minutes"]].forEach(([k,t],i)=>{if(m.an&&m.an[k])LK(ws.getCell(r,11+i),"▸ "+t,`#'${sname(mk)}'!A${m.an[k]}`)});
+    for(let k=1;k<=14;k++)ws.getCell(r,k).border=XB;r++});
+  ws.addConditionalFormatting(pctRules(`C${r0}:C${r-1}`,`C${r0}`,0.9,0.95));ws.addConditionalFormatting(pctRules(`J${r0}:J${r-1}`,`J${r0}`,0.8,0.9));ws.addConditionalFormatting(pctRules(`I${r0}:I${r-1}`,`I${r0}`,(cfg.qa||98)/100,(cfg.qa||98)/100+0.0001));
+  ws.views=[{showGridLines:false,state:"frozen",ySplit:10}];return ws}
+
+async function buildWorkbook(all,ops,ds){
+  const months=[...new Set(ds.map(ym))].sort(),mds={};months.forEach(mk=>{mds[mk]=mdata(mk,all,ops,ds)});
+  const wb=new ExcelJS.Workbook();wb.creator="GeoPro EOD Tracker";wb.created=new Date();
+  const years=[...new Set(months.map(m=>+m.slice(0,4)))].sort((a,b)=>b-a);
+  const home=wb.addWorksheet("Home",{properties:{tabColor:{argb:"FF0F2A5C"}},views:[{showGridLines:false}]});   // created first so it is the first tab; filled last
+  years.forEach(y=>yearSheet(wb,y,months,mds));
+  [...months].reverse().forEach(mk=>monthSheet(wb,mds[mk],months));
+  homeSheet(home,months,mds,years,ds[ds.length-1]);
+  wb.views=[{activeTab:0}];
+  const buf=await wb.xlsx.writeBuffer(),blob=new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),fn="GeoPro_EOD_Data_"+today()+".xlsx";
+  let dl=null;try{dl=await window.claude?.use("downloads")}catch(e){}
+  if(dl){try{await dl.save({filename:fn,data:blob})}catch(e){if(e&&e.code!=="declined")alert("Could not save the Excel file ("+(e.code||e.message||"error")+").")}return}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
 async function exportXL(){
-  if(typeof XLSX==="undefined"){alert("The Excel library did not load. Check your internet connection and reload the page.");return}
+  if(typeof ExcelJS==="undefined"){alert("The Excel library did not load. Check your internet connection and reload the page.");return}
   let all={},ops={};
   try{const[es,ms]=await Promise.all([getDocs(collection(db,"eod")),getDocs(collection(db,"months"))]);es.forEach(x=>all[x.id]=x.data());ms.forEach(x=>ops[x.id]=x.data())}
   catch(e){alert("Could not read data: "+(e.code||e.message));return}
   const ds=Object.keys(all).sort();if(!ds.length){alert("No saved days yet.");return}
-  const H={};ds.forEach(d=>H[d]=model(d,all,ops[ym(d)]||{}));
-  const PR=W.map(()=>[["Date","Type","Received","Completed","Pending","Errors","QA %","MTD"]]),
-    wf=[["Date","Department","WFH count","WFH names"]],ar=[["Date","Department","Available","Absent","Shrinkage %","On leave","Planned","Unplanned","WFH"]],
-    sm=[["Date","Staff available","Absent","Shrinkage %","Leaves to date","Received","Completed","Pending","Errors","QA %"]];
-  ds.forEach(d=>{const h=H[d];let R=0,C=0,E=0,P=0,av=0,ab=0;
-    W.forEach((g,gi)=>h.ws[gi].forEach((x,si)=>{const pe=Math.max(0,x[0]-x[1]);
-      if(!g.hide||x[0]||x[1]||x[2])PR[gi].push([d,h.lab[gi][si],x[0],x[1],pe,x[2],x[1]?Math.max(0,(x[1]-x[2])/x[1]):1,x[3]]);
-      if(!g.hide){R+=x[0];C+=x[1];E+=x[2];P+=pe}}));
-    const ad=attDay(JSON.parse(all[d].json));h.att.forEach((a,i)=>{av+=a[0];ab+=a[1];ar.push([d,D[i],a[0],a[1],a[0]?a[1]/a[0]:0,a[5],ad[i].p,ad[i].u,ad[i].wc]);if(ad[i].wc)wf.push([d,D[i],ad[i].wc,ad[i].w.join(", ")])});
-    sm.push([d,av,ab,av?ab/av:0,h.leaves,R,C,P,E,C?Math.max(0,(C-E)/C):1])});
-  const tr=[["Date","Request Type",...TC.map(c=>c==="Avg Total Time"?"Avg Total Time (min)":c+" (min)")]];
-  ds.forEach(d=>{const T=H[d].tat||[],vis=TR.map((_,i)=>i).filter(i=>(T[i]||[]).some(v=>v>0));
-    vis.forEach(i=>tr.push([d,TR[i],...T[i]]));
-    if(vis.length)tr.push([d,"Grand Total",...TC.map((_,c)=>Math.round(vis.reduce((t,i)=>t+T[i][c],0)*100)/100)])});
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,sheet(sm,[3,9],[12,14,9,12,14,10,11,9,8,8]),"Daily Summary");
-  W.forEach((g,gi)=>{if(PR[gi].length>1)XLSX.utils.book_append_sheet(wb,sheet(PR[gi],[6],[12,26,10,11,9,8,8,10]),g.id.slice(0,31))});
-  XLSX.utils.book_append_sheet(wb,sheet(ar,[4],[12,12,10,9,12,40,9,11,7]),"Attendance");
-  if(wf.length>1)XLSX.utils.book_append_sheet(wb,sheet(wf,[],[12,12,11,40]),"WFH");
-  if(tr.length>1)XLSX.utils.book_append_sheet(wb,sheet(tr,[],[12,14,16,16,16,18,20,14,20]),"Minutes by Stage");
-  const tp=[["Date","BRC total","BRC met","BRC missed","BRC internal","BRC eligible","BRC met %","VOB total","VOB met","VOB missed","VOB internal","VOB eligible","VOB met %","Combined met %","Combined missed %","MTD combined met %"]];
-  ds.forEach(d=>{const q3=parseTp(JSON.parse(all[d].json));if(!q3.has)return;const c=sumTp(q3),mt=modelTat(d,all).mtd;
-    tp.push([d,q3.brc.t,q3.brc.m,q3.brc.x,q3.brc.i,q3.brc.el,pc(q3.brc.m,q3.brc.el)/100,q3.vob.t,q3.vob.m,q3.vob.x,q3.vob.i,q3.vob.el,pc(q3.vob.m,q3.vob.el)/100,c.mp/100,c.xp/100,mt.comb/100])});
-  if(tp.length>1)XLSX.utils.book_append_sheet(wb,sheet(tp,[6,12,13,14,15],[12,10,9,11,12,12,10,10,9,11,12,12,10,14,16,18]),"TAT Performance");
-  const blob=new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})]);
-  const fn="GeoPro_EOD_Data_"+today()+".xlsx";
-  let dl=null;try{dl=await window.claude?.use("downloads")}catch(e){}
-  if(!dl){XLSX.writeFile(wb,fn);return}
-  try{await dl.save({filename:fn,data:blob})}
-  catch(e){if(e&&e.code!=="declined")alert("Could not save the Excel file ("+(e.code||e.message||"error")+").")}
-}
+  const b=$("xl"),bt=b.textContent;b.disabled=true;b.textContent="Building…";
+  try{await buildWorkbook(all,ops,ds)}catch(e){console.error(e);alert("Could not build the Excel file: "+e.message)}
+  b.disabled=false;b.textContent=bt}
 $("xl").onclick=exportXL;
 $("out").onclick=()=>signOut(auth);
 $("lgo").onclick=async()=>{$("lerr").textContent="";try{await signInWithEmailAndPassword(auth,$("lem").value.trim(),$("lpw").value)}catch(e){$("lerr").textContent="Sign-in failed ("+(e.code||e.message)+")"}};
