@@ -658,7 +658,9 @@ function monthSheet(wb,md,months){
     ws.addConditionalFormatting({ref:`${XC(DC)}${e0}:${XC(LC)}${e1}`,rules:[
      {type:"expression",priority:1,formulae:[`${XC(DC)}${e0}="P"`],style:dx("C8ECD4","1E7A3C")},{type:"expression",priority:2,formulae:[`${XC(DC)}${e0}="WFH"`],style:dx("CFE3FF","1C4FB5")},
      {type:"expression",priority:3,formulae:[`OR(${XC(DC)}${e0}="WO",${XC(DC)}${e0}="H")`],style:dx("E3E7EF","6B7585")},
-     {type:"expression",priority:4,formulae:[`AND(${XC(DC)}${e0}<>"",${XC(DC)}${e0}<>"P",${XC(DC)}${e0}<>"WFH",${XC(DC)}${e0}<>"WO",${XC(DC)}${e0}<>"H")`],style:dx("FFE0B8","A24D00")}]});
+     {type:"expression",priority:4,formulae:[`${XC(DC)}${e0}="PL"`],style:dx("FFF1A8","8A6100")},
+     {type:"expression",priority:5,formulae:[`OR(${XC(DC)}${e0}="UL",${XC(DC)}${e0}="NCNS")`],style:dx("F8B4B0","B3261E")},
+     {type:"expression",priority:6,formulae:[`AND(${XC(DC)}${e0}<>"",${XC(DC)}${e0}<>"P",${XC(DC)}${e0}<>"WFH",${XC(DC)}${e0}<>"WO",${XC(DC)}${e0}<>"H",${XC(DC)}${e0}<>"PL",${XC(DC)}${e0}<>"UL",${XC(DC)}${e0}<>"NCNS")`],style:dx("A9CCFF","0F3E91")}]});
     ws.addConditionalFormatting(pctRules(`G${e0}:G${e1}`,`G${e0}`,0.9,0.95))}
   // day totals
   const tl=["Present (incl. WFH)","On leave","Working from home","Shrinkage %"],t0=r;
