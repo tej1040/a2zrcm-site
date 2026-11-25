@@ -1,0 +1,28 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+main { max-width: 820px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { margin: 0 0 8px; }
+h2 { font-size: 1.1rem; margin: 28px 0 8px; }
+section { border-top: 1px solid #1e293b; }
+.hint { color: #94a3b8; font-size: .9rem; }
+code { background: #1e293b; padding: 1px 5px; border-radius: 4px; }
+textarea, select, input {
+  width: 100%; background: #1e293b; color: inherit; border: 1px solid #334155;
+  border-radius: 8px; padding: 10px; font: inherit;
+}
+.row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-top: 12px; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: #94a3b8; flex: 1; min-width: 140px; }
+button {
+  background: #3b82f6; color: white; border: 0; border-radius: 8px;
+  padding: 10px 18px; font: inherit; cursor: pointer;
+}
+button.ghost { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.scene { background: #1e293b; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.scene .meta { display: flex; gap: 8px; margin-bottom: 8px; }
+.scene .meta input { flex: 2; }
+.scene .meta select { flex: 1; }
+.scene textarea { min-height: 70px; }
+.scene .dur { color: #94a3b8; font-size: .8rem; margin-top: 4px; }
+progress { width: 100%; margin-top: 12px; }
+canvas { width: 100%; border-radius: 10px; background: #000; }

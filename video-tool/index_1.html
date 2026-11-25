@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Script to Video</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Script to Video</h1>
+
+    <section>
+      <h2>1. Paste your script</h2>
+      <p class="hint">Blank line = new scene. Start a line with <code>#</code> for a scene title.
+        Add <code>[visual: title|bullets|quote]</code> to pick a layout.</p>
+      <textarea id="script" rows="10"></textarea>
+      <div class="row">
+        <button id="sample" class="ghost">Load sample</button>
+        <button id="split">Split into scenes</button>
+      </div>
+    </section>
+
+    <section id="scenesSection" hidden>
+      <h2>2. Review scenes</h2>
+      <div id="scenes"></div>
+      <div class="row">
+        <label>Voice
+          <select id="voice">
+            <option value="af_heart">Heart (female)</option>
+            <option value="af_bella">Bella (female)</option>
+            <option value="am_michael">Michael (male)</option>
+            <option value="bf_emma">Emma (British female)</option>
+            <option value="bm_george">George (British male)</option>
+          </select>
+        </label>
+        <label>Theme
+          <select id="theme">
+            <option value="ocean">Ocean</option>
+            <option value="sunset">Sunset</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <button id="generate">Generate voice-over</button>
+      </div>
+      <progress id="bar" value="0" max="1" hidden></progress>
+      <p id="status" class="hint"></p>
+    </section>
+
+    <section id="previewSection" hidden>
+      <h2>3. Preview</h2>
+      <canvas id="stage" width="1280" height="720"></canvas>
+      <div class="row">
+        <button id="play">Play</button>
+        <button id="stop" class="ghost">Stop</button>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
