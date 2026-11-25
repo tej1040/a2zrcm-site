@@ -261,6 +261,7 @@ input.invalid{border-color:var(--bad);background:#fff8f8}
 .wfhoff .tg[data-k="w"]{opacity:.45;pointer-events:none;background:repeating-linear-gradient(135deg,#eceff3,#eceff3 6px,#e3e7ee 6px,#e3e7ee 12px)}
 .attsave{display:flex;align-items:center;gap:.8em;margin-top:.7em;flex-wrap:wrap}.attsave button{padding:.55em 1.2em}
 .attnote{font-size:.82em;color:var(--mut)}
+.dtr small{text-align:center;line-height:1.2}.dtr small em{display:block;font-style:normal;font-size:.82em;color:#7b8fa0;font-weight:600}.dtr small em.we{color:#b5504d}
 </style>
 </head>
 <body>
@@ -579,8 +580,10 @@ function attDay(e,fb){const head=(e&&e.head)||fb||cfg.head;return D.map((_,i)=>{
   return{h:num(head[i]),lc:dig?+raw:L.length,L,w,wc:wa?Math.max(0,num(head[i])-(dig?+raw:L.length)):w.length,p:L.filter(n=>kind(n)==="p").length,u:L.filter(n=>kind(n)==="u").length}})}
 const LFULL={PL:"Planned Leave",UL:"Unplanned Leave",SL:"Sick Leave",NCNS:"No Call No Show",EM:"Emergency",HD:"Half Day",PT:"Paternity",MT:"Maternity",BL:"Bereavement Leave",NOTE:"Other / custom"};
 function lcode(s){const o=ptag(s,true)[0]||{n:s,t:""};const t=o.t,c=!t?(/unplanned/i.test(s)?"UL":/planned/i.test(s)?"PL":/sick/i.test(s)?"SL":/ncns/i.test(s)?"NCNS":"NOTE"):(t==="Custom"?"NOTE":(LCODE[t]||"NOTE"));return{n:o.n||s,c}}
+const nzf=a=>Array.isArray(a)?a.some(nzf):(a!==""&&a!=null&&a!==0&&a!=="0"&&a!==false);
+function hasDay(e){try{const j=JSON.parse(e.json);return nzf(j.ws)||nzf(j.tat)||nzf(j.names)||nzf(j.wfh)||nzf(j.tp)||nzf(j.x)||!!j.wfhAll||!!String(j.actions||"").trim()}catch(_){return true}}
 function attHtml(){const dt=cur,ymk=ym(dt),dm=Object.assign({},days);dm[dt]={json:JSON.stringify(readForm().entry)};const WA=!!JSON.parse(dm[dt].json).wfhAll;
-  const rows=Object.keys(dm).filter(k=>k.slice(0,7)===ymk&&k<=dt).sort().map(k=>({k,t:attDay(JSON.parse(dm[k].json))})),T=rows.find(x=>x.k===dt).t;
+  const rowsAll=Object.keys(dm).filter(k=>k.slice(0,7)===ymk&&k<=dt).sort().map(k=>({k,t:attDay(JSON.parse(dm[k].json))})),T=rowsAll.find(x=>x.k===dt).t,rows=rowsAll.filter(r=>hasDay(dm[r.k]));
   const sm=(a,f)=>a.reduce((t,x)=>t+f(x),0),H=sm(T,x=>x.h),A=sm(T,x=>x.lc),WF=sm(T,x=>x.wc),PL=sm(T,x=>x.p),UN=sm(T,x=>x.u),att=H?(H-A)/H*100:100,sh=100-att;
   const MH=sm(rows,r=>sm(r.t,x=>x.h)),MA=sm(rows,r=>sm(r.t,x=>x.lc)),MW=sm(rows,r=>sm(r.t,x=>x.wc)),MP=sm(rows,r=>sm(r.t,x=>x.p)),MU=sm(rows,r=>sm(r.t,x=>x.u)),mAtt=MH?(MH-MA)/MH*100:100;
   const cl=v=>v>=90?"g":v>=80?"y":"r",pf=v=>v.toFixed(1)+"%",k=(c,l,v,s2)=>`<div class="k ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s2}</div></div>`;
@@ -596,7 +599,7 @@ function attHtml(){const dt=cur,ymk=ym(dt),dm=Object.assign({},days);dm[dt]={jso
   const rk=tm.map((x,i)=>{const sh2=100-x.att;return `<tr><td>${i+1}</td><td class="l">${x.d}</td><td>${x.a}</td><td>${x.w}</td><td style="text-align:left"><span class="mbar"><i class="${cl(x.att)}" style="width:${x.att}%"></i></span>${pf(x.att)}</td><td>${pf(sh2)}</td></tr>`}).join("");
   const lr=mcs.map(c=>`<tr><td><span class="cd ${cls(c)}" style="padding-right:.55em">${c}</span></td><td class="l">${LFULL[c]}</td><td>${mcode[c]}</td></tr>`).join("")||`<tr><td colspan="3">No leaves this month</td></tr>`;
   const mx=Math.max(1,...rows.map(r=>{const h=sm(r.t,x=>x.h),a=sm(r.t,x=>x.lc);return h?a/h*100:0}));
-  const dtr=rows.map(r=>{const h=sm(r.t,x=>x.h),a=sm(r.t,x=>x.lc),v=h?a/h*100:0;return `<div><b>${v.toFixed(1)}%</b><i class="${v>0?"":"z"}" style="height:${Math.max(2,v/mx*78)}%"></i><small>${+r.k.slice(8)}</small></div>`}).join("");
+  const dtr=rows.map(r=>{const h=sm(r.t,x=>x.h),a=sm(r.t,x=>x.lc),v=h?a/h*100:0;return `<div><b>${v.toFixed(1)}%</b><i class="${v>0?"":"z"}" style="height:${Math.max(2,v/mx*78)}%"></i><small>${+r.k.slice(8)}<em class="${[0,6].includes(new Date(r.k+"T12:00:00").getDay())?"we":""}">${["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date(r.k+"T12:00:00").getDay()]}</em></small></div>`}).join("");
   const wk=new Date(dt+"T12:00:00").toLocaleDateString("en-US",{weekday:"long"}),dstr=dt.slice(5,7)+"/"+dt.slice(8)+"/"+dt.slice(0,4),best=tm[0],low=tm[tm.length-1];
   return `<div class="athd"><img class="alogo" src="${LOGO}" alt="GeoPro"><h2>Team Attendance Report</h2><span class="dt">${dstr} · ${wk}</span><button class="noshot" id="attimg">⬇ Download image</button><button class="noshot" id="attx">✕ Close</button></div>
   <div class="atsec">Today <small>${dstr}</small></div>
